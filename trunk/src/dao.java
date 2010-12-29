@@ -84,7 +84,7 @@ class VO{
 		}
 		
 
-		
+		int no_pks = 0;
 		
 		//buscar llave primaria, PRIMARY KEY
 		if( (tline.trim().startsWith("PRIMARY KEY") ) )
@@ -104,6 +104,7 @@ class VO{
 
 					if(fields.get( a ).title.equals(i)){
 						fields.get( a ).isPrimary = true;
+						no_pks ++;
 					}
 				}
 
@@ -111,6 +112,12 @@ class VO{
 			}
 		}
 		
+		if(no_pks == 0){
+			System.out.println("ERROR: "+t_name+" no contiene llave primaria, saltando tabla.");
+				
+			
+			return ;
+		}
 		
 		writeVO( t_name, fields );
 		
@@ -136,6 +143,7 @@ class VO{
 		pw.println("  * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).");
 		pw.println("  * @author Alan Gonzalez <alan@caffeina.mx> ");
 		pw.println("  * @access public");
+		pw.println("  * @package docs");
 		pw.println("  * ");
 		pw.println("  */");
 		
@@ -306,6 +314,13 @@ class VO{
 		pw.println("require_once(\"base/"+tabla+".dao.base.php\");");
 		pw.println("require_once(\"base/"+tabla+".vo.base.php\");");
 
+
+		pw.println("/** Page-level DocBlock ." );
+		pw.println("  * ");
+		pw.println("  * @author Alan Gonzalez <alan@caffeina.mx> ");
+		pw.println("  * @package docs");
+		pw.println("  * ");
+		pw.println("  */");						
 				
 		pw.println("/** "+ toCamelCase(tabla) +" Data Access Object (DAO)." );
 		pw.println("  * ");
@@ -313,6 +328,7 @@ class VO{
 		pw.println("  * almacenar de forma permanente y recuperar instancias de objetos {@link "+toCamelCase(tabla)+" }. ");
 		pw.println("  * @author Alan Gonzalez <alan@caffeina.mx> ");
 		pw.println("  * @access public");
+		pw.println("  * @package docs");
 		pw.println("  * ");
 		pw.println("  */");		
 
@@ -343,6 +359,8 @@ class VO{
 		pw.println("  * almacenar de forma permanente y recuperar instancias de objetos {@link "+toCamelCase(tabla)+" }. ");
 		pw.println("  * @author Alan Gonzalez <alan@caffeina.mx> ");
 		pw.println("  * @access private");
+		pw.println("  * @abstract");
+		pw.println("  * @package docs");
 		pw.println("  * ");
 		pw.println("  */");
 		
@@ -354,7 +372,7 @@ class VO{
 		/*	
 			metodo save
 		*/
- 		{
+		{
 			pw.println("	/**");
 			pw.println("	  *	Guardar registros. ");
 			pw.println("	  *	");
@@ -377,6 +395,8 @@ class VO{
 				if(!f.isPrimary) continue;
 				pks +=  " $"+tabla+"->get"+ toCamelCase(f.title)+"() ,";
 			}
+			
+
 			pks = pks.substring(0, pks.length() -1 );
 			
 			pw.println("		if( self::getByPK( " + pks + ") === NULL )");
@@ -931,30 +951,43 @@ class VO{
 		pw.println("		  * Esta clase abstracta comprende metodos comunes para todas las clases DAO que mapean una tabla");
 		pw.println("		  * @author Alan Gonzalez <alan@caffeina.mx> ");
 		pw.println("		  * @access private");
-		pw.println("		  * ");
+		pw.println("		  * @abstract");
+		pw.println("		  * @package docs");
 		pw.println("		  */");
 		pw.println("		abstract class DAO");
 		pw.println("		{");
 		pw.println("");
-		pw.println("		}");
+		pw.println("		    protected static $isTrans = false;");
 		pw.println("");
-		pw.println("		/** Table Data Access Object.");
-		pw.println("		  * ");
-		pw.println("		  * Esta clase abstracta comprende metodos comunes para todas las clases DAO que mapean una vista");
-		pw.println("		  * @author Alan Gonzalez <alan@caffeina.mx> ");
-		pw.println("		  * @access private");
-		pw.println("		  * ");
-		pw.println("		  */");
-		pw.println("		abstract class VistaDAO");
-		pw.println("		{");
+		pw.println("            public static function transBegin (){");
+		pw.println("                        global $conn;");
+		pw.println("                $conn->StartTrans();");
+		pw.println("                self::$isTrans = true;");
 		pw.println("");
+		pw.println("            }");
+		pw.println("");
+		pw.println("            public static function transEnd (  ){");
+		pw.println("                        global $conn;");
+		pw.println("                $conn->CompleteTrans();");
+		pw.println("                self::$isTrans = false;");
+		pw.println("            }");
+		pw.println("");
+		pw.println("");
+		pw.println("            public static function transRollback (  ){");
+		pw.println("                        global $conn;");
+		pw.println("                $conn->FailTrans();");
+		pw.println("                self::$isTrans = false;");
+		pw.println("            }");
+		
 		pw.println("		}");
+
 
 		pw.println("		/** Value Object.");
 		pw.println("		  * ");
 		pw.println("		  * Esta clase abstracta comprende metodos comunes para todas los objetos VO");
 		pw.println("		  * @author Alan Gonzalez <alan@caffeina.mx> ");
 		pw.println("		  * @access private");
+		pw.println("		  * @package docs");		
 		pw.println("		  * ");
 		pw.println("		  */");
 		pw.println("		abstract class VO");
@@ -989,7 +1022,7 @@ class VO{
 	
 	static void writeIncludes(  )
 	{
-		
+
 		try{
 			
 			PrintWriter pw = new PrintWriter(new FileWriter( "dao/model.inc.php" ));
