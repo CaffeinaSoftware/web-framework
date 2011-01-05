@@ -561,6 +561,8 @@ class VO{
 				pw.println("		}");
 				pw.println();
 			}
+
+  			pw.println("		if(sizeof($val) == 0){return array();}");			
 	
 			pw.println("		$sql = substr($sql, 0, -3) . \" )\";" );
 
