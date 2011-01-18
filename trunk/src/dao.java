@@ -75,7 +75,7 @@ class VO{
 			
 			String comentario = (tline.indexOf("COMMENT ") != -1) ? tline.substring( tline.indexOf("COMMENT ") + 9, tline.lastIndexOf("'") ) : " [Campo no documentado]";
 			
-			boolean autoInc = (tline.indexOf("AUTO_INCREMENT ") != -1);
+			boolean autoInc = (tline.indexOf("AUTO_INCREMENT ") != -1) || (tline.indexOf("auto_increment ") != -1);
 
 			String tipo = tline.trim().split(" ")[1];
 
@@ -195,19 +195,18 @@ class VO{
 				pw.println("	public function __toString( )");
 				pw.println("	{ ");
 
-				pw.println( "		$vec = array();" );
-				pw.println( "		array_push($vec, array( " );
+				pw.println( "		$vec = array( " );
 
 				int x = 0;
 					for( Field f : fields)
 					{
 
 						if(x++ < (fields.size()-1))
-							pw.println( "		\""+ f.title+ "\" => $this->" + f.title +  "," );
+							pw.println( "			\""+ f.title+ "\" => $this->" + f.title +  "," );
 						else
-							pw.println( "		\"" +f.title +"\" => $this->" + f.title  );
+							pw.println( "			\"" +f.title +"\" => $this->" + f.title  );
 					}
-				pw.println( "		)); " );					
+				pw.println( "		); " );					
 				pw.println( "	return json_encode($vec); " );					
 				pw.println("	}");
 				pw.println("	");
@@ -391,19 +390,23 @@ class VO{
 			pw.println("	{");
 			
 			String pks = "";
+			String foo = "(";
+			
 			for(Field f : fields){
 				if(!f.isPrimary) continue;
 				pks +=  " $"+tabla+"->get"+ toCamelCase(f.title)+"() ,";
+				foo +=  " isset($"+tabla+"->get"+ toCamelCase(f.title)+"()) && ";
 			}
 			
+			foo = foo.substring(0, foo.length() -3 ) + ")";
 
 			pks = pks.substring(0, pks.length() -1 );
 			
-			pw.println("		if( self::getByPK( " + pks + ") === NULL )");
+			pw.println("		if(  self::getByPK( " + pks + ") !== NULL )");
 			pw.println("		{");
-			pw.println("			try{ return " + className +"DAOBase::create( $"+ tabla +") ; } catch(Exception $e){ throw $e; }");
-			pw.println("		}else{");
 			pw.println("			try{ return " + className +"DAOBase::update( $"+ tabla +") ; } catch(Exception $e){ throw $e; }");
+			pw.println("		}else{");
+			pw.println("			try{ return " + className +"DAOBase::create( $"+ tabla +") ; } catch(Exception $e){ throw $e; }");
 			pw.println("		}");
 			pw.println("	}");
 			pw.println();
@@ -677,7 +680,7 @@ class VO{
 			String sql = "";
 			String args = "";
 			String sqlnames = "";
-			String pk_ai = "";
+			String pk_ai = " ";
 				
 			for(Field f : fields){
 				
