@@ -304,6 +304,11 @@ public class dao{
 	}
 
 
+	
+	
+	
+	
+	
 	//dao normal para tabla 
 	private void writeDAO(String tabla, ArrayList<Field> fields ) throws IOException
 	{
@@ -347,19 +352,31 @@ public class dao{
 		pw.flush();
 		pw.close();
 	}
+	
 
+	
+	
+	
 	//dao base para tabla
 	private void writeDAOBase(String tabla, ArrayList<Field> fields ) throws IOException
 	{
 
 		String fileName = path.getAbsolutePath() + "/dao/base/" + tabla + ".dao.base.php";
-
 		String className = toCamelCase( tabla );
-
+		
 		PrintWriter pw = new PrintWriter(new FileWriter( fileName ));
+		String pksVars = "";
+		
+		for(Field f : fields){
+			if(!f.isPrimary) 
+				continue;
+			pksVars +=  " $"+f.title+",";
+		}
+
+		String [] pksArray = pksVars.replace(" $", "").split(",");
+		pksVars = pksVars.substring( 0, pksVars.length() -1 );	
 		
 		pw.println("<?php");
-
 		pw.println("/** "+ toCamelCase(tabla) +" Data Access Object (DAO) Base." );
 		pw.println("  * ");
 		pw.println("  * Esta clase contiene toda la manipulacion de bases de datos que se necesita para ");
@@ -375,10 +392,45 @@ public class dao{
 		pw.println("{");
 		pw.println();
 		
+		
+		pw.println("		private static $loadedRecords = array();\n");
+		
+		pw.println("		private static function recordExists( "+pksVars+" ){");
+
+		pw.println("			$pk = \"\";");
+		for(String pk : pksArray ){
+			pw.println("			$pk .= $" + pk+" . \"-\";");
+		}
+		
+		pw.println("			return array_key_exists ( $pk , self::$loadedRecords );");
+		pw.println("		}");
+		
+		
+		pw.println("		private static function pushRecord( $inventario, " +pksVars +"){");
+		pw.println("			$pk = \"\";");
+		for(String pk : pksArray ){
+			pw.println("			$pk .= $" + pk+" . \"-\";");
+		}
+		pw.println("			self::$loadedRecords [$pk] = $inventario;");
+		pw.println("		}");
+		
+		pw.println("		private static function getRecord( "+pksVars+" ){");
+		pw.println("			$pk = \"\";");
+		for(String pk : pksArray ){
+			pw.println("			$pk .= $" + pk+" . \"-\";");
+		}
+		pw.println("			return self::$loadedRecords[$pk];");
+		pw.println("		}");
+		
+		
+		
+		
+		
+		
 				
-		/*	
-			metodo save
-		*/
+		/* ********************************************	
+		 *	save()
+		 ******************************************** */
 		{
 			pw.println("	/**");
 			pw.println("	  *	Guardar registros. ");
@@ -430,9 +482,9 @@ public class dao{
 		
 		
 		
-		/*	
-			metodo getByPK
-		*/
+		/* ********************************************	
+		 *	getByPK()
+		 ******************************************** */
 		{
 
 			String pks = "";
@@ -462,12 +514,21 @@ public class dao{
 
 			pw.println("	public static final function getByPK( " + pks + " )");
 			pw.println("	{");
+			
+			pw.println("		if(self::recordExists( "+ pks +")){");
+			pw.println("			return self::getRecord("+ pks +" );");
+			pw.println("		}");
+			
 			pw.println("		$sql = \"SELECT * FROM "+tabla+" WHERE ("+ sql + ") LIMIT 1;\";");
 			pw.println("		$params = array( "+ pks +" );");
 			pw.println("		global $conn;");
 			pw.println("		$rs = $conn->GetRow($sql, $params);");
 			pw.println("		if(count($rs)==0)return NULL;");
-			pw.println("		return new " + toCamelCase(tabla) + "( $rs );");
+			
+			pw.println("			$foo = new " + toCamelCase(tabla) + "( $rs );");
+			pw.println("			self::pushRecord( $foo, " + pks + " );");
+			pw.println("			return $foo;");
+
 			pw.println("	}");
 			pw.println();
 			pw.println();			
@@ -479,9 +540,9 @@ public class dao{
 				
 		
 
-		/*	
-			metodo getAll
-		*/
+		/* ********************************************	
+		 *	getAll()
+		 ******************************************** */
 		{
 			
 			pw.println("	/**");
@@ -514,7 +575,18 @@ public class dao{
 			pw.println("		$rs = $conn->Execute($sql);");
 			pw.println("		$allData = array();");
 			pw.println("		foreach ($rs as $foo) {");
-			pw.println("    		array_push( $allData, new "+ toCamelCase( tabla ) +"($foo));");
+			pw.println("			$bar = new "+ toCamelCase( tabla ) +"($foo);");
+			pw.println("    		array_push( $allData, $bar);");
+			
+			String foo = "";
+			
+			for(String pk : pksArray){
+				pw.println("			//" + pk);
+				foo += "$foo[\"" +pk + "\"],";
+			}
+			
+			
+			pw.println("    		self::pushRecord( $bar, " + foo.substring(0, foo.length() -1  ) + " );");
 			pw.println("		}");
 			pw.println("		return $allData;");
 			pw.println("	}");
@@ -588,7 +660,20 @@ public class dao{
 		
 			pw.println("		$ar = array();");
 			pw.println("		foreach ($rs as $foo) {");
-			pw.println("    		array_push( $ar, new "+ toCamelCase( tabla ) +"($foo));");
+			pw.println("			$bar =  new "+ toCamelCase( tabla ) +"($foo);");			
+			pw.println("    		array_push( $ar,$bar);");
+			
+			
+			String foo = "";
+			
+			for(String pk : pksArray){
+				//pw.println("			//" + pk);
+				foo += "$foo[\"" +pk + "\"],";
+			}
+
+			pw.println("    		self::pushRecord( $bar, " + foo.substring(0, foo.length() -1  ) + " );");
+
+			
 			pw.println("		}");
 			pw.println("		return $ar;");			
 	
@@ -956,6 +1041,63 @@ public class dao{
 		pw.println("		abstract class DAO");
 		pw.println("		{");
 		pw.println("");
+		
+		pw.println("		protected static $isTrans = false;");
+		pw.println("		protected static $transCount = 0;");
+		pw.println("		");
+		pw.println("		public static function transBegin (){");
+		pw.println("			");
+		pw.println("			self::$transCount ++;");
+		pw.println("			Logger::log(\"Iniciando transaccion (\".self::$transCount.\")\");");
+		pw.println("			");
+		pw.println("			if(self::$isTrans){");
+		pw.println("				//Logger::log(\"Transaccion ya ha sido iniciada antes.\");");
+		pw.println("				return;");
+		pw.println("			}");
+		pw.println("			");
+		pw.println("			global $conn;");
+		pw.println("			$conn->StartTrans();");
+		pw.println("			self::$isTrans = true;");
+		pw.println("			");
+		pw.println("		}");
+		pw.println("");
+		pw.println("		public static function transEnd (  ){");
+		pw.println("			");
+		pw.println("			if(!self::$isTrans){");
+		pw.println("				Logger::log(\"Transaccion commit pero no hay transaccion activa !!.\");");
+		pw.println("				return;");
+		pw.println("			}");
+		pw.println("			");
+		pw.println("			self::$transCount --;");
+		pw.println("			Logger::log(\"Terminando transaccion (\".self::$transCount.\")\");");
+		pw.println("			");
+		pw.println("			if(self::$transCount > 0){");
+		pw.println("				return;");
+		pw.println("			}");
+			
+		pw.println("			global $conn;");
+		pw.println("			$conn->CompleteTrans();");
+		pw.println("			Logger::log(\"Transaccion commit !!\");");
+		pw.println("			self::$isTrans = false;");
+		pw.println("		}");
+		
+		
+		pw.println("		public static function transRollback (  ){");
+		pw.println("			if(!self::$isTrans){");
+		pw.println("				Logger::log(\"Transaccion rollback pero no hay transaccion activa !!.\");");
+		pw.println("				return;");
+		pw.println("			}");
+		pw.println("			");
+		pw.println("			self::$transCount = 0;");
+			
+		pw.println("			global $conn;");
+		pw.println("			$conn->FailTrans();");
+		pw.println("			Logger::log(\"Transaccion rollback !\");");
+		pw.println("			self::$isTrans = false;");
+		pw.println("		}");
+				   
+				   
+		/*
 		pw.println("		    protected static $isTrans = false;");
 		pw.println("");
 		pw.println("            public static function transBegin (){");
@@ -977,6 +1119,8 @@ public class dao{
 		pw.println("                $conn->FailTrans();");
 		pw.println("                self::$isTrans = false;");
 		pw.println("            }");
+		*/
+		
 		
 		pw.println("		}");
 
@@ -1133,3 +1277,4 @@ class Field{
 	
 }
 
+// phpdoc -f *.php, base/*.php -s on -pp on -dn docs -ti "Point of Sale - Data Access Object Model" -t docs/
