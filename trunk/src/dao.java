@@ -1,44 +1,52 @@
 import java.io.*;
 import java.util.ArrayList;
+import javax.swing.JTextArea;
+
+class Data{
+    static JTextArea data;
+}
 
 
+public class dao{
+	private BufferedReader br;
+	private ArrayList<String> includes;
+        private String author="no author especified";
+        private File path; //solo puede ser necesario un String con absolutepath
 
-
-class VO{
-
-	static BufferedReader br;
-	static ArrayList<String> includes;
-
-
-
-
-	static void readFile( String file )
+        //anterior  boolean readFile( String file )
+	private boolean readFile( File file )
 	{
 		try{
 			br = new BufferedReader(new FileReader( file ));
+                        return true;
 		}catch(IOException ioe){
-			System.out.println( "Cant read File:" );
-			System.out.println( ioe );
-			System.exit(1);
+                    Data.data.setText("Cant read file\nError:\t" + ioe);
+                    return false;
+//			System.out.println( "Cant read File:" );
+//			System.out.println( ioe );
+//			System.exit(1);
 		}
 	}
 
 
 	
-	static void closeFile( )
+	private boolean closeFile( )
 	{
 		try{
-			br.close();			
+			br.close();
+                        return true;
 		}catch(IOException ioe){
-			System.out.println( "Cant close File:" );
-			System.out.println( ioe );
-			System.exit(1);			
+                    Data.data.setText("Cant close File\nError:\t" + ioe);
+                    return false;
+//			System.out.println( "Cant close File:" );
+//			System.out.println( ioe );
+//			System.exit(1);
 		}
 
 	}
 	
 	
-	static String toCamelCase(String s)
+	private String toCamelCase(String s)
 	{
 			//convertir a camelCase
 
@@ -60,9 +68,10 @@ class VO{
 	 *
 	 *
 	 * */
-	static void parseTable(String t_name) throws IOException 
+	private void parseTable(String t_name) throws IOException
 	{
-		System.out.println( "parseando tabla: " + t_name );
+            Data.data.append( "\n\nparseando tabla: " + t_name );
+//		System.out.println( "parseando tabla: " + t_name );
 		
 		String tline ;
 		
@@ -113,9 +122,8 @@ class VO{
 		}
 		
 		if(no_pks == 0){
-			System.out.println("ERROR: "+t_name+" no contiene llave primaria, saltando tabla.");
-				
-			
+                    Data.data.append("\n\nERROR: "+t_name+" no contiene llave primaria, saltando tabla.");
+//			System.out.println("ERROR: "+t_name+" no contiene llave primaria, saltando tabla.");
 			return ;
 		}
 		
@@ -127,13 +135,13 @@ class VO{
 	}
 	
 	//vo para una tabla
-	static void writeVO( String tabla, ArrayList<Field> fields ) throws IOException
+	private void writeVO( String tabla, ArrayList<Field> fields ) throws IOException
 	{
 		//convertir a camelCase
 	
 		String camelCaseTabla = toCamelCase( tabla );
 
-		String fileName = "dao/base/" + tabla + ".vo.base.php";
+		String fileName = path.getAbsolutePath() + "/dao/base/" + tabla + ".vo.base.php";
 
 		PrintWriter pw = new PrintWriter(new FileWriter( fileName ));
 
@@ -141,7 +149,7 @@ class VO{
 		pw.println("/** Value Object file for table "+ tabla +"." );
 		pw.println("  * ");
 		pw.println("  * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).");
-		pw.println("  * @author Alan Gonzalez <alan@caffeina.mx> ");
+		pw.println("  * @author "+author);
 		pw.println("  * @access public");
 		pw.println("  * @package docs");
 		pw.println("  * ");
@@ -297,9 +305,9 @@ class VO{
 
 
 	//dao normal para tabla 
-	static void writeDAO(String tabla, ArrayList<Field> fields ) throws IOException
+	private void writeDAO(String tabla, ArrayList<Field> fields ) throws IOException
 	{
-		String fileName = "dao/" + tabla + ".dao.php";
+		String fileName = path.getAbsolutePath() + "/dao/" + tabla + ".dao.php";
 		
 		includes.add(fileName);
 
@@ -316,7 +324,7 @@ class VO{
 
 		pw.println("/** Page-level DocBlock ." );
 		pw.println("  * ");
-		pw.println("  * @author Alan Gonzalez <alan@caffeina.mx> ");
+		pw.println("  * @author "+author);
 		pw.println("  * @package docs");
 		pw.println("  * ");
 		pw.println("  */");						
@@ -325,7 +333,7 @@ class VO{
 		pw.println("  * ");
 		pw.println("  * Esta clase contiene toda la manipulacion de bases de datos que se necesita para ");
 		pw.println("  * almacenar de forma permanente y recuperar instancias de objetos {@link "+toCamelCase(tabla)+" }. ");
-		pw.println("  * @author Alan Gonzalez <alan@caffeina.mx> ");
+		pw.println("  * @author "+author);
 		pw.println("  * @access public");
 		pw.println("  * @package docs");
 		pw.println("  * ");
@@ -341,10 +349,10 @@ class VO{
 	}
 
 	//dao base para tabla
-	static void writeDAOBase(String tabla, ArrayList<Field> fields ) throws IOException
+	private void writeDAOBase(String tabla, ArrayList<Field> fields ) throws IOException
 	{
 
-		String fileName = "dao/base/" + tabla + ".dao.base.php";
+		String fileName = path.getAbsolutePath() + "/dao/base/" + tabla + ".dao.base.php";
 
 		String className = toCamelCase( tabla );
 
@@ -356,7 +364,7 @@ class VO{
 		pw.println("  * ");
 		pw.println("  * Esta clase contiene toda la manipulacion de bases de datos que se necesita para ");
 		pw.println("  * almacenar de forma permanente y recuperar instancias de objetos {@link "+toCamelCase(tabla)+" }. ");
-		pw.println("  * @author Alan Gonzalez <alan@caffeina.mx> ");
+		pw.println("  * @author "+author);
 		pw.println("  * @access private");
 		pw.println("  * @abstract");
 		pw.println("  * @package docs");
@@ -876,54 +884,40 @@ class VO{
 		pw.println("}");
 		pw.close();	
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
-	
 	//parse view
-	static void parseView(String vname) throws IOException
+	private void parseView(String vname) throws IOException
 	{
 	}
 	
 	//vo para vista
-	static void parseViewTableVO( String tabla, ArrayList<Field> fields ) throws IOException
+	private void parseViewTableVO( String tabla, ArrayList<Field> fields ) throws IOException
 	{
 	}
 
 	//ado y adobase para vista
-	static void parseViewTableADO( String tabla, ArrayList<Field> fields ) throws IOException
+	private void parseViewTableADO( String tabla, ArrayList<Field> fields ) throws IOException
 	{
 	}
 		
 		
 
 
-		
-
-	
-	
 	/*
 		init
 	*/
 
-	static void parseContent() throws IOException
+
+	private void parseContent() throws IOException
 	{
+		Data.data.setText("Starting...");
+//		System.out.println("Starting...");
 		
-		System.out.println("Starting...");
-		
-        //crear directorios
-        File f = new File("dao");
+
+        File f = new File(path.getAbsolutePath()+"/dao");
         f.mkdir();
 
-        f = new File("dao/base");
+        f = new File(path.getAbsolutePath()+"/dao/base");
         f.mkdir();
 
 
@@ -947,14 +941,14 @@ class VO{
 		}
 		
 		//escribir el archivo de la estructura de las clases
-		PrintWriter pw = new PrintWriter(new FileWriter("dao/Estructura.php"));
+		PrintWriter pw = new PrintWriter(new FileWriter(path.getAbsolutePath()+"/dao/Estructura.php"));
 		
 		pw.println("<?php");
 
 		pw.println("		/** Table Data Access Object.");
 		pw.println("       *	 ");
 		pw.println("		  * Esta clase abstracta comprende metodos comunes para todas las clases DAO que mapean una tabla");
-		pw.println("		  * @author Alan Gonzalez <alan@caffeina.mx> ");
+		pw.println("		  * @author "+author);
 		pw.println("		  * @access private");
 		pw.println("		  * @abstract");
 		pw.println("		  * @package docs");
@@ -990,7 +984,7 @@ class VO{
 		pw.println("		/** Value Object.");
 		pw.println("		  * ");
 		pw.println("		  * Esta clase abstracta comprende metodos comunes para todas los objetos VO");
-		pw.println("		  * @author Alan Gonzalez <alan@caffeina.mx> ");
+		pw.println("		  * @author "+author);
 		pw.println("		  * @access private");
 		pw.println("		  * @package docs");		
 		pw.println("		  * ");
@@ -1015,9 +1009,11 @@ class VO{
 		
 		pw.flush();
 		pw.close();
-		
-		System.out.println("Parsed tables: " + table_count);
-		System.out.println("Parsed views: " + views_count);		
+
+                Data.data.append("\n\nParsed tables: " + table_count);
+                Data.data.append("\nParsed views: " + views_count);
+//		System.out.println("Parsed tables: " + table_count);
+//		System.out.println("Parsed views: " + views_count);
 	}
 	
 	
@@ -1025,12 +1021,12 @@ class VO{
 	
 	
 	
-	static void writeIncludes(  )
+	private void writeIncludes(  )
 	{
 
 		try{
 			
-			PrintWriter pw = new PrintWriter(new FileWriter( "dao/model.inc.php" ));
+			PrintWriter pw = new PrintWriter(new FileWriter( path.getAbsolutePath()+"/dao/model.inc.php" ));
 
 			pw.println("<?php");
 			pw.println("/* Todos los includes de este sitema */" );
@@ -1045,39 +1041,64 @@ class VO{
 				
 			pw.close();
 		}catch(IOException ioe){
-			System.out.println("Inclues"+ioe);
-			
+//			System.out.println("Inclues"+ioe);
+			Data.data.append("\n\nInclues\t"+ioe);
 		}
 	}
 
+        public boolean playParser(File sql, File dir, int lang, String aut){
+            br = null;
+            if(!aut.isEmpty())
+                author=aut;
+            includes = new ArrayList<String>();
+            if( (sql.isFile() && sql.getName().endsWith(".sql")) ) {
+                Data.data.setText("No sql file specified...");
+                return false;
+            }
+            if(dir.isDirectory()) {
+                path = dir;
+            } else {
+                Data.data.setText("No path specified...");
+                return false;
+            }
+            readFile( sql );
+            try{
+                parseContent();
+            }catch( IOException ioe ){
+                Data.data.append("Error al parsear...\n"+ioe);
+            }
+            writeIncludes();
+            closeFile();
+            return true;
+
+        }
 
 
-	
-	public static void main(String ... args)
-	{
-		
-		br = null;
-
-		includes = new ArrayList<String>();
-
-		if(args.length < 1){
-			System.out.println("No sql file specified... using bd.sql");
-			readFile( "bd.sql" );
-		}else{
-			readFile( args[0] );
-		}
-				
-		try{
-			parseContent(  );			
-		}catch(IOException ioe){
-			System.out.println( "Error al parsear..." );
-			System.out.println( ioe );
-		}
-
-		writeIncludes();
-		
-		closeFile();
-	}
+//        public static void main(String ... args)
+//        {
+//
+//                br = null;
+//
+//                includes = new ArrayList<String>();
+//
+//                if(args.length < 1){
+//                        System.out.println("No sql file specified... using bd.sql");
+//                        readFile( "bd.sql" );
+//                }else{
+//                        readFile( args[0] );
+//                }
+//
+//                try{
+//                        parseContent(  );
+//                }catch(IOException ioe){
+//                        System.out.println( "Error al parsear..." );
+//                        System.out.println( ioe );
+//                }
+//
+//                writeIncludes();
+//
+//                closeFile();
+//        }
 
 
 }
