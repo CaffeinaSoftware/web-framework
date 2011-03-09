@@ -360,7 +360,6 @@ File file2, file3;
         if(file2==null|| file3==null) JOptionPane.showMessageDialog(null, "No se seleccionó archivo y/o Directorio");
         else
         d.playParser(file2, file3, jTextField3.getText());
-        //jTextArea1.append(Data.data.getText());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
