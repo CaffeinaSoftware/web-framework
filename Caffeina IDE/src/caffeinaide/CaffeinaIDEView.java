@@ -14,17 +14,20 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import DAO.*;
 
 /**
  * The application's main frame.
  */
 public class CaffeinaIDEView extends FrameView {
-
+    dao d = new dao();
     public CaffeinaIDEView(SingleFrameApplication app) {
         super(app);
-
+        Data.data = new JTextArea();
         initComponents();
-
+        
+        //this.jTextArea1 = Data.data;
+        
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
         int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
@@ -111,14 +114,12 @@ public class CaffeinaIDEView extends FrameView {
         jLabel4 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox();
         jButton3 = new javax.swing.JButton();
 
-        mainPanel.setName("mainPanel"); // NOI18N
+        mainPanel.setName("mainPanel");
 
         jPanel1.setName("jPanel1"); // NOI18N
 
@@ -217,14 +218,16 @@ public class CaffeinaIDEView extends FrameView {
                 .addContainerGap(23, Short.MAX_VALUE))
         );
 
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel4.border.title"))); // NOI18N
         jPanel4.setName("jPanel4"); // NOI18N
-
+        JScrollPane jScrollPane1 = new JScrollPane();
+        //jPanel4.add(new JScrollPane(Data.data));
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setName("jTextArea1"); // NOI18N
-        jScrollPane1.setViewportView(jTextArea1);
+        //Data.data.setName("jTextArea1"); // NOI18N
+
+        jScrollPane1.setViewportView(Data.data);
+        //jPanel4.add(Data.data);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -281,7 +284,6 @@ public class CaffeinaIDEView extends FrameView {
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 610, Short.MAX_VALUE)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -309,7 +311,7 @@ public class CaffeinaIDEView extends FrameView {
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -330,28 +332,35 @@ ExaminarDirectorio();
 private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
 Generar();
 }//GEN-LAST:event_jButton3MouseClicked
-
+File file2, file3;
     @Action
     public void ExaminarArchivo() {
         JFileChooser jf = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(".sql files", "sql");
         jf.setFileFilter(filter);
         if ((jf.showOpenDialog(this.jTextField1))!=JFileChooser.APPROVE_OPTION) return;
-        File file2 = jf.getSelectedFile();
+        file2 = jf.getSelectedFile();
+        this.jTextField1.setText(file2.getName());
     }
 
     @Action
     public void ExaminarDirectorio() {
         JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         File file = chooser.getCurrentDirectory();
         chooser.setCurrentDirectory(file);
         if ((chooser.showOpenDialog(this.jTextField2))!=JFileChooser.APPROVE_OPTION) return;
-        File file2 = chooser.getSelectedFile();
-        this.jTextField2.setText(file2.getName());
+        file3 = chooser.getSelectedFile();
+        this.jTextField2.setText(file3.getName());
     }
 
     @Action
     public void Generar() {
+        System.out.println(file2.getAbsolutePath());
+        if(file2==null|| file3==null) JOptionPane.showMessageDialog(null, "No se seleccionó archivo y/o Directorio");
+        else
+        d.playParser(file2, file3, jTextField3.getText());
+        //jTextArea1.append(Data.data.getText());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -367,8 +376,6 @@ Generar();
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
