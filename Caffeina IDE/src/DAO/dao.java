@@ -5,132 +5,130 @@ import java.util.ArrayList;
 
 
 public class dao{
-	private BufferedReader br;
-	private ArrayList<String> includes;
-        private String author="no author especified";
-        private File path; //solo puede ser necesario un String con absolutepath
+
+    private BufferedReader      br;
+    private ArrayList<String>   includes;
+    private String              author = "Anonymous";
+
+    //solo puede ser necesario un String con absolutepath
+    private File                path;
 
         //anterior  boolean readFile( String file )
-	private boolean readFile( File file )
-	{
-		try{
-			br = new BufferedReader(new FileReader( file ));
-                        return true;
-		}catch(IOException ioe){
-                    Data.data.setText("Cant read file\nError:\t" + ioe);
-                    return false;
-//			System.out.println( "Cant read File:" );
-//			System.out.println( ioe );
-//			System.exit(1);
-		}
-	}
+    private boolean readFile( File file )
+    {
+        try{
+            br = new BufferedReader(new FileReader( file ));
+            return true;
+
+        }catch(IOException ioe){
+            Data.data.setText("Cant read file\nError:\t" + ioe);
+            return false;
+
+        }
+    }
 
 
 	
-	private boolean closeFile( )
-	{
-		try{
-			br.close();
-                        return true;
-		}catch(IOException ioe){
-                    Data.data.setText("Cant close File\nError:\t" + ioe);
-                    return false;
-//			System.out.println( "Cant close File:" );
-//			System.out.println( ioe );
-//			System.exit(1);
-		}
+    private boolean closeFile( )
+    {
+        try{
+            br.close();
+            return true;
+        }catch(IOException ioe){
+            Data.data.setText("Cant close File\nError:\t" + ioe);
+            return false;
+        }
 
-	}
+    }
 	
 	
-	private String toCamelCase(String s)
-	{
-			//convertir a camelCase
+    private String toCamelCase(String s)
+    {
+        //convertir a camelCase
 
-			String foo [] = s.split("_");
+        String foo [] = s.split("_");
 
-			String camelCase = "";
+        String camelCase = "";
 
-			for(String bar : foo){
-				camelCase += Character.toUpperCase( bar.charAt(0) ) + bar.substring( 1 );
-			}
-			
-			return camelCase;
-	}
-	
+        for(String bar : foo){
+                camelCase += Character.toUpperCase( bar.charAt(0) ) + bar.substring( 1 );
+        }
+
+        return camelCase;
+    }
 	
 	
 
-	/*
-	 *
-	 *
-	 * */
-	private void parseTable(String t_name) throws IOException
-	{
-            Data.data.append( "\n\nparseando tabla: " + t_name );
-//		System.out.println( "parseando tabla: " + t_name );
-		
-		String tline ;
-		
-		ArrayList<Field> fields = new ArrayList<Field>();	
-		
-		while( (tline = br.readLine()).trim().startsWith("`") )
-		{
 
-			String campo = tline.substring( tline.indexOf("`") + 1, tline.lastIndexOf("`") );
-			
-			String comentario = (tline.indexOf("COMMENT ") != -1) ? tline.substring( tline.indexOf("COMMENT ") + 9, tline.lastIndexOf("'") ) : " [Campo no documentado]";
-			
-			boolean autoInc = (tline.indexOf("AUTO_INCREMENT ") != -1) || (tline.indexOf("auto_increment ") != -1);
+    /*
+     *
+     *
+     * */
+    private void parseTable(String t_name) throws IOException
+    {
+        Data.data.append( "\n\nparseando tabla: " + t_name );
 
-			String tipo = tline.trim().split(" ")[1];
+        String tline ;
 
-			fields.add( new Field(campo , tipo , comentario, false, autoInc) );
-		
-		}
-		
+        ArrayList<Field> fields = new ArrayList<Field>();
 
-		int no_pks = 0;
-		
-		//buscar llave primaria, PRIMARY KEY
-		if( (tline.trim().startsWith("PRIMARY KEY") ) )
-		{
+        while( (tline = br.readLine()).trim().startsWith("`") )
+        {
 
-			//hay definicion de llave primaria
-			String pk = tline.substring( tline.indexOf("(")+1, tline.indexOf(")") );
-			
-			String pks[] = pk.split(",");
-			
-			for(String i: pks)
-			{
-				i= i.trim().substring( 1, i.length()-1 ) ;
-				
-				//cicle trough the fields, and add pk to the ones on i
-				for(int a = 0; a < fields.size(); a++){
+            String campo = tline.substring( tline.indexOf("`") + 1, tline.lastIndexOf("`") );
 
-					if(fields.get( a ).title.equals(i)){
-						fields.get( a ).isPrimary = true;
-						no_pks ++;
-					}
-				}
+            String comentario = (tline.indexOf("COMMENT ") != -1) ? tline.substring( tline.indexOf("COMMENT ") + 9, tline.lastIndexOf("'") ) : " [Campo no documentado]";
 
-				
-			}
-		}
-		
-		if(no_pks == 0){
-                    Data.data.append("\n\nERROR: "+t_name+" no contiene llave primaria, saltando tabla.");
+            boolean autoInc = (tline.indexOf("AUTO_INCREMENT") != -1) || (tline.indexOf("auto_increment") != -1);
+
+            String tipo = tline.trim().split(" ")[1];
+
+            fields.add( new Field(campo , tipo , comentario, false, autoInc) );
+
+        }
+
+
+        int no_pks = 0;
+
+        //buscar llave primaria, PRIMARY KEY
+        if( (tline.trim().startsWith("PRIMARY KEY") ) )
+        {
+
+            //hay definicion de llave primaria
+            String pk = tline.substring( tline.indexOf("(")+1, tline.indexOf(")") );
+
+            String pks[] = pk.split(",");
+
+            for(String i: pks)
+            {
+                i= i.trim().substring( 1, i.length()-1 ) ;
+
+                //cicle trough the fields, and add pk to the ones on i
+                for(int a = 0; a < fields.size(); a++){
+
+                    if(fields.get( a ).title.equals(i)){
+                            fields.get( a ).isPrimary = true;
+                            no_pks ++;
+                    }
+                }
+            }
+        }
+
+        if(no_pks == 0){
+            Data.data.append("\n\nERROR: "+t_name+" no contiene llave primaria, saltando tabla.");
 //			System.out.println("ERROR: "+t_name+" no contiene llave primaria, saltando tabla.");
-			return ;
-		}
-		
-		writeVO( t_name, fields );
-		
-		writeDAOBase( t_name, fields );
-		
-		writeDAO( t_name, fields );
-	}
-	
+                return ;
+        }
+
+        writeVO( t_name, fields );
+
+        writeDAOBase( t_name, fields );
+
+        writeDAO( t_name, fields );
+    }
+
+
+    
 	//vo para una tabla
 	private void writeVO( String tabla, ArrayList<Field> fields ) throws IOException
 	{
@@ -774,7 +772,7 @@ public class dao{
 				
 			for(Field f : fields){
 				
-				if(f.isPrimary && f.isAutoIncrement)
+				if(f.isAutoIncrement)
 				{
 					pk_ai += "$"+tabla+"->set"+ toCamelCase(f.title) + "( $conn->Insert_ID() );";
 				}
@@ -796,7 +794,7 @@ public class dao{
 			pw.println("		catch(Exception $e){ throw new Exception ($e->getMessage()); }");
 			pw.println("		$ar = $conn->Affected_Rows();");
 			pw.println("		if($ar == 0) return 0;");
-			pw.println("		" + pk_ai);
+			pw.println("		/* save autoincremented value on obj */ " + pk_ai + " /*  */ ");
 			pw.println("		return $ar;");
 			pw.println("	}");
 			pw.println();
@@ -843,8 +841,8 @@ public class dao{
 				pw.println("	  *	@static");
 				pw.println("	  * @param "+toCamelCase(tabla)+" [$"+tabla+"] El objeto de tipo " + toCamelCase(tabla));
 				pw.println("	  * @param "+toCamelCase(tabla)+" [$"+tabla+"] El objeto de tipo " + toCamelCase(tabla));
-    			pw.println("	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.");		
-	    		pw.println("	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'");			
+                                pw.println("	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.");
+                                pw.println("	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'");
 				pw.println("	  **/");
 
 				pw.println("	public static final function byRange( $"+tabla+"A , $"+tabla+"B , $orderBy = null, $orden = 'ASC')");
@@ -992,167 +990,166 @@ public class dao{
 
 	private void parseContent() throws IOException
 	{
-		Data.data.setText("Starting...");
-//		System.out.println("Starting...");
-		
 
-        File f = new File(path.getAbsolutePath()+"/dao");
-        f.mkdir();
+            Data.data.setText("Starting...");
 
-        f = new File(path.getAbsolutePath()+"/dao/base");
-        f.mkdir();
+            File f = new File(path.getAbsolutePath()+"/dao");
+            f.mkdir();
 
-
-		String line ;
-		
-		int table_count = 0;
-		int views_count = 0;
-		
-		
-		while( (line = br.readLine()) != null )
-		{
-			if( line.indexOf("CREATE TABLE") != -1 ) 
-			{
-				table_count++;
-				
-				String t_name = line.substring( line.indexOf("`") + 1, line.lastIndexOf("`") );
-				
-				parseTable( t_name );
-			}
-
-		}
-		
-		//escribir el archivo de la estructura de las clases
-		PrintWriter pw = new PrintWriter(new FileWriter(path.getAbsolutePath()+"/dao/Estructura.php"));
-		
-		pw.println("<?php");
-
-		pw.println("		/** Table Data Access Object.");
-		pw.println("       *	 ");
-		pw.println("		  * Esta clase abstracta comprende metodos comunes para todas las clases DAO que mapean una tabla");
-		pw.println("		  * @author "+author);
-		pw.println("		  * @access private");
-		pw.println("		  * @abstract");
-		pw.println("		  * @package docs");
-		pw.println("		  */");
-		pw.println("		abstract class DAO");
-		pw.println("		{");
-		pw.println("");
-		
-		pw.println("		protected static $isTrans = false;");
-		pw.println("		protected static $transCount = 0;");
-		pw.println("		");
-		pw.println("		public static function transBegin (){");
-		pw.println("			");
-		pw.println("			self::$transCount ++;");
-		pw.println("			Logger::log(\"Iniciando transaccion (\".self::$transCount.\")\");");
-		pw.println("			");
-		pw.println("			if(self::$isTrans){");
-		pw.println("				//Logger::log(\"Transaccion ya ha sido iniciada antes.\");");
-		pw.println("				return;");
-		pw.println("			}");
-		pw.println("			");
-		pw.println("			global $conn;");
-		pw.println("			$conn->StartTrans();");
-		pw.println("			self::$isTrans = true;");
-		pw.println("			");
-		pw.println("		}");
-		pw.println("");
-		pw.println("		public static function transEnd (  ){");
-		pw.println("			");
-		pw.println("			if(!self::$isTrans){");
-		pw.println("				Logger::log(\"Transaccion commit pero no hay transaccion activa !!.\");");
-		pw.println("				return;");
-		pw.println("			}");
-		pw.println("			");
-		pw.println("			self::$transCount --;");
-		pw.println("			Logger::log(\"Terminando transaccion (\".self::$transCount.\")\");");
-		pw.println("			");
-		pw.println("			if(self::$transCount > 0){");
-		pw.println("				return;");
-		pw.println("			}");
-			
-		pw.println("			global $conn;");
-		pw.println("			$conn->CompleteTrans();");
-		pw.println("			Logger::log(\"Transaccion commit !!\");");
-		pw.println("			self::$isTrans = false;");
-		pw.println("		}");
-		
-		
-		pw.println("		public static function transRollback (  ){");
-		pw.println("			if(!self::$isTrans){");
-		pw.println("				Logger::log(\"Transaccion rollback pero no hay transaccion activa !!.\");");
-		pw.println("				return;");
-		pw.println("			}");
-		pw.println("			");
-		pw.println("			self::$transCount = 0;");
-			
-		pw.println("			global $conn;");
-		pw.println("			$conn->FailTrans();");
-		pw.println("			Logger::log(\"Transaccion rollback !\");");
-		pw.println("			self::$isTrans = false;");
-		pw.println("		}");
-				   
-				   
-		/*
-		pw.println("		    protected static $isTrans = false;");
-		pw.println("");
-		pw.println("            public static function transBegin (){");
-		pw.println("                        global $conn;");
-		pw.println("                $conn->StartTrans();");
-		pw.println("                self::$isTrans = true;");
-		pw.println("");
-		pw.println("            }");
-		pw.println("");
-		pw.println("            public static function transEnd (  ){");
-		pw.println("                        global $conn;");
-		pw.println("                $conn->CompleteTrans();");
-		pw.println("                self::$isTrans = false;");
-		pw.println("            }");
-		pw.println("");
-		pw.println("");
-		pw.println("            public static function transRollback (  ){");
-		pw.println("                        global $conn;");
-		pw.println("                $conn->FailTrans();");
-		pw.println("                self::$isTrans = false;");
-		pw.println("            }");
-		*/
-		
-		
-		pw.println("		}");
+            f = new File(path.getAbsolutePath()+"/dao/base");
+            f.mkdir();
 
 
-		pw.println("		/** Value Object.");
-		pw.println("		  * ");
-		pw.println("		  * Esta clase abstracta comprende metodos comunes para todas los objetos VO");
-		pw.println("		  * @author "+author);
-		pw.println("		  * @access private");
-		pw.println("		  * @package docs");		
-		pw.println("		  * ");
-		pw.println("		  */");
-		pw.println("		abstract class VO");
-		pw.println("		{");
-		pw.println("");	
+            String line ;
+
+            int table_count = 0;
+            int views_count = 0;
 
 
-		pw.println("	        /**");
-		pw.println("	          *	Obtener una representacion en forma de arreglo.");
-		pw.println("	          *	");
-		pw.println("	          * Este metodo transforma todas las propiedades este objeto en un arreglo asociativo.");
-		pw.println("	          *	");
-		pw.println("	          * @returns Array Un arreglo asociativo que describe a este objeto.");
-    	pw.println("	          **/");
-		pw.println("			function asArray(){");
-		pw.println("				return get_object_vars($this);");
-		pw.println("			}");
-		pw.println("");	
-		pw.println("		}");
+            while( (line = br.readLine()) != null )
+            {
+                    if( line.indexOf("CREATE TABLE") != -1 )
+                    {
+                            table_count++;
+
+                            String t_name = line.substring( line.indexOf("`") + 1, line.lastIndexOf("`") );
+
+                            parseTable( t_name );
+                    }
+
+            }
 		
-		pw.flush();
-		pw.close();
+            //escribir el archivo de la estructura de las clases
+            PrintWriter pw = new PrintWriter(new FileWriter(path.getAbsolutePath()+"/dao/Estructura.php"));
 
-                Data.data.append("\n\nParsed tables: " + table_count);
-                Data.data.append("\nParsed views: " + views_count);
+            pw.println("<?php");
+
+            pw.println("		/** Table Data Access Object.");
+            pw.println("       *	 ");
+            pw.println("		  * Esta clase abstracta comprende metodos comunes para todas las clases DAO que mapean una tabla");
+            pw.println("		  * @author "+author);
+            pw.println("		  * @access private");
+            pw.println("		  * @abstract");
+            pw.println("		  * @package docs");
+            pw.println("		  */");
+            pw.println("		abstract class DAO");
+            pw.println("		{");
+            pw.println("");
+
+            pw.println("		protected static $isTrans = false;");
+            pw.println("		protected static $transCount = 0;");
+            pw.println("		");
+            pw.println("		public static function transBegin (){");
+            pw.println("			");
+            pw.println("			self::$transCount ++;");
+            pw.println("			Logger::log(\"Iniciando transaccion (\".self::$transCount.\")\");");
+            pw.println("			");
+            pw.println("			if(self::$isTrans){");
+            pw.println("				//Logger::log(\"Transaccion ya ha sido iniciada antes.\");");
+            pw.println("				return;");
+            pw.println("			}");
+            pw.println("			");
+            pw.println("			global $conn;");
+            pw.println("			$conn->StartTrans();");
+            pw.println("			self::$isTrans = true;");
+            pw.println("			");
+            pw.println("		}");
+            pw.println("");
+            pw.println("		public static function transEnd (  ){");
+            pw.println("			");
+            pw.println("			if(!self::$isTrans){");
+            pw.println("				Logger::log(\"Transaccion commit pero no hay transaccion activa !!.\");");
+            pw.println("				return;");
+            pw.println("			}");
+            pw.println("			");
+            pw.println("			self::$transCount --;");
+            pw.println("			Logger::log(\"Terminando transaccion (\".self::$transCount.\")\");");
+            pw.println("			");
+            pw.println("			if(self::$transCount > 0){");
+            pw.println("				return;");
+            pw.println("			}");
+
+            pw.println("			global $conn;");
+            pw.println("			$conn->CompleteTrans();");
+            pw.println("			Logger::log(\"Transaccion commit !!\");");
+            pw.println("			self::$isTrans = false;");
+            pw.println("		}");
+
+
+            pw.println("		public static function transRollback (  ){");
+            pw.println("			if(!self::$isTrans){");
+            pw.println("				Logger::log(\"Transaccion rollback pero no hay transaccion activa !!.\");");
+            pw.println("				return;");
+            pw.println("			}");
+            pw.println("			");
+            pw.println("			self::$transCount = 0;");
+
+            pw.println("			global $conn;");
+            pw.println("			$conn->FailTrans();");
+            pw.println("			Logger::log(\"Transaccion rollback !\");");
+            pw.println("			self::$isTrans = false;");
+            pw.println("		}");
+
+
+            /*
+            pw.println("		    protected static $isTrans = false;");
+            pw.println("");
+            pw.println("            public static function transBegin (){");
+            pw.println("                        global $conn;");
+            pw.println("                $conn->StartTrans();");
+            pw.println("                self::$isTrans = true;");
+            pw.println("");
+            pw.println("            }");
+            pw.println("");
+            pw.println("            public static function transEnd (  ){");
+            pw.println("                        global $conn;");
+            pw.println("                $conn->CompleteTrans();");
+            pw.println("                self::$isTrans = false;");
+            pw.println("            }");
+            pw.println("");
+            pw.println("");
+            pw.println("            public static function transRollback (  ){");
+            pw.println("                        global $conn;");
+            pw.println("                $conn->FailTrans();");
+            pw.println("                self::$isTrans = false;");
+            pw.println("            }");
+            */
+
+
+            pw.println("		}");
+
+
+            pw.println("		/** Value Object.");
+            pw.println("		  * ");
+            pw.println("		  * Esta clase abstracta comprende metodos comunes para todas los objetos VO");
+            pw.println("		  * @author "+author);
+            pw.println("		  * @access private");
+            pw.println("		  * @package docs");
+            pw.println("		  * ");
+            pw.println("		  */");
+            pw.println("		abstract class VO");
+            pw.println("		{");
+            pw.println("");
+
+
+            pw.println("	        /**");
+            pw.println("	          *	Obtener una representacion en forma de arreglo.");
+            pw.println("	          *	");
+            pw.println("	          * Este metodo transforma todas las propiedades este objeto en un arreglo asociativo.");
+            pw.println("	          *	");
+            pw.println("	          * @returns Array Un arreglo asociativo que describe a este objeto.");
+            pw.println("	          **/");
+            pw.println("			function asArray(){");
+            pw.println("				return get_object_vars($this);");
+            pw.println("			}");
+            pw.println("");
+            pw.println("		}");
+
+            pw.flush();
+            pw.close();
+
+            Data.data.append("\n\nParsed tables: " + table_count);
+            Data.data.append("\nParsed views: " + views_count);
 //		System.out.println("Parsed tables: " + table_count);
 //		System.out.println("Parsed views: " + views_count);
 	}
@@ -1187,13 +1184,16 @@ public class dao{
 		}
 	}
 
+
+
         public boolean playParser(File sql, File dir, String aut){
             br = null;
             if(!aut.isEmpty())
-                author=aut;
+                author = aut;
+            
             includes = new ArrayList<String>();
+
             if(!(sql.isFile() && sql.getName().endsWith(".sql")) ) {
-                System.out.println("mensaje de aqui");
                 Data.data.setText("No sql file specified...");
                 return false;
             }
@@ -1203,44 +1203,21 @@ public class dao{
                 Data.data.setText("No path specified...");
                 return false;
             }
+
             readFile( sql );
+
             try{
                 parseContent();
             }catch( IOException ioe ){
                 Data.data.append("Error al parsear...\n"+ioe);
             }
+
             writeIncludes();
             closeFile();
             return true;
 
         }
 
-
-//        public static void main(String ... args)
-//        {
-//
-//                br = null;
-//
-//                includes = new ArrayList<String>();
-//
-//                if(args.length < 1){
-//                        System.out.println("No sql file specified... using bd.sql");
-//                        readFile( "bd.sql" );
-//                }else{
-//                        readFile( args[0] );
-//                }
-//
-//                try{
-//                        parseContent(  );
-//                }catch(IOException ioe){
-//                        System.out.println( "Error al parsear..." );
-//                        System.out.println( ioe );
-//                }
-//
-//                writeIncludes();
-//
-//                closeFile();
-//        }
 
 
 }
