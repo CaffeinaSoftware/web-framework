@@ -21,7 +21,8 @@ import DAO.*;
  */
 public class CaffeinaIDEView extends FrameView {
     
-    dao d = new dao();
+    dao phpDao  = null;
+    JsDAO jsDao = null;
 
     public CaffeinaIDEView(SingleFrameApplication app) {
 
@@ -360,12 +361,27 @@ public void ExaminarArchivo() {
     @Action
     public void Generar() {
         //System.out.println(file2.getAbsolutePath());
-
-        if( file2==null || file3==null )
+        
+        if( file2==null || file3==null ){
             JOptionPane.showMessageDialog(null, "No se seleccionó archivo y/o Directorio");
-        else
-            d.playParser(file2, file3, jTextField3.getText());
+            return;
+        }
+        
+        String target_lang = (String)jComboBox1.getSelectedItem();
 
+        if(target_lang.equals("PHP")){
+            phpDao  = new dao();
+            phpDao.playParser(file2, file3, jTextField3.getText());
+
+
+        }
+
+        if(target_lang.equals("JavaScript")){
+            jsDao = new JsDAO();
+            jsDao.playParser(file2, file3, jTextField3.getText());
+        }
+
+        //
         Data.data.append("\n\nTerminado !");
     }
 
