@@ -1,9 +1,11 @@
 /*
  * CaffeinaIDEView.java
  */
-
 package caffeinaide;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -15,27 +17,33 @@ import java.io.File;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import DAO.*;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 
 /**
  * The application's main frame.
  */
 public class CaffeinaIDEView extends FrameView {
-    
-    dao phpDao  = null;
+
+    dao phpDao = null;
     JsDAO jsDao = null;
+    boolean nofile = false;
+    ShowCodeSQL codeWriter = null;
+    ShowCodeSQL fileCode = null;
 
     public CaffeinaIDEView(SingleFrameApplication app) {
 
         super(app);
         Data.data = new JTextArea();
         initComponents();
-        
+
         //this.jTextArea1 = Data.data;
-        
+
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
         int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
         messageTimer = new Timer(messageTimeout, new ActionListener() {
+
             public void actionPerformed(ActionEvent e) {
                 //statusMessageLabel.setText("");
             }
@@ -46,6 +54,7 @@ public class CaffeinaIDEView extends FrameView {
             busyIcons[i] = resourceMap.getIcon("StatusBar.busyIcons[" + i + "]");
         }
         busyIconTimer = new Timer(busyAnimationRate, new ActionListener() {
+
             public void actionPerformed(ActionEvent e) {
                 busyIconIndex = (busyIconIndex + 1) % busyIcons.length;
                 //statusAnimationLabel.setIcon(busyIcons[busyIconIndex]);
@@ -58,6 +67,7 @@ public class CaffeinaIDEView extends FrameView {
         // connecting action tasks to status bar via TaskMonitor
         TaskMonitor taskMonitor = new TaskMonitor(getApplication().getContext());
         taskMonitor.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 String propertyName = evt.getPropertyName();
                 if ("started".equals(propertyName)) {
@@ -74,11 +84,11 @@ public class CaffeinaIDEView extends FrameView {
                     //progressBar.setVisible(false);
                     //progressBar.setValue(0);
                 } else if ("message".equals(propertyName)) {
-                    String text = (String)(evt.getNewValue());
+                    String text = (String) (evt.getNewValue());
                     //statusMessageLabel.setText((text == null) ? "" : text);
                     messageTimer.restart();
                 } else if ("progress".equals(propertyName)) {
-                    int value = (Integer)(evt.getNewValue());
+                    int value = (Integer) (evt.getNewValue());
                     //progressBar.setVisible(true);
                     //progressBar.setIndeterminate(false);
                     //progressBar.setValue(value);
@@ -115,6 +125,7 @@ public class CaffeinaIDEView extends FrameView {
         jTextField2 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
         logPanel = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -126,21 +137,21 @@ public class CaffeinaIDEView extends FrameView {
         mainPanel.setName("mainPanel");
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(caffeinaide.CaffeinaIDEApp.class).getContext().getResourceMap(CaffeinaIDEView.class);
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel1.border.title"))); // NOI18N
-        jPanel1.setName("jPanel1"); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnlFiles.border.title"))); // NOI18N
+        jPanel1.setName("pnlFiles"); // NOI18N
 
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 
-        jTextField1.setName("jTextField1"); // NOI18N
+        jTextField1.setName("txtIn"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(caffeinaide.CaffeinaIDEApp.class).getContext().getActionMap(CaffeinaIDEView.class, this);
         jButton1.setAction(actionMap.get("ExaminarArchivo")); // NOI18N
-        jButton1.setBackground(resourceMap.getColor("jButton1.background")); // NOI18N
-        jButton1.setIcon(resourceMap.getIcon("jButton1.icon")); // NOI18N
-        jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
-        jButton1.setToolTipText(resourceMap.getString("jButton1.toolTipText")); // NOI18N
-        jButton1.setName("jButton1"); // NOI18N
+        jButton1.setBackground(resourceMap.getColor("btnSearch.background")); // NOI18N
+        jButton1.setIcon(resourceMap.getIcon("btnSearch.icon")); // NOI18N
+        jButton1.setText(resourceMap.getString("btnSearch.text")); // NOI18N
+        jButton1.setToolTipText(resourceMap.getString("btnSearch.toolTipText")); // NOI18N
+        jButton1.setName("btnSearch"); // NOI18N
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton1MouseClicked(evt);
@@ -150,13 +161,13 @@ public class CaffeinaIDEView extends FrameView {
         jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
         jLabel2.setName("jLabel2"); // NOI18N
 
-        jTextField2.setName("jTextField2"); // NOI18N
+        jTextField2.setName("txtOut"); // NOI18N
 
         jButton2.setAction(actionMap.get("ExaminarDirectorio")); // NOI18N
-        jButton2.setIcon(resourceMap.getIcon("jButton2.icon")); // NOI18N
-        jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
-        jButton2.setToolTipText(resourceMap.getString("jButton2.toolTipText")); // NOI18N
-        jButton2.setName("jButton2"); // NOI18N
+        jButton2.setIcon(resourceMap.getIcon("btnSearchDirectory.icon")); // NOI18N
+        jButton2.setText(resourceMap.getString("btnSearchDirectory.text")); // NOI18N
+        jButton2.setToolTipText(resourceMap.getString("btnSearchDirectory.toolTipText")); // NOI18N
+        jButton2.setName("btnSearchDirectory"); // NOI18N
         jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton2MouseClicked(evt);
@@ -174,6 +185,15 @@ public class CaffeinaIDEView extends FrameView {
             }
         });
 
+        jButton4.setIcon(resourceMap.getIcon("btnWriteCode.icon")); // NOI18N
+        jButton4.setText(resourceMap.getString("btnWriteCode.text")); // NOI18N
+        jButton4.setName("btnWriteCode"); // NOI18N
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -181,24 +201,24 @@ public class CaffeinaIDEView extends FrameView {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(22, 22, 22))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton1))
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE))))
+                        .addComponent(jLabel1)
+                        .addGap(22, 22, 22))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTextField1)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton5)))
-                    .addComponent(jLabel2))
+                        .addComponent(jButton5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton4))
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -212,7 +232,8 @@ public class CaffeinaIDEView extends FrameView {
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -220,11 +241,11 @@ public class CaffeinaIDEView extends FrameView {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jButton2))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
-        logPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("logPanel.border.title"))); // NOI18N
-        logPanel.setName("logPanel"); // NOI18N
+        logPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnlLog.border.title"))); // NOI18N
+        logPanel.setName("pnlLog"); // NOI18N
         JScrollPane jScrollPane1 = new JScrollPane();
         //jPanel4.add(new JScrollPane(Data.data));
         jScrollPane1.setName("jScrollPane1"); // NOI18N
@@ -252,25 +273,25 @@ public class CaffeinaIDEView extends FrameView {
         logPanel.setLayout(logPanelLayout);
         logPanelLayout.setHorizontalGroup(
             logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 720, Short.MAX_VALUE)
+            .addGap(0, 746, Short.MAX_VALUE)
         );
         logPanelLayout.setVerticalGroup(
             logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 201, Short.MAX_VALUE)
+            .addGap(0, 161, Short.MAX_VALUE)
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel2.border.title"))); // NOI18N
-        jPanel2.setName("jPanel2"); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnlGenerate.border.title"))); // NOI18N
+        jPanel2.setName("pnlGenerate"); // NOI18N
 
         jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
         jLabel3.setName("jLabel3"); // NOI18N
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "PHP", "JavaScript" }));
-        jComboBox1.setName("jComboBox1"); // NOI18N
+        jComboBox1.setName("cbxLanguaje"); // NOI18N
 
         jButton3.setAction(actionMap.get("Generar")); // NOI18N
-        jButton3.setText(resourceMap.getString("jButton3.text")); // NOI18N
-        jButton3.setName("jButton3"); // NOI18N
+        jButton3.setText(resourceMap.getString("btnGenerate.text")); // NOI18N
+        jButton3.setName("btnGenerate"); // NOI18N
         jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton3MouseClicked(evt);
@@ -280,7 +301,7 @@ public class CaffeinaIDEView extends FrameView {
         jLabel4.setText(resourceMap.getString("jLabel4.text")); // NOI18N
         jLabel4.setName("jLabel4"); // NOI18N
 
-        jTextField3.setName("jTextField3"); // NOI18N
+        jTextField3.setName("txtAuthor"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -289,37 +310,36 @@ public class CaffeinaIDEView extends FrameView {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 144, Short.MAX_VALUE)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(52, 52, 52))
+                        .addGap(12, 12, 12)
+                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel3)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(13, 13, 13)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(188, Short.MAX_VALUE))))
+                        .addGap(12, 12, 12)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(38, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(113, 113, 113)
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(120, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
-                        .addComponent(jLabel3)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(36, 36, 36)
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32))
         );
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
@@ -336,9 +356,9 @@ public class CaffeinaIDEView extends FrameView {
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, 0, 182, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(logPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -347,79 +367,133 @@ public class CaffeinaIDEView extends FrameView {
     }// </editor-fold>//GEN-END:initComponents
 
 private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-ExaminarArchivo();
+    ExaminarArchivo();
 }//GEN-LAST:event_jButton1MouseClicked
 
 private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
-ExaminarDirectorio();
+    ExaminarDirectorio();
 }//GEN-LAST:event_jButton2MouseClicked
 
 private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
-Generar();
+    Generar();
 }//GEN-LAST:event_jButton3MouseClicked
 
 private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-    ShowCodeSQL code = new ShowCodeSQL();
-    code.show(file2);
+    if(fileCode == null){
+        fileCode = new ShowCodeSQL();
+        fileCode.showFile(file_sql);
+    }else
+        if(!fileCode.getVisible())
+            fileCode.setVisible(true);
 }//GEN-LAST:event_jButton5ActionPerformed
 
-File file2, file3;
+private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    if(codeWriter == null){
+        codeWriter = new ShowCodeSQL();
+        codeWriter.writeCode();
+        nofile = true;
+        this.jTextField1.setEnabled(false);
+        this.jButton5.setEnabled(false);
+    }
+    if(!codeWriter.getVisible()){
+        codeWriter.setVisible(true);
+    }
+}//GEN-LAST:event_jButton4ActionPerformed
+    File file_sql, output_direcotory;
 
-@Action
-public void ExaminarArchivo() {
-        JFileChooser jf = new JFileChooser();
+    @Action
+    public void ExaminarArchivo() {
+        JFileChooser fchooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(".sql files", "sql");
-        jf.setFileFilter(filter);
-        if ((jf.showOpenDialog(this.jTextField1))!=JFileChooser.APPROVE_OPTION) return;
-        file2 = jf.getSelectedFile();
-        this.jTextField1.setText(file2.getName());
+        fchooser.setFileFilter(filter);
+        if ((fchooser.showOpenDialog(this.jTextField1)) != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        file_sql = fchooser.getSelectedFile();
+        this.jTextField1.setText(file_sql.getName());
+        this.jTextField1.setEnabled(true);
         this.jButton5.setEnabled(true);
-}
+        this.nofile = false;
+        if(fileCode!=null)
+            fileCode.setVisible(false);
+        if(codeWriter!=null)
+            codeWriter.setVisible(false);
+        codeWriter = null;
+        fileCode = null;
+    }
 
     @Action
     public void ExaminarDirectorio() {
-        JFileChooser chooser = new JFileChooser();
-        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        File file = chooser.getCurrentDirectory();
-        chooser.setCurrentDirectory(file);
-        if ((chooser.showOpenDialog(this.jTextField2))!=JFileChooser.APPROVE_OPTION) return;
-        file3 = chooser.getSelectedFile();
-        this.jTextField2.setText(file3.getName());
+        JFileChooser fchooser = new JFileChooser();
+        fchooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        File file = fchooser.getCurrentDirectory();
+        fchooser.setCurrentDirectory(file);
+        if ((fchooser.showOpenDialog(this.jTextField2)) != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        output_direcotory = fchooser.getSelectedFile();
+        this.jTextField2.setText(output_direcotory.getAbsolutePath());
+    }
+
+    public boolean savedTemporalFile(){
+        PrintWriter writer = null;
+        try {
+            String code = codeWriter.getCode();
+            if(code.isEmpty()){
+                JOptionPane.showMessageDialog(null, "El codigo ingresado es nulo");
+                return false;
+            }
+            writer = new PrintWriter(new FileWriter("temporal.sql"));
+            writer.append(code);
+            writer.flush();
+            writer.close();
+            return true;
+        } catch (IOException ex) {
+            return false;
+        }
     }
 
     @Action
     public void Generar() {
         //System.out.println(file2.getAbsolutePath());
-        this.jButton3.setEnabled(false);
-        if( file2==null || file3==null ){
+        
+        if ( ( !nofile && file_sql == null ) || output_direcotory == null) {
             JOptionPane.showMessageDialog(null, "No se seleccionó archivo y/o Directorio");
             return;
         }
-        
-        String target_lang = (String)jComboBox1.getSelectedItem();
 
-        if(target_lang.equals("PHP")){
-            phpDao  = new dao();
-            phpDao.playParser(file2, file3, jTextField3.getText());
+        if( nofile ){
+            if( savedTemporalFile() )
+                file_sql = new File("temporal.sql");
+            else
+                return;
+        }
+
+        this.jButton3.setEnabled(false);
+
+        String target_lang = (String) jComboBox1.getSelectedItem();
+
+        if (target_lang.equals("PHP")) {
+            phpDao = new dao();
+            phpDao.playParser(file_sql, output_direcotory, jTextField3.getText());
 
 
         }
 
-        if(target_lang.equals("JavaScript")){
+        if (target_lang.equals("JavaScript")) {
             jsDao = new JsDAO();
-            jsDao.playParser(file2, file3, jTextField3.getText());
+            jsDao.playParser(file_sql, output_direcotory, jTextField3.getText());
         }
 
-        //
-        JOptionPane.showMessageDialog(null,"Proceso completado!");
+        JOptionPane.showMessageDialog(null, "Proceso completado!");
         Data.data.append("\n\nTerminado !");
         this.jButton3.setEnabled(true);
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
@@ -434,12 +508,10 @@ public void ExaminarArchivo() {
     public javax.swing.JPanel logPanel;
     private javax.swing.JPanel mainPanel;
     // End of variables declaration//GEN-END:variables
-
     private final Timer messageTimer;
     private final Timer busyIconTimer;
     private final Icon idleIcon;
     private final Icon[] busyIcons = new Icon[15];
     private int busyIconIndex = 0;
-
     private JDialog aboutBox;
 }

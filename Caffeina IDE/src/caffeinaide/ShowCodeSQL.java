@@ -19,8 +19,10 @@ import java.io.IOException;
 public class ShowCodeSQL {
 
     TextArea codeview;
+    Frame frm;
+    boolean saved_file = false;
 
-    public void show(File sql){
+    public void showFile(File sql){
         codeview = new TextArea();
         try {
             BufferedReader lector = new BufferedReader(new FileReader(sql));
@@ -28,15 +30,21 @@ public class ShowCodeSQL {
             while ((linea = lector.readLine()) != null) {
                 codeview.append(linea + "\n");
             }
-            mostrar();
+            lector.close();
+            mostrar(sql.getName());
         } catch (IOException e) {
             codeview.append("\n\nError al leer el archivo...");
         }
     }
 
-    public void mostrar(){
-        final Frame frm = new Frame("DataEntry frame");
-        frm.setSize(350, 200);
+    public void writeCode(){
+        codeview = new TextArea();
+        mostrar("Escribir/pegar codigo sql");
+    }
+
+    public void mostrar(String name){
+        frm = new Frame(name);
+        frm.setSize(650, 400);
         frm.setVisible(true);
         frm.addWindowListener(new WindowAdapter() {
             @Override
@@ -46,4 +54,21 @@ public class ShowCodeSQL {
         });
         frm.add(codeview);
     }
+
+    public void setVisible(boolean value){
+        frm.setVisible(value);
+    }
+
+    public boolean getVisible(){
+        return frm.isVisible();
+    }
+
+    public boolean getStatus(){
+        return saved_file;
+    }
+
+    public String getCode(){
+        return codeview.getText();
+    }
+
 }
