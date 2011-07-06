@@ -280,6 +280,41 @@ public class JsDAO {
 
         /* ####################################################################
 
+                              ##  ######   #######  ##    ##
+                              ## ##    ## ##     ## ###   ##
+                              ## ##       ##     ## ####  ##
+                              ##  ######  ##     ## ## ## ##
+                        ##    ##       ## ##     ## ##  ####
+                        ##    ## ##    ## ##     ## ##   ###
+                         ######   ######   #######  ##    ##
+
+        ##################################################################### */
+
+        pw.println( "	this.json = {" );
+        
+        pw.println( "	" );
+        pw.println( "	" );
+        x = 0;
+        for( JsField f : fields)
+        {
+
+            pw.print( "	" + f.title + " : _" + f.title  );
+
+            x = x +1;
+            if( x < fields.size() ){
+                    pw.print(",");
+            }
+            pw.println();
+        }
+
+        pw.println( "	" );
+        pw.println( "   };" );
+
+
+
+
+        /* ####################################################################
+
          ######     ###    ##       ##       ########     ###     ######  ##    ##
         ##    ##   ## ##   ##       ##       ##     ##   ## ##   ##    ## ##   ##
         ##        ##   ##  ##       ##       ##     ##  ##   ##  ##       ##  ##
@@ -933,14 +968,15 @@ public class JsDAO {
 
 				//quitar los sets, de mysql
 				if(line.trim().startsWith("SET ")) continue;
-
+  
 				//quitar los comentarios de mysql
 				if(line.trim().startsWith("/*") && line.trim().endsWith("*/;")) continue;
 
-
 				if(line.trim().indexOf("enum") != -1) {
 					System.out.println("EPA ! Enums no son soportados por Sqlite !*");
-					continue;
+					//`escala` enum('kilogramo','pieza','litro','unidad') COLLATE utf8_unicode_ci NOT NULL,
+                                        line = line.trim().substring(0, line.trim().lastIndexOf("`")+1);
+                                        line += " varchar(32),";
 				}
 
 				//
