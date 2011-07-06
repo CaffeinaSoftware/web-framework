@@ -190,10 +190,10 @@ public class JsDAO {
 			pw.println( "	*/");
 
 			if(first){
-				pw.print( "	var _" + f.title + " = config === undefined ? null : config." + f.title + " || null" );
+				pw.print( "	var _" + f.title + " = config === undefined ? '' : config." + f.title + " || ''" );
 				first = false;
 			}else{
-				pw.print( "	_" + f.title + " = config === undefined ? null : config." + f.title + " || null" );
+				pw.print( "	_" + f.title + " = config === undefined ? '' : config." + f.title + " || ''" );
 			}
 
 			x = x +1;
@@ -292,11 +292,11 @@ public class JsDAO {
 				pw.println("		//console.log('estoy en save()');");
 				pw.println("		" + toCamelCase(tabla) + "._callback_stack.push( _original_callback  );");
 				pw.println("		" + toCamelCase(tabla) + "._callback_stack.push( function(res){ ");
-				pw.println("						//console.log('estoy de regreso en save(',res,')');");
+				pw.println("						console.log('estoy de regreso en save(',res,')');");
 				pw.println("						if(res == null){");
-				pw.println("							create(this);");
+				pw.println("							create.call(this, this);");
 				pw.println("						}else{");
-				pw.println("							update(this);");
+				pw.println("							update.call(res, res);");
 				pw.println("						}");
 				pw.println("	 			});");
 				pw.println("		"+toCamelCase(tabla)+".getByPK( " + pks + ", { context : this } ) ");
@@ -428,7 +428,7 @@ public class JsDAO {
 				args = args.substring(0, args.length() -1 ) ;
 				sql = sql.substring(0, sql.length() -2 );
 
-				pw.println("		//console.log('estoy en create()');" );
+				pw.println("		console.log('estoy en create(this)');" );
 				pw.println("		$sql = \"INSERT INTO "+tabla+" ( "+ sqlnames + " ) VALUES ( "+ sql +");\";" );
 				pw.println("		$params = [\n			"+ args +" ];");
 
@@ -490,7 +490,7 @@ public class JsDAO {
 					pw.println("		$sql = \"UPDATE "+tabla+" SET  "+ sql + " WHERE " +pk+ ";\";" );
 					pw.println("		$params = [ \n			"+ args +"	"+ pkargs +"  ] ;");
 
-					pw.println("		//console.log('estoy en update()');" );
+					pw.println("		console.log('estoy en update()');" );
 
 					pw.println("		db.query($sql, $params, function(tx, results){ ");
 					pw.println("				//console.log('ya termine el query de update():',tx,results);");
@@ -794,7 +794,7 @@ public class JsDAO {
                 //File f = new File("dao");
                 //f.mkdir();
 
-                File f = new File(path.getAbsolutePath()+"/dao");
+                File f = new File(path.getAbsolutePath());
                 f.mkdir();
 		String line ;
 		int table_count = 0;
@@ -803,7 +803,7 @@ public class JsDAO {
 
 
 
-		String fileName = "/dao/DAO.js";
+		String fileName = "/DAO.js";
 
 			pw = new PrintWriter(new FileWriter( path.getAbsolutePath() + fileName ));
 
