@@ -647,7 +647,7 @@ public class JsDAO {
             pw.println("	  *	@return boolean Verdadero si todo salio bien.");
             pw.println("	  **/");
 
-            pw.println("	this.delete = function(  )");
+            pw.println("	this.delete = function( config )");
             pw.println("	{");
 
 
@@ -668,17 +668,19 @@ public class JsDAO {
             if(pkargs.length() == 0){
 
             }else{
-                    pkargs = pkargs.substring(0, pkargs.length() -2 ) ;
-                    pk = pk.substring(0, pk.length() - 4 ) ;
+                pkargs = pkargs.substring(0, pkargs.length() -2 ) ;
+                pk = pk.substring(0, pk.length() - 4 ) ;
 
-                    pw.println("		if( "+toCamelCase(tabla)+".getByPK("+ pkargs +") === null) throw new Exception('Campo no encontrado.');");
-                                                            //DELETE FROM `pos`.`cliente` WHERE `cliente`.`id_cliente` = 54 LIMIT 1
-                    pw.println("		$sql = \"DELETE FROM "+tabla+" WHERE " +pk+ ";\";" );
+                //pw.println("		if( "+toCamelCase(tabla)+".getByPK("+ pkargs +") === null) throw new Exception('Campo no encontrado.');");
+                pw.println("		$sql = \"DELETE FROM "+tabla+" WHERE " +pk+ ";\";" );
+                pw.println("		$params = [ "+ pkargs +" ];");
+                
+                pw.println("		if(DEBUG){console.log( $sql, $params );}" );
 
-                    pw.println("		$params = [ "+ pkargs +" ];");
-                    pw.println("		//$conn->Execute($sql, $params);");
-                    pw.println("		return $sql;");
-
+                pw.println("		db.query($sql, $params, function(tx,results){ ");
+                pw.println("                        config.callback.call(config.context || null, results);");
+                pw.println("			});");
+                pw.println("		return;");
 
             }
 
@@ -810,28 +812,29 @@ public class JsDAO {
                 pw.println("	  * Este metodo solo debe usarse cuando las tablas destino tienen solo pequenas cantidades de datos o se usan sus parametros para obtener un menor numero de filas.");
                 pw.println("	  *	");
                 pw.println("	  *	@static");
-                pw.println("	  * @param config Un objeto de configuracion con por lo menos success, y failure");
+                pw.println("	  * @param config Un objeto de configuracion con por lo menos success, y failure y..");
                 pw.println("	  * @param $pagina Pagina a ver.");
                 pw.println("	  * @param $columnas_por_pagina Columnas por pagina.");
                 pw.println("	  * @param $orden Debe ser una cadena con el nombre de una columna en la base de datos.");
                 pw.println("	  * @param $tipo_de_orden 'ASC' o 'DESC' el default es 'ASC'");
                 pw.println("	  **/");
-                pw.println("	" + toCamelCase(tabla) + ".getAll = function ( config, $pagina , $columnas_por_pagina, $orden, $tipo_de_orden )");
+                pw.println("	" + toCamelCase(tabla) + ".getAll = function ( config )");
                 pw.println("	{");
                 pw.println("		$sql = \"SELECT * from "+tabla+"\";");
 
-                pw.println("		if($orden != null)");
-                pw.println("		{ $sql += \" ORDER BY \" + $orden + \" \" + $tipo_de_orden;	}");
+                pw.println("		if(config.orden !== undefined)");
+                pw.println("                $sql += \" ORDER BY \" + config.orden + \" \" + config.tipo_de_orden;");
 
-                pw.println("		if($pagina != null)");
-                pw.println("		{");
-                pw.println("			$sql += \" LIMIT \" + (( $pagina - 1 )*$columnas_por_pagina) + \",\" + $columnas_por_pagina; ");
-                pw.println("		}");
+                pw.println("		if(config.pagina !== undefined)");
+                pw.println("                $sql += \" LIMIT \" + (( config.pagina - 1 )* config.columnas_por_pagina) + \",\" + config.columnas_por_pagina; ");
+                
 
                 pw.println("		db.query($sql, [], function(tx,results){ ");
                 pw.println("				fres = [];");
-                pw.println("				for( i = 0; i < results.rows.length ; i++ ){ fres.push( new "+ toCamelCase(tabla) +"( results.rows.item(i) ) ) }");
-                pw.println("				//console.log(fres, config) ");
+                pw.println("				for( i = 0; i < results.rows.length ; i++ ){ "
+                        + "                                 fres.push( new "+ toCamelCase(tabla) +"( results.rows.item(i) ) ) "
+                        + "                             }");
+                pw.println("                            config.callback.call(config.context || null, fres);");
                 pw.println("			});");
                 pw.println("		return;");
                 pw.println("	};");
