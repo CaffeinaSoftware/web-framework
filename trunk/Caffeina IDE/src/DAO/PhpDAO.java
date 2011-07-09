@@ -21,7 +21,6 @@ public class PhpDAO{
             return true;
 
         }catch(IOException ioe){
-            //Dar formato
             LogData.epLog.setText("Cant read file\nError:\t" + ioe);
             return false;
 
@@ -36,7 +35,6 @@ public class PhpDAO{
             br.close();
             return true;
         }catch(IOException ioe){
-            //Dar formato
             LogData.epLog.setText("Cant close File\nError:\t" + ioe);
             return false;
         }
@@ -69,6 +67,7 @@ public class PhpDAO{
     private void parseTable(String t_name) throws IOException
     {
         LogData.epLog.append( "\n\nparseando tabla: " + t_name );
+
         String tline ;
 
         ArrayList<Field> fields = new ArrayList<Field>();
