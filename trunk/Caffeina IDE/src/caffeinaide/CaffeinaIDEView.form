@@ -4,6 +4,12 @@
   <NonVisualComponents>
     <Container class="javax.swing.JPanel" name="mainPanel">
       <Properties>
+        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[32767, 600]"/>
+        </Property>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[593, 486]"/>
+        </Property>
         <Property name="name" type="java.lang.String" value="mainPanel" noResource="true"/>
       </Properties>
 
@@ -30,7 +36,7 @@
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="jPanel2" max="32767" attributes="1"/>
-                      <Component id="pnlFileAndDirectory" alignment="0" pref="183" max="32767" attributes="1"/>
+                      <Component id="pnlFileAndDirectory" alignment="0" pref="187" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="pnlGenerate" min="-2" max="-2" attributes="0"/>
@@ -154,6 +160,7 @@
                 <Property name="icon" type="javax.swing.Icon" resourceKey="btnShowSqlFile.icon"/>
                 <Property name="text" type="java.lang.String" resourceKey="btnShowSqlFile.text"/>
                 <Property name="toolTipText" type="java.lang.String" resourceKey="btnShowSqlFile.toolTipText"/>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="btnShowSqlFile" noResource="true"/>
               </Properties>
               <Events>
@@ -327,7 +334,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="198" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="196" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -471,7 +478,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="statusMessageLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="407" max="32767" attributes="0"/>
+                  <EmptySpace pref="409" max="32767" attributes="0"/>
                   <Component id="progressBar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="statusAnimationLabel" min="-2" max="-2" attributes="0"/>

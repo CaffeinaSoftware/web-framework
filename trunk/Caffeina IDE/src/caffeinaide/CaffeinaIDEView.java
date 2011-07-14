@@ -185,6 +185,8 @@ public class CaffeinaIDEView extends FrameView {
         jScrollPane2 = new javax.swing.JScrollPane();
         txaViewFile = new javax.swing.JTextArea();
 
+        mainPanel.setMaximumSize(new java.awt.Dimension(32767, 600));
+        mainPanel.setMinimumSize(new java.awt.Dimension(593, 486));
         mainPanel.setName("mainPanel"); // NOI18N
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(caffeinaide.CaffeinaIDEApp.class).getContext().getResourceMap(CaffeinaIDEView.class);
@@ -218,6 +220,7 @@ public class CaffeinaIDEView extends FrameView {
         btnShowSqlFile.setIcon(resourceMap.getIcon("btnShowSqlFile.icon")); // NOI18N
         btnShowSqlFile.setText(resourceMap.getString("btnShowSqlFile.text")); // NOI18N
         btnShowSqlFile.setToolTipText(resourceMap.getString("btnShowSqlFile.toolTipText")); // NOI18N
+        btnShowSqlFile.setEnabled(false);
         btnShowSqlFile.setName("btnShowSqlFile"); // NOI18N
         btnShowSqlFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -376,7 +379,7 @@ public class CaffeinaIDEView extends FrameView {
         );
         pnlLogLayout.setVerticalGroup(
             pnlLogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 198, Short.MAX_VALUE)
+            .addGap(0, 196, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
@@ -399,7 +402,7 @@ public class CaffeinaIDEView extends FrameView {
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlFileAndDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE))
+                    .addComponent(pnlFileAndDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlGenerate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -488,7 +491,7 @@ public class CaffeinaIDEView extends FrameView {
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 407, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 409, Short.MAX_VALUE)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusAnimationLabel)
@@ -716,7 +719,7 @@ public class CaffeinaIDEView extends FrameView {
     public boolean savedTemporalFile(){
         PrintWriter writer = null;
         try {
-            if( txaWriteCode.getText().isEmpty()){
+            if( txaWriteCode.getText().trim().isEmpty()){
                 return false;
             }
             writer = new PrintWriter(new FileWriter("temporal.sql"));
@@ -758,7 +761,7 @@ public class CaffeinaIDEView extends FrameView {
             if( savedTemporalFile() )
                 fileSql = new File("temporal.sql");
             else{
-                LogData.epLog.setText("\nEl codigo ingresado es nulo");
+                LogData.epLog.setText("\nEl codigo ingresado es nulo\nno se han generado los DAO");
                 return;
             }
         }
