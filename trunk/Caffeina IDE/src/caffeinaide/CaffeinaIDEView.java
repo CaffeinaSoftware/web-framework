@@ -61,8 +61,8 @@ public class CaffeinaIDEView extends FrameView {
         }
 
         // size frames
-        fmeViewFile.setSize(600, 450);
-        fmeWriteCode.setSize(600, 450);
+        fmeViewFile.setSize(700, 550);
+        fmeWriteCode.setSize(700, 550);
 
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
@@ -693,7 +693,7 @@ public class CaffeinaIDEView extends FrameView {
         btnShowSqlFile.setEnabled(true);
         txaWriteCode.setText(" ");
         fmeWriteCode.setVisible(false);
-        LogData.epLog.setText("\nAhora se usará el archivo "+fileSql.getName()+" para generar los DAO");
+        LogData.epLog.setText("\nSe usará el archivo "+fileSql.getName()+" para generar los DAO");
         nofile = false;
     }
 
@@ -712,7 +712,7 @@ public class CaffeinaIDEView extends FrameView {
         btnShowSqlFile.setEnabled(false);
         txaViewFile.setText(" ");
         fmeViewFile.setVisible(false);
-        LogData.epLog.setText("\nAhora se usará el codigo escrito para generar los DAO");
+        LogData.epLog.setText("\nSe usará el codigo escrito para generar los DAO");
         nofile = true;
     }
 
