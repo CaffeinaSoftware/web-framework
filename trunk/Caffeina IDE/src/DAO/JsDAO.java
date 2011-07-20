@@ -327,11 +327,11 @@ public class JsDAO {
         pw.println("	var _callback_stack = [];");
         pw.println("	this.pushCallback = function( fn, context ){");
         pw.println("	    _callback_stack.push({ f: fn, c: context });");
-        pw.println("	}");
+        pw.println("	};");
         pw.println("	this.callCallback = function(params){");
         pw.println("	    var t = _callback_stack.pop();");
         pw.println("	    t.f.call(t.c, params);");
-        pw.println("	}");
+        pw.println("	};");
 
 
         /* ####################################################################
@@ -611,7 +611,7 @@ public class JsDAO {
 
                 }
 
-                pw.println("	}");
+                pw.println("	};");
                 pw.println();
                 pw.println();
         }
@@ -647,7 +647,7 @@ public class JsDAO {
             pw.println("	  *	@return boolean Verdadero si todo salio bien.");
             pw.println("	  **/");
 
-            pw.println("	this.delete = function( config )");
+            pw.println("	this.destroy = function( config )");
             pw.println("	{");
 
 
