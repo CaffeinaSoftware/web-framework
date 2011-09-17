@@ -12,7 +12,7 @@
        }
 
        if (!@mysql_select_db($BaseDatos, $Conexion_ID)){
-          $Error = "ERROR : Imposible abrir la base de datos ".$this->BaseDatos ;
+          $Error = "ERROR : Imposible abrir la base de datos ".$BaseDatos ;
 		  echo $Error;
        }
 		$sql="Insert into metodo(nombre,tipo,sesion_valida,grupo,ejemplo_peticion,ejemplo_respuesta,descripcion,subtitulo) values('".$_POST["nombre_metodo"]."','".$_POST["tipo_metodo"]."',".$_POST["sesion_valida"].",".$_POST["grupo"].",'".$_POST["ejemplo_peticion"]."','".$_POST["ejemplo_respuesta"]."','".$_POST["descripcion_metodo"]."','".$_POST["subtitulo"]."')";
