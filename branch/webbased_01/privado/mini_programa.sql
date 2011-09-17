@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 17-09-2011 a las 19:45:04
+-- Tiempo de generación: 17-09-2011 a las 20:30:43
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS `metodo` (
   `ejemplo_peticion` text NOT NULL,
   `ejemplo_respuesta` text NOT NULL,
   `descripcion` text NOT NULL,
+  `subtitulo` varchar(100) NOT NULL,
   PRIMARY KEY (`id_metodo`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
