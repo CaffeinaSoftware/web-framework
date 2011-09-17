@@ -60,7 +60,7 @@
 					for($i = 0; $i < $_POST["numero_argumentos"]; $i++)
 					{
 						$id_metodo= mysql_fetch_row($Consulta_ID);
-						$sql="Insert into argumento(id_metodo,nombre,descripcion,ahuevo,tipo,default) values(".$id_metodo[0].",'".$_POST["nombre_argumento_".$i]."','".$_POST["descripcion_argumento_".$i]."',".$_POST["ahuevo_".$i].",'".$_POST["tipo_argumento_".$i]."','".$_POST["default_".$i]."')";
+						$sql="Insert into argumento(id_metodo,nombre,descripcion,ahuevo,tipo,defaults) values(".$id_metodo[0].",'".$_POST["nombre_argumento_".$i]."','".$_POST["descripcion_argumento_".$i]."','".$_POST["ahuevo_".$i]."','".$_POST["tipo_argumento_".$i]."','".$_POST["default_".$i]."')";
 						$Consulta_ID = mysql_query($sql, $Conexion_ID);
 						if (!$Consulta_ID){
 						$mensaje.= $sql."<br>";

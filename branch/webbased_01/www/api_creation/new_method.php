@@ -8,35 +8,36 @@
 
 		function addParam(){
 			param_count ++;
-
+			document.getElementById("numero_argumentos").value=param_count+1;
 			var html = '';
 			
 			html += 	'<tr valign=top>';
 			html += 	'<td>';
-			html += 		'<input type="text" placeholder="nombre" id="args_nombre_'+param_count+'" onKeyUp="m.render()">';
+			html += 		'<input type="text" name="nombre_argumento_'+param_count+'" placeholder="nombre" id="args_nombre_'+param_count+'" onKeyUp="m.render()">';
 			html += 	'</td>';
+			
 			html += 	'<td>';
-			html += 		'<textarea placeholder="descripcion" id="args_desc_'+param_count+'" onKeyUp="m.render()"></textarea>';
+			html += 		'<select name="tipo_argumento_'+param_count+'" id="args_tipo_'+param_count+'" onChange="m.render()">';
+			html += 			'<option value="string">string</option>';
+			html += 			'<option value="bool">bool</option>';
+			html += 			'<option value="int">int</option>';
+			html += 			'<option value="float">float</option>';
+			html += 			'<option value="json">json</option>';
+			html += 		'</select>';
 			html += 	'</td>';
-
+			
 			html += 	'<td>';
-			html += 		'<select id="args_ahuevo_'+param_count+'" onChange="m.render()">';
-			html += 			'<option>Obligatorio</option>';
-			html += 			'<option>Opcional</option>';
+			html += 		'<select name="ahuevo_'+param_count+'" id="args_ahuevo_'+param_count+'" onChange="m.render()">';
+			html += 			'<option value="Obligatorio">Obligatorio</option>';
+			html += 			'<option value="Opcional">Opcional</option>';
 			html += 		'</select>';
 			html += 	'</td>'; 
-
+			
 			html += 	'<td>';
-			html += 		'<select id="args_tipo_'+param_count+'" onChange="m.render()">';
-			html += 			'<option>string</option>';
-			html += 			'<option>bool</option>';
-			html += 			'<option>int</option>';
-			html += 			'<option>float</option>';
-			html += 			'<option>json</option>';
-			html += 		'</select>';
+			html += 		'<textarea name="descripcion_argumento_'+param_count+'""placeholder="descripcion" id="args_desc_'+param_count+'" onKeyUp="m.render()"></textarea>';
 			html += 	'</td>';
-
-			html += 	'<td><input id="args_default_'+param_count+'" placeholder="default" onKeyUp="m.render()"></td>';
+			
+			html += 	'<td><input name="default_'+param_count+'" id="args_default_'+param_count+'" placeholder="default" onKeyUp="m.render()"></td>';
 			html += 	'</tr>'	;
 					
 			$("#param_space").append(html);
@@ -47,25 +48,28 @@
 		var response_count = -1;
 		function addResponse(){
 			response_count++;
+			document.getElementById("numero_respuestas").value=response_count+1;
 			var html = '';
 			
 			html += 	'<tr valign=top>';
 				html += 	'<td>';
-				html += 		'<input type="text" placeholder="nombre" id="response_nombre_'+response_count+'" onKeyUp="m.render()">';
+				html += 		'<input type="text" name="nombre_respuesta_'+param_count+'" placeholder="nombre" id="response_nombre_'+response_count+'" onKeyUp="m.render()">';
 				html += 	'</td>';
-				html += 	'<td>';
-				html += 		'<textarea placeholder="descripcion" id="response_desc_'+response_count+'" onKeyUp="m.render()"></textarea>';
-				html += 	'</td>';
-
+				
 				html += 	'<td>';
 				html += 		'<select id="response_tipo_'+response_count+'" onChange="m.render()">';
-				html += 			'<option>string</option>';
-				html += 			'<option>bool</option>';
-				html += 			'<option>int</option>';
-				html += 			'<option>float</option>';
-				html += 			'<option>json</option>';
+				html += 			'<option value="string">string</option>';
+				html += 			'<option value="bool">bool</option>';
+				html += 			'<option value="int">int</option>';
+				html += 			'<option value="float">float</option>';
+				html += 			'<option value="json">json</option>';
 				html += 		'</select>';
 				html += 	'</td>';
+				
+				html += 	'<td>';
+				html += 		'<textarea name="descripcion_respuesta_'+param_count+'" placeholder="descripcion" id="response_desc_'+response_count+'" onKeyUp="m.render()"></textarea>';
+				html += 	'</td>';
+				
 			html += 	'</tr>'	;
 					
 			$("#response_space").append(html);
@@ -75,6 +79,7 @@
 		var ApiMethod = function(){
 			
 			this.nombre 	= "";
+			this.subtitulo	= "";
 			this.metodo 	= "";
 			this.http 		= "GET";
 			this.desc 		= "";
@@ -91,6 +96,7 @@
 
 			this.render = function(){
 				$("#preview_nombre").html(this.http + " " + this.nombre);
+				$("#preview_subtitle").html(this.subtitulo);
 				$("#preview_desc").html(this.desc);
 				//clean the space
 				
@@ -107,13 +113,13 @@
 				for( a = 0; a <= param_count ; a ++ )
 				{
 						preview_arg_table += '<tr><td class="c135"><p class="c3">';
-						preview_arg_table += '<span class="c7">' +  $( "#args_nombre_"+param_count ).val() + '</span>';
+						preview_arg_table += '<span class="c7">' +  $( "#args_nombre_"+a ).val() + '</span>';
 						preview_arg_table += '</p></td><td class="c61"><p class="c3">';
-						preview_arg_table += '<span class="c7">' + $( "#args_desc_"+param_count ).val() +'</span>';
+						preview_arg_table += '<span class="c7">' + $( "#args_desc_"+a ).val() +'</span>';
 						preview_arg_table += '</p></td><td class="c96"><p class="c3">';
-						preview_arg_table += '<span class="c7">' + $( "#args_ahuevo_"+param_count ).val() +'</span>';
+						preview_arg_table += '<span class="c7">' + $( "#args_ahuevo_"+a ).val() +'</span>';
 						preview_arg_table += '</p></td><td class="c82"><p class="c3">';
-						preview_arg_table += '<span class="c7">'+ $( "#args_tipo_"+param_count ).val() + '</span>';
+						preview_arg_table += '<span class="c7">'+ $( "#args_tipo_"+a ).val() + '</span>';
 						preview_arg_table += '</p></td></tr>';
 				}
 				$("#preview_arg_table").html(preview_arg_table);
@@ -124,13 +130,11 @@
 				for( a = 0; a <= response_count ; a ++ )
 				{
 						preview_resp_table += '<tr><td class="c135"><p class="c3">';
-						preview_resp_table += '<span class="c7">' +  $( "#response_nombre_"+param_count ).val() + '</span>';
+						preview_resp_table += '<span class="c7">' +  $( "#response_nombre_"+a ).val() + '</span>';
 						preview_resp_table += '</p></td><td class="c61"><p class="c3">';
-						preview_resp_table += '<span class="c7">' + $( "#response_desc_"+param_count ).val() +'</span>';
+						preview_resp_table += '<span class="c7">' + $( "#response_desc_"+a ).val() +'</span>';
 						preview_resp_table += '</p></td><td class="c96"><p class="c3">';
-						preview_resp_table += '<span class="c7">' + $( "#response_tipo_"+param_count ).val() +'</span>';
-						preview_resp_table += '</p></td><td class="c82"><p class="c3">';
-						preview_resp_table += '<span class="c7">'+ $( "#response_tipo_"+param_count ).val() + '</span>';
+						preview_resp_table += '<span class="c7">' + $( "#response_tipo_"+a ).val() +'</span>';
 						preview_resp_table += '</p></td></tr>';
 				}
 				$("#preview_resp_table").html(preview_resp_table);
@@ -148,8 +152,8 @@
 	</script>
 </head>
 <body>
-
-
+<?php if(isset($_GET["mensaje"])) echo $_GET["mensaje"];?>
+<form id="form_insercion" method="POST" action="negocios.php">
 	<table border=0>
 		<tr style="width:50%">
 			<td valign=top>
@@ -163,22 +167,28 @@
 				     	<tr>
 				     		<td>Nombre</td>
 				     		<td>
-								<input type="text" style="width:100%" onKeyUp="m.nombre = this.value; m.render()" >
+								<input type="text" name="nombre_metodo" style="width:100%" onKeyUp="m.nombre = this.value; m.render()" >
+				     		</td>
+				     	</tr>
+						<tr>
+				     		<td>Subtitulo</td>
+				     		<td>
+								<input type="text" name="subtitulo" style="width:100%" onKeyUp="m.subtitulo = this.value; m.render()" >
 				     		</td>
 				     	</tr>
 				     	<tr>
 				     		<td>Descripcion</td>
 				     		<td>
-								<textarea style="width:100%" onKeyUp="m.desc = this.value; m.render()"></textarea>
+								<textarea name="descripcion_metodo" style="width:100%" onKeyUp="m.desc = this.value; m.render()"></textarea>
 				     		</td>
 				     	</tr>				     	
 				     	<tr>
 				     		<td>Method</td>
 				     		<td>
-				     		<select onChange="m.http = this.value; m.render()">
-								<option>GET</option>
-								<option>POST</option>
-								<option>POST/GET</option>
+				     		<select name="tipo_metodo" onChange="m.http = this.value; m.render()">
+								<option value="GET">GET</option>
+								<option value="POST">POST</option>
+								<option value="POST/GET">POST/GET</option>
 							</select>
 							</td>
 				     	</tr>
@@ -187,11 +197,11 @@
 				     	</tr>	
 				     	
 				     	<tr><td >Sesion Valida</td>		
-				     	<td ><input type="checkbox"  value="Si" checked onChange="m.auth.sesion = !m.auth.sesion; m.render()"> </td>
+				     	<td ><input type="checkbox" name="sesion_valida" value="true" checked onChange="m.auth.sesion = !m.auth.sesion; m.render()"> </td>
 				     	</tr>
 				     	
 				     	<tr><td >Grupo</td>		
-				     	<td ><input type="text" onKeyUp="m.auth.grupo = this.value; m.render()"></td>
+				     	<td ><input type="text" name="grupo" onKeyUp="m.auth.grupo = this.value; m.render()"></td>
 				     	</tr>
 				     	
 				     	<tr><td >Permiso</td>		
@@ -224,14 +234,14 @@
 				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Ejemplo Peticion</h3></td>
 				     	</tr>
 				     	<tr>
-				     		<td colspan="2"><textarea style="width:100%" onKeyUp="m.entrada = this.value; m.render()"></textarea></td>
+				     		<td colspan="2"><textarea style="width:100%" name="ejemplo_peticion" onKeyUp="m.entrada = this.value; m.render()"></textarea></td>
 				     	</tr>
 				     	<tr>
 				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Ejemplo Respuesta</h3></td>
 				     	</tr>
 				     	<tr>
 
-				     		<td colspan="2"><textarea style="width:100%" onKeyUp="m.salida = this.value; m.render()"></textarea></td>
+				     		<td colspan="2"><textarea style="width:100%" name="ejemplo_respuesta" onKeyUp="m.salida = this.value; m.render()"></textarea></td>
 				     	</tr>
 				     	
 
@@ -359,7 +369,11 @@
 		</tr>
 
 	</table>	
-
+	<input type=submit value="Insertar">
+	<input type="hidden" name="sesion_valida" value="false">
+	<input type="hidden" name="numero_argumentos" id="numero_argumentos">
+	<input type="hidden" name="numero_respuestas" id="numero_respuestas">
+</form>
 	<script type="text/javascript">
 		var a = new ApiMethod();
 		a.nombre = "api/hola/say_hola";
