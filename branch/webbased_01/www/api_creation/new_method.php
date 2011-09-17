@@ -164,6 +164,27 @@
 				     	<tr>
 				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">General</h3></td>
 				     	</tr>
+						<tr>
+				     		<td>Clasificacion</td>
+				     		<td>
+								<select name="clasificacion_metodo" style="width:100%" >
+									<?php
+										$sql="select * from clasificacion";
+										$Conexion_ID = mysql_connect('localhost', 'root', '');
+										mysql_select_db('mini_programa', $Conexion_ID);
+										$result=mysql_query($sql,$Conexion_ID);
+										while($row=mysql_fetch_row($result))
+										{
+											echo 
+											'
+												<option value="'.$row[0].'">'.$row[1].'</option>
+											';
+										}
+										
+									?>
+								</select>
+				     		</td>
+				     	</tr>
 				     	<tr>
 				     		<td>Nombre</td>
 				     		<td>
@@ -370,9 +391,8 @@
 
 	</table>	
 	<input type=submit value="Insertar">
-	<input type="hidden" name="sesion_valida" value="false">
-	<input type="hidden" name="numero_argumentos" id="numero_argumentos">
-	<input type="hidden" name="numero_respuestas" id="numero_respuestas">
+	<input type="hidden" name="numero_argumentos" id="numero_argumentos" value=0>
+	<input type="hidden" name="numero_respuestas" id="numero_respuestas" value=0>
 </form>
 	<script type="text/javascript">
 		var a = new ApiMethod();

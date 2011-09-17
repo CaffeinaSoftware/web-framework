@@ -39,7 +39,8 @@
        }
 	   else
 	   {
-		   $sql="Insert into metodo(nombre,tipo,sesion_valida,grupo,ejemplo_peticion,ejemplo_respuesta,descripcion,subtitulo) values('".$_POST["nombre_metodo"]."','".$_POST["tipo_metodo"]."',".$_POST["sesion_valida"].",".$_POST["grupo"].",'".$_POST["ejemplo_peticion"]."','".$_POST["ejemplo_respuesta"]."','".$_POST["descripcion_metodo"]."','".$_POST["subtitulo"]."')";
+			$combo=!is_null($_POST["sesion_valida"]);
+		   $sql="Insert into metodo(id_clasificacion,nombre,tipo,sesion_valida,grupo,ejemplo_peticion,ejemplo_respuesta,descripcion,subtitulo) values(".$_POST["clasificacion_metodo"].",'".$_POST["nombre_metodo"]."','".$_POST["tipo_metodo"]."',".$combo.",".$_POST["grupo"].",'".$_POST["ejemplo_peticion"]."','".$_POST["ejemplo_respuesta"]."','".$_POST["descripcion_metodo"]."','".$_POST["subtitulo"]."')";
 		   $Consulta_ID = mysql_query($sql, $Conexion_ID);
 
 		   if (!$Consulta_ID){
