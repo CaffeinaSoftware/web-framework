@@ -4,153 +4,241 @@
 	<script type="text/javascript" src="http://api.caffeina.mx/jquery/jquery-1.4.2.min.js"></script>
 	<title></title>
 	<script type="text/javascript">
+		var param_count = -1;
+
 		function addParam(){
+			param_count ++;
+
 			var html = '';
-			html += '';
-			$("#param_space").append()
+			
+			html += 	'<tr valign=top>';
+			html += 	'<td>';
+			html += 		'<input type="text" placeholder="nombre" id="args_nombre_'+param_count+'" onKeyUp="m.render()">';
+			html += 	'</td>';
+			html += 	'<td>';
+			html += 		'<textarea placeholder="descripcion" id="args_desc_'+param_count+'" onKeyUp="m.render()"></textarea>';
+			html += 	'</td>';
+
+			html += 	'<td>';
+			html += 		'<select id="args_ahuevo_'+param_count+'" onChange="m.render()">';
+			html += 			'<option>Obligatorio</option>';
+			html += 			'<option>Opcional</option>';
+			html += 		'</select>';
+			html += 	'</td>'; 
+
+			html += 	'<td>';
+			html += 		'<select id="args_tipo_'+param_count+'" onChange="m.render()">';
+			html += 			'<option>string</option>';
+			html += 			'<option>bool</option>';
+			html += 			'<option>int</option>';
+			html += 			'<option>float</option>';
+			html += 			'<option>json</option>';
+			html += 		'</select>';
+			html += 	'</td>';
+
+			html += 	'<td><input id="args_default_'+param_count+'" placeholder="default" onKeyUp="m.render()"></td>';
+			html += 	'</tr>'	;
+					
+			$("#param_space").append(html);
+
+			m.render();
 		}
 
+		var response_count = -1;
+		function addResponse(){
+			response_count++;
+			var html = '';
+			
+			html += 	'<tr valign=top>';
+				html += 	'<td>';
+				html += 		'<input type="text" placeholder="nombre" id="response_nombre_'+response_count+'" onKeyUp="m.render()">';
+				html += 	'</td>';
+				html += 	'<td>';
+				html += 		'<textarea placeholder="descripcion" id="response_desc_'+response_count+'" onKeyUp="m.render()"></textarea>';
+				html += 	'</td>';
+
+				html += 	'<td>';
+				html += 		'<select id="response_tipo_'+response_count+'" onChange="m.render()">';
+				html += 			'<option>string</option>';
+				html += 			'<option>bool</option>';
+				html += 			'<option>int</option>';
+				html += 			'<option>float</option>';
+				html += 			'<option>json</option>';
+				html += 		'</select>';
+				html += 	'</td>';
+			html += 	'</tr>'	;
+					
+			$("#response_space").append(html);
+			m.render();
+		}
 
 		var ApiMethod = function(){
 			
-			this.nombre 	= null;
-			this.metodo 	= null;
-
+			this.nombre 	= "";
+			this.metodo 	= "";
+			this.http 		= "GET";
+			this.desc 		= "";
 			this.auth 		= {
-				group 	: null,
+				sesion  : true,
+				grupo 	: null,
 				permiso : null
 			};
 
 			this.params 	= [];
 			this.response 	= [];
-			this.ejemplo_entrada = null;
-			this.ejemplo_salida	 = null;
+			this.entrada = "";
+			this.salida	 = "";
 
 			this.render = function(){
-				var o = $("#render_preview");
+				$("#preview_nombre").html(this.http + " " + this.nombre);
+				$("#preview_desc").html(this.desc);
 				//clean the space
-				o.html("");
+				
+
+				$("#preview_auth_sesion").html(  this.auth.sesion ? "Si" : "No" );
+				$("#preview_auth_grupo").html(  this.auth.grupo );
+				$("#preview_auth_permiso").html(  this.nombre );
+
+				$("#preview_respuesta").html(this.salida)
+				$("#preview_peticion").html(this.entrada)
+				
+
+				var preview_arg_table = "";
+				for( a = 0; a <= param_count ; a ++ )
+				{
+						preview_arg_table += '<tr><td class="c135"><p class="c3">';
+						preview_arg_table += '<span class="c7">' +  $( "#args_nombre_"+param_count ).val() + '</span>';
+						preview_arg_table += '</p></td><td class="c61"><p class="c3">';
+						preview_arg_table += '<span class="c7">' + $( "#args_desc_"+param_count ).val() +'</span>';
+						preview_arg_table += '</p></td><td class="c96"><p class="c3">';
+						preview_arg_table += '<span class="c7">' + $( "#args_ahuevo_"+param_count ).val() +'</span>';
+						preview_arg_table += '</p></td><td class="c82"><p class="c3">';
+						preview_arg_table += '<span class="c7">'+ $( "#args_tipo_"+param_count ).val() + '</span>';
+						preview_arg_table += '</p></td></tr>';
+				}
+				$("#preview_arg_table").html(preview_arg_table);
+
+
+
+				var preview_resp_table = "";
+				for( a = 0; a <= response_count ; a ++ )
+				{
+						preview_resp_table += '<tr><td class="c135"><p class="c3">';
+						preview_resp_table += '<span class="c7">' +  $( "#response_nombre_"+param_count ).val() + '</span>';
+						preview_resp_table += '</p></td><td class="c61"><p class="c3">';
+						preview_resp_table += '<span class="c7">' + $( "#response_desc_"+param_count ).val() +'</span>';
+						preview_resp_table += '</p></td><td class="c96"><p class="c3">';
+						preview_resp_table += '<span class="c7">' + $( "#response_tipo_"+param_count ).val() +'</span>';
+						preview_resp_table += '</p></td><td class="c82"><p class="c3">';
+						preview_resp_table += '<span class="c7">'+ $( "#response_tipo_"+param_count ).val() + '</span>';
+						preview_resp_table += '</p></td></tr>';
+				}
+				$("#preview_resp_table").html(preview_resp_table);
 
 				
 			}
 		};
 
 
-	
+
+		var m = new ApiMethod();
+
+
 
 	</script>
 </head>
 <body>
 
 
-	<table>
-		<tr>
-			<td>
+	<table border=0>
+		<tr style="width:50%">
+			<td valign=top>
 				<!-- --------------------------------------------------------------------
 						EDITOR
 				     -------------------------------------------------------------------- -->
-				     <table>
+				     <table border=0 width=100%>
 				     	<tr>
-				     		<td colspan=2>General</td>
+				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">General</h3></td>
 				     	</tr>
 				     	<tr>
 				     		<td>Nombre</td>
 				     		<td>
-								<input type="text">
+								<input type="text" style="width:100%" onKeyUp="m.nombre = this.value; m.render()" >
 				     		</td>
 				     	</tr>
 				     	<tr>
 				     		<td>Descripcion</td>
 				     		<td>
-								<textarea>
-								</textarea>
+								<textarea style="width:100%" onKeyUp="m.desc = this.value; m.render()"></textarea>
 				     		</td>
 				     	</tr>				     	
 				     	<tr>
 				     		<td>Method</td>
 				     		<td>
-				     		<select>
+				     		<select onChange="m.http = this.value; m.render()">
 								<option>GET</option>
 								<option>POST</option>
-								<option>Ambos</option>
+								<option>POST/GET</option>
 							</select>
 							</td>
 				     	</tr>
 				     	<tr>
-				     		<td colspan=2>Autenticacion</td>
+				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Autenticacion</h3></td>
+				     	</tr>	
+				     	
+				     	<tr><td >Sesion Valida</td>		
+				     	<td ><input type="checkbox"  value="Si" checked onChange="m.auth.sesion = !m.auth.sesion; m.render()"> </td>
+				     	</tr>
+				     	
+				     	<tr><td >Grupo</td>		
+				     	<td ><input type="text" onKeyUp="m.auth.grupo = this.value; m.render()"></td>
+				     	</tr>
+				     	
+				     	<tr><td >Permiso</td>		
+				     	<td ><input type="text" disabled ></td>
+				     	</tr>
+				     		
+				     	
+				     	<tr>
+				     		
+				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Argumentos <a onClick='addParam()'>[+]</a></h3></td>
+				     	</tr>
+						<tr>
+				     		<td colspan="2">
+								<table id="param_space">
+								</table>
+				     		</td>
 				     	</tr>				     	
 				     	<tr>
-				     		<td>Autenticacion</td>
-				     		<td></td>
+				     		
+				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Respuesta <a onClick='addResponse()'>[+]</a></h3></td>
 				     	</tr>
 				     	<tr>
-				     		<td></td>
-				     		<td></td>
+							<td colspan="2">
+								<table id="response_space">
+								</table>
+				     		</td>
 				     	</tr>
 				     	<tr>
-				     		<td></td>
-				     		<td></td>
+				     		
+				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Ejemplo Peticion</h3></td>
 				     	</tr>
+				     	<tr>
+				     		<td colspan="2"><textarea style="width:100%" onKeyUp="m.entrada = this.value; m.render()"></textarea></td>
+				     	</tr>
+				     	<tr>
+				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Ejemplo Respuesta</h3></td>
+				     	</tr>
+				     	<tr>
+
+				     		<td colspan="2"><textarea style="width:100%" onKeyUp="m.salida = this.value; m.render()"></textarea></td>
+				     	</tr>
+				     	
 
 				     </table>	
-					<form>
-
-
-						<h2></h2>
-						
-
-						<h2>Autenticacion</h2>
-						<input >
-							
-						<h2>Parametros</h2>
-						<div id="param_space">
-							<table>
-								<tr>
-									<td>Nombre</td>
-									<td>Descripcion</td>
-									<td>Tipo</td>
-									<td>Default</td>
-								</tr>
-
-								<tr>
-								<td>
-									<input type="text" placeholder="nombre">
-								</td>
-
-								<td>
-									<textarea placeholder="descripcion" ></textarea>
-								</td>
-
-								<td>
-									<select>
-										<option>Obligatorio</option>
-										<option>Opcional</option>
-									</select>
-								</td>
-
-								<td>
-									<select>
-										<option>string</option>
-										<option>bool</option>
-										<option>int</option>
-										<option>float</option>
-										<option>json</option>
-									</select>
-								</td>
-
-								<td><input placeholder="default"></td>
-								</tr>
-
-							</table>
-						</div>
-					</form>
-
-
-
-
 
 			</td>
-			<td width="50%">
+			<td width="50%" valign=top>
 				<!-- --------------------------------------------------------------------
 						PREVIEW
 				     -------------------------------------------------------------------- -->
@@ -161,19 +249,17 @@
 <tr class="c1">
 	<td class="c25 c41">
 		<p class="c3">
-			<span class="c19">GET api/sesion/iniciar</span>
+			<span class="c19" id="preview_nombre"></span>
 		</p>
 		<p class="c3">
-			<span class="c31">Validar e iniciar una sesion</span><span class="c31">.</span>
+			<span class="c31" id="preview_subtitle"></span>
 		</p>
 	</td>
 </tr>
 </tbody>
 </table>
-<p class="c22 c15">
-	<span>Valida las credenciales de un usuario y regresa un url a donde se debe de redireccionar. Este m&eacute;todo no necesita de ning&uacute;n tipo de autenticaci&oacute;n. Si se detecta un tipo de usuario inferior a admin y no se ha llamado antes a </span><span class="c8">api/sucursal/revisar_sucursal</span><span>&nbsp;se regresar&aacute; un </span><span class="c8">403 Authorization Required </span><span>y la sesi&oacute;n no se iniciar&aacute;. &nbsp;Si el usuario que esta intentando iniciar sesion, esta descativado... </span><span class="c8">403 Authorization Required supongo</span>
-</p>
-<h4 class="c15"><a name="h.u52pfb3h2ec5"></a><span>Autenticaci&oacute;n</span></h4>
+<p class="c22 c15" id="preview_desc"></p>
+<h4 class="c15"><span>Autenticaci&oacute;n</span></h4>
 <table cellpadding="0" cellspacing="0" class="c0">
 <tbody>
 <tr>
@@ -184,7 +270,7 @@
 	</td>
 	<td class="c16">
 		<p class="c3">
-			<span class="c7">No</span>
+			<span class="c7" id="preview_auth_sesion">Si</span>
 		</p>
 	</td>
 </tr>
@@ -196,7 +282,7 @@
 	</td>
 	<td class="c16">
 		<p class="c3">
-			<span class="c7">Cualquiera</span>
+			<span class="c7" id="preview_auth_grupo"></span>
 		</p>
 	</td>
 </tr>
@@ -208,7 +294,7 @@
 	</td>
 	<td class="c16">
 		<p class="c22 c15">
-			<span class="c8 c7">api/sesion/iniciar</span>
+			<span class="c8 c7" id="preview_auth_permiso"></span>
 		</p>
 	</td>
 </tr>
@@ -216,144 +302,21 @@
 </table>
 <h4 class="c15"><a name="h.fmkw97a0ehmh"></a><span>Argumentos</span></h4>
 <table cellpadding="0" cellspacing="0" class="c0">
-<tbody>
-<tr>
-	<td class="c135">
-		<p class="c3">
-			<span class="c7">usuario</span>
-		</p>
-	</td>
-	<td class="c61">
-		<p class="c3">
-			<span class="c7">string</span>
-		</p>
-	</td>
-	<td class="c96">
-		<p class="c3">
-			<span class="c7">Obligatorio</span>
-		</p>
-	</td>
-	<td class="c82">
-		<p class="c3">
-			<span class="c7">El id de usuario a intentar iniciar sesi&oacute;n.</span>
-		</p>
-	</td>
-</tr>
-<tr>
-	<td class="c135">
-		<p class="c3">
-			<span class="c7">password</span>
-		</p>
-	</td>
-	<td class="c61">
-		<p class="c3">
-			<span class="c7">string</span>
-		</p>
-	</td>
-	<td class="c96">
-		<p class="c3">
-			<span class="c7">Obligatorio</span>
-		</p>
-	</td>
-	<td class="c82">
-		<p class="c3">
-			<span class="c7">La contrase&ntilde;a del usuario.</span>
-		</p>
-	</td>
-</tr>
-<tr>
-	<td class="c135">
-		<h4 class="c3 c12"><a name="h.9lm2h3uody6n"></a><span class="c7">request_token</span></h4>
-	</td>
-	<td class="c61">
-		<h4 class="c3 c12"><a name="h.dag43ipxnhz7"></a><span class="c7">bool</span></h4>
-	</td>
-	<td class="c96">
-		<h4 class="c3 c12"><a name="h.ftmijvku8bem"></a><span class="c7">Opcional</span></h4>
-		<p class="c15">
-			<span class="c8">false</span>
-		</p>
-	</td>
-	<td class="c82">
-		<h4 class="c3 c12"><a name="h.xwpnmx5udl7t"></a><span class="c7">Si se env&iacute;a, y es verdadero, el seguimiento de esta sesi&oacute;n se har&aacute; mediante un token, de lo contrario se har&aacute; mediante cookies.</span></h4>
-	</td>
-</tr>
-</tbody>
+	<tbody id="preview_arg_table">
+
+		<!-- -------------------- -->
+
+	</tbody>
 </table>
 <h4 class="c15"><a name="h.vzpf48a1ugdo"></a><span>Respuesta</span></h4>
 <table cellpadding="0" cellspacing="0" class="c0">
-<tbody>
-<tr>
-	<td class="c93">
-		<p class="c3">
-			<span class="c7">login_succesful</span>
-		</p>
-	</td>
-	<td class="c40">
-		<p class="c3">
-			<span class="c7">bool</span>
-		</p>
-	</td>
-	<td class="c60">
-		<p class="c3">
-			<span class="c7">Si la validaci&oacute;n del usuario es correcta.</span>
-		</p>
-	</td>
-</tr>
-<tr class="c121">
-	<td class="c93">
-		<p class="c3">
-			<span class="c7">siguiente_url</span>
-		</p>
-	</td>
-	<td class="c40">
-		<p class="c3">
-			<span class="c7">string</span>
-		</p>
-	</td>
-	<td class="c60">
-		<p class="c3">
-			<span class="c7">La url a donde se debe de redirigir.</span>
-		</p>
-	</td>
-</tr>
-<tr>
-	<td class="c93">
-		<p class="c3">
-			<span class="c7">usuario_grupo</span>
-		</p>
-	</td>
-	<td class="c40">
-		<p class="c3">
-			<span class="c7">int</span>
-		</p>
-	</td>
-	<td class="c60">
-		<p class="c3">
-			<span class="c7">El grupo al que este usuario pertenece.</span>
-		</p>
-	</td>
-</tr>
-<tr>
-	<td class="c93">
-		<p class="c3">
-			<span class="c7">auth_token</span>
-		</p>
-	</td>
-	<td class="c40">
-		<p class="c3">
-			<span class="c7">string</span>
-		</p>
-	</td>
-	<td class="c60">
-		<p class="c3">
-			<span class="c7">El token si es que fue solicitado.</span>
-		</p>
-	</td>
-</tr>
-</tbody>
+	<tbody id="preview_resp_table">
+
+	
+
+	</tbody>
 </table>
-<h4 class="c15"><a name="h.prszvv6aw8cg"></a><span>Ejemplo</span></h4>
+<h4 class="c15"><span>Ejemplo</span></h4>
 <p class="c15">
 	<span>Peticion</span>
 </p>
@@ -361,53 +324,21 @@
 <tbody>
 <tr>
 	<td class="c25 c13">
-		<p class="c15">
-			<span class="c8">{</span>
-		</p>
-		<p class="c15">
-			<span class="c8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ldquo;</span><span class="c4">usuario&rdquo;</span><span class="c8">&nbsp;: &ldquo;123&rdquo;,</span>
-		</p>
-		<p class="c15">
-			<span class="c8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ldquo;</span><span class="c4">password&rdquo;</span><span class="c8">: &ldquo;abcde&rdquo;,</span>
-		</p>
-		<p class="c15">
-			<span class="c8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ldquo;</span><span class="c4">request_token&rdquo;</span><span class="c8">: true</span>
-		</p>
-		<p class="c15">
-			<span class="c8">}</span>
-		</p>
+		<p class="code" id="preview_peticion"></p>
 	</td>
 </tr>
 </tbody>
 </table>
-<p class="c10 c15">
-	<span></span>
-</p>
+
 <p class="c15">
 	<span>Respuesta</span>
 </p>
+
 <table cellpadding="0" cellspacing="0" class="c0">
 <tbody>
 <tr class="c1">
 	<td class="c25 c13">
-		<p class="c15">
-			<span>{</span>
-		</p>
-		<p class="c15">
-			<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="c83">&ldquo;success&rdquo;</span><span>&nbsp;: true,</span>
-		</p>
-		<p class="c15">
-			<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="c83">&ldquo;login_succesful&rdquo;</span><span>&nbsp;: true,</span>
-		</p>
-		<p class="c15">
-			<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="c83">&ldquo;siguiente_url&rdquo;</span><span>: &ldquo;clientes.php&rdquo;,</span>
-		</p>
-		<p class="c15">
-			<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="c83">&ldquo;auth_token&rdquo;</span><span>: &ldquo;912ec803b2ce49e4a541068d495ab570&rdquo;</span>
-		</p>
-		<p class="c15">
-			<span>}</span>
-		</p>
+		<p class="code" id="preview_respuesta"></p>
 	</td>
 </tr>
 </tbody>
@@ -439,19 +370,3 @@
 
 </body>
 </html>
-
-<!--
-
- Nombre del metodo
- POST/GET
- Autorizacion
- Parametros obligatorios
- Parametros opcionales
-
- Ejemplo de entrada
- Ejemplo de salida
-
- MimeType de Salida
-
-
- -->
