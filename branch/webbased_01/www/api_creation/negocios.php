@@ -1,4 +1,26 @@
 <?php
+//			       metodo
+//  nombre				----------	$_POST["nombre_metodo"]
+//	subtitulo  			----------	$_POST["subtitulo"]
+//	descripcion			----------	$_POST["descripcion_metodo"]
+//	tipo				----------	$_POST["tipo_metodo"]
+//  sesion_valida		----------	$_POST["sesion_valida"]
+//	grupo				----------	$_POST["grupo"]
+//	peticion			----------	$_POST["ejemplo_peticion"]
+//	respuesta			----------	$_POST["ejemplo_respuesta"]
+//
+//           		argumento
+//	nombre				----------	$_POST["nombre_argumento_n"]
+//	descripcion			----------	$_POST["descripcion_argumento_n"]
+//	ahuevo				----------	$_POST["ahuevo_n"]
+//	tipo				----------	$_POST["tipo_argumento_n"]
+//	default				----------	$_POST["default_n"]
+//
+//                 	respuesta
+//	nombre				----------	$_POST["nombre_respuesta_n"]
+//	descripcion			----------	$_POST["descripcion_respuesta_n"]
+//	tipo				----------	$_POST["tipo_respuesta_n"]
+
     $BaseDatos="mini_programa";
     $Servidor="localhost";
     $Usuario="root";
