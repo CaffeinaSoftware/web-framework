@@ -28,8 +28,8 @@
 			
 			html += 	'<td>';
 			html += 		'<select name="ahuevo_'+param_count+'" id="args_ahuevo_'+param_count+'" onChange="m.render()">';
-			html += 			'<option value="Obligatorio">Obligatorio</option>';
-			html += 			'<option value="Opcional">Opcional</option>';
+			html += 			'<option value=1>Obligatorio</option>';
+			html += 			'<option value=0>Opcional</option>';
 			html += 		'</select>';
 			html += 	'</td>'; 
 			
@@ -53,11 +53,11 @@
 			
 			html += 	'<tr valign=top>';
 				html += 	'<td>';
-				html += 		'<input type="text" name="nombre_respuesta_'+param_count+'" placeholder="nombre" id="response_nombre_'+response_count+'" onKeyUp="m.render()">';
+				html += 		'<input type="text" name="nombre_respuesta_'+response_count+'" placeholder="nombre" id="response_nombre_'+response_count+'" onKeyUp="m.render()">';
 				html += 	'</td>';
 				
 				html += 	'<td>';
-				html += 		'<select id="response_tipo_'+response_count+'" onChange="m.render()">';
+				html += 		'<select name="tipo_respuesta_'+response_count+'" id="response_tipo_'+response_count+'" onChange="m.render()">';
 				html += 			'<option value="string">string</option>';
 				html += 			'<option value="bool">bool</option>';
 				html += 			'<option value="int">int</option>';
@@ -67,7 +67,7 @@
 				html += 	'</td>';
 				
 				html += 	'<td>';
-				html += 		'<textarea name="descripcion_respuesta_'+param_count+'" placeholder="descripcion" id="response_desc_'+response_count+'" onKeyUp="m.render()"></textarea>';
+				html += 		'<textarea name="descripcion_respuesta_'+response_count+'" placeholder="descripcion" id="response_desc_'+response_count+'" onKeyUp="m.render()"></textarea>';
 				html += 	'</td>';
 				
 			html += 	'</tr>'	;
