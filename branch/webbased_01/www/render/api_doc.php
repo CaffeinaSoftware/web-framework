@@ -39,7 +39,23 @@
 						<div class="wrap">
 							<input type="hidden" autocomplete="off" class="hiddenInput" name="path" value=""/>
 							<div class="innerWrap">
-								<span class="uiSearchInput textInput"><span><input type="text" class="inputtext DOMControl_placeholder" name="selection" placeholder="Search Documentation / Apps" autocomplete="off" onfocus="return wait_for_load(this, event, function() &#123;window.ArbiterMonitor &amp;&amp; ArbiterMonitor.pause();;JSCC.get(&#039;j4e77526729eb92f593566592&#039;).init([&quot;submitOnSelect&quot;]);;;window.ArbiterMonitor &amp;&amp; ArbiterMonitor.resume();;&#125;);" spellcheck="false" value="Search Documentation / Apps" title="Search Documentation / Apps"/><button type="submit" title="Search Documentation / Apps"><span class="hidden_elem"></span></button></span></span>
+								<span class="uiSearchInput textInput">
+								<span>
+								<input 
+									type="text" 
+									class="inputtext DOMControl_placeholder" 
+									name="selection" 
+									placeholder="Buscar" 
+									autocomplete="off" 
+									onfocus="" 
+									spellcheck="false"
+									title="Search Documentation / Apps"/>
+								<button type="submit" title="Search Documentation / Apps">
+								<span class="hidden_elem">
+								</span>
+								</button>
+								</span>
+								</span>
 							</div>
 						</div>
 					</div>
