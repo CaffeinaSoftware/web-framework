@@ -29,10 +29,15 @@
 
 			}
 			?>
+
+			<a class="l" href="">Generar</a>
+			<a class="l" href="">Nuevo metodo</a>
+
+			<!--
 			<a class="l" href="/support/">Support</a>
 			<a class="l" href="/blog/">Blog</a>
 			<a class="l" href="">Apps</a>
-
+			-->
 			<div class="search">
 				<form method="get" action="/search">
 					<div class="uiTypeahead" id="u272751_1">
@@ -41,6 +46,15 @@
 							<div class="innerWrap">
 								<span class="uiSearchInput textInput">
 								<span>
+<?php
+
+	//------------------------
+	//	BUSCAR
+	//------------------------
+	class buscable{
+			
+	}
+?>								
 								<input 
 									type="text" 
 									class="inputtext DOMControl_placeholder" 
@@ -280,6 +294,18 @@
 
 						</table>
 						<?php
+					}else if(isset($_GET["cat"])){
+		
+						
+
+						$q = "select * from metodo where id_clasificacion = " . $_GET["cat"];
+						$res = mysql_query( $q ) or die(mysql_error());
+
+						while( ($row = mysql_fetch_assoc( $res )) != null )
+						{
+							echo "<h3><a href='api_doc.php?cat=". $_GET["cat"] ."&m=". $row["id_metodo"] ."'>" . $row["tipo"] . " " . $row["nombre"] . "</a></h3>";
+							echo "<p>" . $row["subtitulo"] . "</p>";
+						}
 					}
 				?>
 				
