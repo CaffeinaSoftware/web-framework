@@ -21,7 +21,7 @@
 //	descripcion			----------	$_POST["descripcion_respuesta_n"]
 //	tipo				----------	$_POST["tipo_respuesta_n"]
 
-    $BaseDatos="mini_programa";
+    $BaseDatos="api_pos";
     $Servidor="localhost";
     $Usuario="root";
     $Clave="";
