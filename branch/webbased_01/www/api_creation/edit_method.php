@@ -1,5 +1,6 @@
 <?php
    session_start();
+   require_once("../../server/bootstrap.php");
    if(!isset($_SESSION["metodo"]))
    {
         $_SESSION["metodo"]=-1;
@@ -164,10 +165,7 @@
 <body>
 <?php
    $query = "Select id_metodo, nombre, id_clasificacion from metodo order by id_clasificacion ASC";
-   $conexion = mysql_connect('localhost', 'root', '');
-   mysql_select_db('mini_programa', $conexion);
-   $r=mysql_query($query,$conexion);
-   mysql_close($conexion);
+   $r=mysql_query($query);
    echo "<select id='metodo' onchange='cambioMetodo(this.value)'>";
    while($row=mysql_fetch_row($r))
    {
@@ -179,8 +177,12 @@
    echo "</select>";
    if($_SESSION["metodo"]==-1)
 	return;
-?>
-<?php if(isset($_GET["mensaje"])) echo $_GET["mensaje"];?>
+	
+	$info_metodo="select * from metodo where id_metodo=".$_SESSION["metodo"];
+	$r=mysql_query($info_metodo);
+	$info_metodo=mysql_fetch_row($r);
+	if(isset($_GET["mensaje"])) echo $_GET["mensaje"];
+	?>
 <form id="form_insercion" method="POST" action="negocios.php">
 	<table border=0>
 		<tr style="width:50%">
@@ -198,11 +200,15 @@
 								<select name="clasificacion_metodo" style="width:100%" >
 									<?php
 										$sql="select * from clasificacion";
-										$Conexion_ID = mysql_connect('localhost', 'root', '');
-										mysql_select_db('mini_programa', $Conexion_ID);
-										$result=mysql_query($sql,$Conexion_ID);
+										$result=mysql_query($sql);
 										while($row=mysql_fetch_row($result))
 										{
+											if($row[0]==$info_metodo[1])
+												echo 
+											'
+												<option value="'.$row[0].' selected">'.$row[1].'</option>
+											';
+											else
 											echo 
 											'
 												<option value="'.$row[0].'">'.$row[1].'</option>
@@ -216,28 +222,45 @@
 				     	<tr>
 				     		<td>Nombre</td>
 				     		<td>
-								<input type="text" name="nombre_metodo" style="width:100%" onKeyUp="m.nombre = this.value; m.render()" >
+								<input type="text" name="nombre_metodo" style="width:100%" value="<?php echo $info_metodo[2];?>" onKeyUp="m.nombre = this.value; m.render()" >
 				     		</td>
 				     	</tr>
 						<tr>
 				     		<td>Subtitulo</td>
 				     		<td>
-								<input type="text" name="subtitulo" style="width:100%" onKeyUp="m.subtitulo = this.value; m.render()" >
+								<input type="text" name="subtitulo" style="width:100%" value="<?php echo $info_metodo[9];?>" onKeyUp="m.subtitulo = this.value; m.render()" >
 				     		</td>
 				     	</tr>
 				     	<tr>
 				     		<td>Descripcion</td>
 				     		<td>
-								<textarea name="descripcion_metodo" style="width:100%" onKeyUp="m.desc = this.value; m.render()"></textarea>
+								<textarea name="descripcion_metodo" style="width:100%" value="<?php echo $info_metodo[8];?>" onKeyUp="m.desc = this.value; m.render()"></textarea>
 				     		</td>
 				     	</tr>				     	
 				     	<tr>
 				     		<td>Method</td>
 				     		<td>
 				     		<select name="tipo_metodo" onChange="m.http = this.value; m.render()">
-								<option value="GET">GET</option>
-								<option value="POST">POST</option>
-								<option value="POST/GET">POST/GET</option>
+							<?
+							    if($info_metodo[3]=="GET")
+								echo '
+								<option value="GET" selected>GET</option> ';
+								else
+								echo '
+								<option value="GET">GET</option> ';
+								if($info_metodo[3]=="POST")
+								echo '
+								<option value="POST" selected>POST</option> ';
+								else
+								echo '
+								<option value="POST">POST</option> ';
+								if($info_metodo[3]=="POST/GET")
+								echo '
+								<option value="POST/GET" selected>POST/GET</option> ';
+								else
+								echo '
+								<option value="POST/GET">POST/GET</option> ';
+							?>
 							</select>
 							</td>
 				     	</tr>
@@ -246,7 +269,7 @@
 				     	</tr>	
 				     	
 				     	<tr><td >Sesion Valida</td>		
-				     	<td ><input type="checkbox" name="sesion_valida" value="true" checked onChange="m.auth.sesion = !m.auth.sesion; m.render()"> </td>
+				     	<td ><input type="checkbox" name="sesion_valida" value="true" <?php if($info_metodo[4]) echo "checked"?> onChange="m.auth.sesion = !m.auth.sesion; m.render()"> </td>
 				     	</tr>
 				     	
 				     	<tr><td >Grupo</td>		
