@@ -19,7 +19,20 @@
 <div class="devsitePage">
 	<div class="menu">
 		<div class="content">
-			<a class="logo" href="/"><img class="img" src="https://s-static.ak.facebook.com/rsrc.php/v1/yW/r/N2f0JA5UPFU.png" alt="Facebook Developers" width="166" height="17"/></a><a class="l" href="/docs/">Documentation</a><a class="l" href="/support/">Support</a><a class="l" href="/blog/">Blog</a><a class="l" href="">Apps</a>
+			<a class="logo" href="/">
+				<img class="img" src="https://s-static.ak.facebook.com/rsrc.php/v1/yW/r/N2f0JA5UPFU.png" alt="Facebook Developers" width="166" height="17"/>
+			</a>
+
+			<?php
+			if(isset($_GET["m"])){
+				echo '<a class="l" href="../api_creation/edit_method.php?m='. $_GET["m"] .'">Editar este metodo</a>';
+
+			}
+			?>
+			<a class="l" href="/support/">Support</a>
+			<a class="l" href="/blog/">Blog</a>
+			<a class="l" href="">Apps</a>
+
 			<div class="search">
 				<form method="get" action="/search">
 					<div class="uiTypeahead" id="u272751_1">
@@ -117,17 +130,16 @@
 							if(isset($_GET["cat"])){
 								$res = mysql_query("select * from clasificacion where id_clasificacion = " . $_GET["cat"]) or die(mysql_error());
 								$metodo = mysql_fetch_assoc($res);
-								//echo "<h1>" . $metodo["nombre"] . "</h1>";
+
 								echo'&rsaquo; <a href=".">'  . $metodo["nombre"] .  '</a>';
 							}
 							?>
 							
 						</div>
+						
 					</div>
 				</div>
-				<p>
-					
-				</p>
+
 				<p>
 					<?php
 					if(isset($_GET["m"])){
@@ -157,7 +169,7 @@
 
 						<?php
 
-						$argsq = mysql_query("select * from argumento where id_metodo = ". $metodo["id_metodo"] .";") or die(mysql_error());
+						$argsq = mysql_query("select * from argumento where id_metodo = ". $metodo["id_metodo"] ." order by ahuevo desc;") or die(mysql_error());
 
 
 						?>
@@ -171,7 +183,7 @@
 								Tipo
 							</th>
 							<th>
-								_
+								A huevo
 							</th>
 							<th>
 								Desc
@@ -185,7 +197,11 @@
 							?>
 							<tr>
 							<td class="method">
-								<code><?php echo $argumento["nombre"]; ?></code>
+								<code><?php 
+									if($argumento["ahuevo"]) echo "<b>";
+									echo $argumento["nombre"]; 
+									if($argumento["ahuevo"]) echo "</b>";
+								?></code>
 							</td>
 							<td class="desc">
 								<code><?php echo $argumento["tipo"]; ?></code>

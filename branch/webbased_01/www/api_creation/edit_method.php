@@ -1,12 +1,11 @@
 <?php
-   session_start();
-   require_once("../../server/bootstrap.php");
-   if(!isset($_SESSION["metodo"]))
-   {
-        $_SESSION["metodo"]=-1;
-   }
-?>
-<html>
+
+
+	require_once("../../server/bootstrap.php");
+   $mid = $_GET["m"];
+
+
+?><html>
 <head>
 	<link rel="stylesheet" type="text/css" href="../css/final_api.css">
 	<script type="text/javascript" src="http://api.caffeina.mx/jquery/jquery-1.4.2.min.js"></script>
@@ -169,17 +168,17 @@
    echo "<select id='metodo' onchange='cambioMetodo(this.value)'>";
    while($row=mysql_fetch_row($r))
    {
-        if($_SESSION["metodo"]==$row[0])
+        if($mid==$row[0])
 			echo "<option value=".$row[0]." selected>".$row[1]."</option>";
 		else
 			echo "<option value=".$row[0].">".$row[1]."</option>";
    }
    echo "</select>";
-   if($_SESSION["metodo"]==-1)
+   if($mid==-1)
 	return;
 	
-	$info_metodo="select * from metodo where id_metodo=".$_SESSION["metodo"];
-	$r=mysql_query($info_metodo);
+	$info_metodo="select * from metodo where id_metodo=".$mid;
+	$r=mysql_query($info_metodo) or die(mysql_error());
 	$info_metodo=mysql_fetch_row($r);
 	if(isset($_GET["mensaje"])) echo $_GET["mensaje"];
 	?>
