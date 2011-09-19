@@ -171,7 +171,7 @@
 									<?php
 										$sql="select * from clasificacion";
 										$Conexion_ID = mysql_connect('localhost', 'root', '');
-										mysql_select_db('mini_programa', $Conexion_ID);
+										mysql_select_db('api_pos', $Conexion_ID);
 										$result=mysql_query($sql,$Conexion_ID);
 										while($row=mysql_fetch_row($result))
 										{
