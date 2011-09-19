@@ -51,6 +51,67 @@
 
 			m.render();
 		}
+		
+		function addParamEdit(nombre,tipo,ahuevo,descripcion,Default){
+			param_count ++;
+			document.getElementById("numero_argumentos").value=param_count+1;
+			var html = '';
+			
+			html += 	'<tr valign=top>';
+			html += 	'<td>';
+			html += 		'<input type="text" name="nombre_argumento_'+param_count+'" value="'+nombre+'" id="args_nombre_'+param_count+'" onKeyUp="m.render()">';
+			html += 	'</td>';
+			
+			html += 	'<td>';
+			html += 		'<select name="tipo_argumento_'+param_count+'" id="args_tipo_'+param_count+'" onChange="m.render()">';
+			if(tipo=="string")
+			html += 			'<option value="string" selected>string</option>';
+			else
+			html += 			'<option value="string">string</option>';
+			if(tipo=="bool")
+			html += 			'<option value="bool" selected>bool</option>';
+			else
+			html += 			'<option value="bool">bool</option>';
+			if(tipo=="int")
+			html += 			'<option value="int" selected>int</option>';
+			else
+			html += 			'<option value="int">int</option>';
+			if(tipo=="float")
+			html += 			'<option value="float" selected>float</option>';
+			else
+			html += 			'<option value="float">float</option>';
+			if(tipo=="json")
+			html += 			'<option value="json" selected>json</option>';
+			else
+			html += 			'<option value="json">json</option>';
+			html += 		'</select>';
+			html += 	'</td>';
+			
+			html += 	'<td>';
+			html += 		'<select name="ahuevo_'+param_count+'" id="args_ahuevo_'+param_count+'" onChange="m.render()">';
+			if(ahuevo)
+			{
+			html += 			'<option value=1 selected>Obligatorio</option>';
+			html += 			'<option value=0>Opcional</option>';
+			}
+			else
+			{
+			html += 			'<option value=1>Obligatorio</option>';
+			html += 			'<option value=0 selected>Opcional</option>';
+			}
+			html += 		'</select>';
+			html += 	'</td>'; 
+			
+			html += 	'<td>';
+			html += 		'<textarea name="descripcion_argumento_'+param_count+'""placeholder="descripcion" id="args_desc_'+param_count+'" onKeyUp="m.render()">'+descripcion+'</textarea>';
+			html += 	'</td>';
+			
+			html += 	'<td><input name="default_'+param_count+'" id="args_default_'+param_count+'" value="'+Default+'" onKeyUp="m.render()"></td>';
+			html += 	'</tr>'	;
+					
+			$("#param_space").append(html);
+			
+		}
 
 		var response_count = -1;
 		function addResponse(){
@@ -81,6 +142,50 @@
 					
 			$("#response_space").append(html);
 			m.render();
+		}
+		
+		function addResponseEdit(nombre,tipo,descripcion){
+			response_count++;
+			document.getElementById("numero_respuestas").value=response_count+1;
+			var html = '';
+			
+			html += 	'<tr valign=top>';
+				html += 	'<td>';
+				html += 		'<input type="text" name="nombre_respuesta_'+response_count+'" value="'+nombre+'" id="response_nombre_'+response_count+'" onKeyUp="m.render()">';
+				html += 	'</td>';
+				
+				html += 	'<td>';
+				html += 		'<select name="tipo_respuesta_'+response_count+'" id="response_tipo_'+response_count+'" onChange="m.render()">';
+				if(tipo=="string")
+				html += 			'<option value="string" selected>string</option>';
+				else
+				html += 			'<option value="string">string</option>';
+				if(tipo=="bool")
+				html += 			'<option value="bool" selected>bool</option>';
+				else
+				html += 			'<option value="bool">bool</option>';
+				if(tipo=="int")
+				html += 			'<option value="int" selected>int</option>';
+				else
+				html += 			'<option value="int">int</option>';
+				if(tipo=="float")
+				html += 			'<option value="float" selected>float</option>';
+				else
+				html += 			'<option value="float">float</option>';
+				if(tipo=="json")
+				html += 			'<option value="json" selected>json</option>';
+				else
+				html += 			'<option value="json">json</option>';
+				html += 		'</select>';
+				html += 	'</td>';
+				
+				html += 	'<td>';
+				html += 		'<textarea name="descripcion_respuesta_'+response_count+'" placeholder="descripcion" id="response_desc_'+response_count+'" onKeyUp="m.render()">'+descripcion+'</textarea>';
+				html += 	'</td>';
+				
+			html += 	'</tr>'	;
+					
+			$("#response_space").append(html);
 		}
 
 		var ApiMethod = function(){
@@ -150,7 +255,7 @@
 			}
 		};
 
-
+		
 
 		var m = new ApiMethod();
 
@@ -158,28 +263,43 @@
 		{
 		     window.location="cambio_metodo.php?id="+id;
 		}
+		
+		
 
 	</script>
 </head>
 <body>
 <?php
-   $query = "Select id_metodo, nombre, id_clasificacion from metodo order by id_clasificacion ASC";
-   $r=mysql_query($query);
-   echo "<select id='metodo' onchange='cambioMetodo(this.value)'>";
-   while($row=mysql_fetch_row($r))
-   {
-        if($mid==$row[0])
-			echo "<option value=".$row[0]." selected>".$row[1]."</option>";
-		else
-			echo "<option value=".$row[0].">".$row[1]."</option>";
-   }
-   echo "</select>";
    if($mid==-1)
 	return;
 	
 	$info_metodo="select * from metodo where id_metodo=".$mid;
 	$r=mysql_query($info_metodo) or die(mysql_error());
-	$info_metodo=mysql_fetch_row($r);
+	$info_metodo=mysql_fetch_row($r) or die(mysql_error());
+	
+	$query_argumentos="select * from argumento where id_metodo=".$mid;
+	$r=mysql_query($query_argumentos) or die(mysql_error());
+	$i=0;
+	$argumentos=-1;
+	while($row=mysql_fetch_row($r))
+	{
+		if($argumentos==-1)
+		   unset($argumentos);
+	   $argumentos[$i]=$row;
+	   $i++;
+	}
+	$respuestas=-1;
+	$query_respuestas="select * from respuesta where id_metodo=".$mid;
+	$r=mysql_query($query_respuestas) or die(mysql_error());
+	$i=0;
+	while($row=mysql_fetch_row($r))
+	{
+	   if($respuestas==-1)
+		   unset($respuestas);
+	   $respuestas[$i]=$row;
+	   $i++;
+	}
+	
 	if(isset($_GET["mensaje"])) echo $_GET["mensaje"];
 	?>
 <form id="form_insercion" method="POST" action="negocios.php">
@@ -202,10 +322,10 @@
 										$result=mysql_query($sql);
 										while($row=mysql_fetch_row($result))
 										{
-											if($row[0]==$info_metodo[1])
+											if($row[0]==(int)$info_metodo[1])
 												echo 
 											'
-												<option value="'.$row[0].' selected">'.$row[1].'</option>
+												<option value="'.$row[0].'" selected>'.$row[1].'</option>
 											';
 											else
 											echo 
@@ -221,26 +341,26 @@
 				     	<tr>
 				     		<td>Nombre</td>
 				     		<td>
-								<input type="text" name="nombre_metodo" style="width:100%" value="<?php echo $info_metodo[2];?>" onKeyUp="m.nombre = this.value; m.render()" >
+								<input type="text" name="nombre_metodo" id="n_metodo" style="width:100%" value="<?php echo $info_metodo[2];?>" onKeyUp="m.nombre = this.value; m.render()">
 				     		</td>
 				     	</tr>
 						<tr>
 				     		<td>Subtitulo</td>
 				     		<td>
-								<input type="text" name="subtitulo" style="width:100%" value="<?php echo $info_metodo[9];?>" onKeyUp="m.subtitulo = this.value; m.render()" >
+								<input type="text" name="subtitulo" id="sub_metodo" style="width:100%" value="<?php echo $info_metodo[9];?>" onKeyUp="m.subtitulo = this.value; m.render()">
 				     		</td>
 				     	</tr>
 				     	<tr>
 				     		<td>Descripcion</td>
 				     		<td>
-								<textarea name="descripcion_metodo" style="width:100%" value="<?php echo $info_metodo[8];?>" onKeyUp="m.desc = this.value; m.render()"></textarea>
+								<textarea name="descripcion_metodo" id="desc_metodo" style="width:100%" onKeyUp="m.desc = this.value; m.render()"><?php echo $info_metodo[8];?></textarea>
 				     		</td>
 				     	</tr>				     	
 				     	<tr>
 				     		<td>Method</td>
 				     		<td>
-				     		<select name="tipo_metodo" onChange="m.http = this.value; m.render()">
-							<?
+				     		<select name="tipo_metodo" id="http_metodo" onChange="m.http = this.value; m.render()">
+							<?php
 							    if($info_metodo[3]=="GET")
 								echo '
 								<option value="GET" selected>GET</option> ';
@@ -268,11 +388,11 @@
 				     	</tr>	
 				     	
 				     	<tr><td >Sesion Valida</td>		
-				     	<td ><input type="checkbox" name="sesion_valida" value="true" <?php if($info_metodo[4]) echo "checked"?> onChange="m.auth.sesion = !m.auth.sesion; m.render()"> </td>
+				     	<td ><input type="checkbox" name="sesion_valida" value="true" <?php if($info_metodo[4]) echo "checked"?> id="auth_session_metodo" onChange="m.auth.sesion = !m.auth.sesion; m.render()"> </td>
 				     	</tr>
 				     	
 				     	<tr><td >Grupo</td>		
-				     	<td ><input type="text" name="grupo" onKeyUp="m.auth.grupo = this.value; m.render()"></td>
+				     	<td ><input type="text" name="grupo" value="<?php echo $info_metodo[5];?>" id="auth_grupo_metodo" onKeyUp="m.auth.grupo = this.value; m.render()"></td>
 				     	</tr>
 				     	
 				     	<tr><td >Permiso</td>		
@@ -305,14 +425,14 @@
 				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Ejemplo Peticion</h3></td>
 				     	</tr>
 				     	<tr>
-				     		<td colspan="2"><textarea style="width:100%" name="ejemplo_peticion" onKeyUp="m.entrada = this.value; m.render()"></textarea></td>
+				     		<td colspan="2"><textarea style="width:100%" name="ejemplo_peticion" id="entrada_metodo" onKeyUp="m.entrada = this.value; m.render()"><?php echo $info_metodo[6];?></textarea></td>
 				     	</tr>
 				     	<tr>
 				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Ejemplo Respuesta</h3></td>
 				     	</tr>
 				     	<tr>
 
-				     		<td colspan="2"><textarea style="width:100%" name="ejemplo_respuesta" onKeyUp="m.salida = this.value; m.render()"></textarea></td>
+				     		<td colspan="2"><textarea style="width:100%" name="ejemplo_respuesta" id="salida_metodo" onKeyUp="m.salida = this.value; m.render()"><?php echo $info_metodo[7];?></textarea></td>
 				     	</tr>
 				     	
 
@@ -440,7 +560,7 @@
 		</tr>
 
 	</table>	
-	<input type=submit value="Insertar">
+	<!--<input type=submit value="Insertar">-->
 	<input type="hidden" name="numero_argumentos" id="numero_argumentos" value=0>
 	<input type="hidden" name="numero_respuestas" id="numero_respuestas" value=0>
 </form>
@@ -448,9 +568,29 @@
 		var a = new ApiMethod();
 		a.nombre = "api/hola/say_hola";
 		a.metodo = "GET";
+		m.nombre = document.getElementById('n_metodo').value;
+		m.subtitulo = document.getElementById('sub_metodo').value;
+		m.desc = document.getElementById('desc_metodo').value;
+		m.http = document.getElementById('http_metodo').value;
+		m.auth.session = document.getElementById('auth_session_metodo').value;
+		m.auth.grupo = document.getElementById('auth_grupo_metodo').value;
+		m.entrada = document.getElementById('entrada_metodo').value;
+		m.salida = document.getElementById('salida_metodo').value;
 		
+	<?php
+		if($argumentos!=-1)
+		for($i=0;$i<count($argumentos);$i++)
+		{
+				echo "addParamEdit('".$argumentos[$i][2]."','".$argumentos[$i][5]."',".$argumentos[$i][4].",'".$argumentos[$i][3]."','".$argumentos[$i][6]."');";
+		}
+		if($respuestas!=-1)
+		for($i=0;$i<count($respuestas);$i++)
+		{
+				echo "addResponseEdit('".$respuestas[$i][2]."','".$respuestas[$i][4]."','".$respuestas[$i][3]."');"; 
+		}
+	?>
+		m.render();
 		//a.render();
 	</script>
-
 </body>
 </html>
