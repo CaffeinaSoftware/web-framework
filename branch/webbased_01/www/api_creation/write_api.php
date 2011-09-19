@@ -300,31 +300,6 @@
 
 
 
-	function write_html_doc( $clasificacion )
-	{
-		
-		$out = "";
-		$out .= "";
-		$out .= "";
-		$out .= "";
-		$out .= "";
-		$out .= "";
-		$out .= "";
-		$out .= "";
-
-		return     $out;
-
-
-	}
-
-
-	function write_html_index()
-	{
-		
-
-
-	}
-
 
 
 
@@ -396,18 +371,10 @@
 		fclose($f);			
 
 
-		//write the html documentation
-		$fn = "../../tmp/out/docs/api/" . $iname . ".html";
-		$f = fopen($fn, 'w') or die("can't open file");
-		fwrite($f, write_html_doc(  $row) );
-		fclose($f);	
+
 	}
 
-	//write the html index
-	$fn = "../../tmp/out/docs/api/index.html";
-	$f = fopen($fn, 'w') or die("can't open file");
-	fwrite($f, write_html_index( $row) );
-	fclose($f);		
+
 
 
 

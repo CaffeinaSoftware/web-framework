@@ -72,6 +72,10 @@
 								</span>
 							</div>
 						</div>
+									
+						
+
+
 					</div>
 				</form>
 			</div>
@@ -145,7 +149,7 @@
 							if(isset($_GET["m"])){
 								$res = mysql_query("select * from metodo where id_metodo = " . $_GET["m"]) or die(mysql_error());
 								$metodo = mysql_fetch_assoc($res);
-								echo "<h1>" . $metodo["nombre"] . "</h1>";
+								echo "<h1>" .$metodo["tipo"] . " " . $metodo["nombre"] . "</h1>";
 
 							}else if(isset($_GET["cat"])){
 								$res = mysql_query("select * from clasificacion where id_clasificacion = " . $_GET["cat"]) or die(mysql_error());
@@ -188,23 +192,14 @@
 						$res = mysql_query("select * from metodo where id_metodo = " . $_GET["m"]) or die(mysql_error());
 						$metodo = mysql_fetch_assoc($res);
 						
-						?>
 
-						<h2>Ejemplo peticion</h2>
-						<pre><code><?php echo $metodo["ejemplo_peticion"]; ?></code></pre>
-
-
-						<h2>Ejemplo respuesta</h2>
-						<pre><code><?php echo $metodo["ejemplo_respuesta"]; ?></code></pre>
-
-						<?php
 
 						$argsq = mysql_query("select * from argumento where id_metodo = ". $metodo["id_metodo"] ." order by ahuevo desc;") or die(mysql_error());
 
 
 						?>
 						<h2>Argumentos</h2>
-						<table class="methods" style="margin-left:auto; margin-right:auto">
+						<table class="methods" style="margin-left:0; width:100%">
 						<tr>
 							<th>
 								Nombre
@@ -257,7 +252,7 @@
 
 						?>
 						<h2>Respuesta</h2>
-						<table class="methods" style="margin-left:auto; margin-right:auto">
+						<table class="methods" style="margin-left:0; width:100%">
 						<tr>
 							<th>
 								Nombre
@@ -293,7 +288,18 @@
 
 
 						</table>
+
+
+						<h2>Ejemplo peticion</h2>
+						<pre style="margin-left:0"><code><?php echo $metodo["ejemplo_peticion"]; ?></code></pre>
+
+
+						<h2>Ejemplo respuesta</h2>
+						<pre style="margin-left:0"><code><?php echo $metodo["ejemplo_respuesta"]; ?></code></pre>
+
 						<?php
+
+
 					}else if(isset($_GET["cat"])){
 		
 						
@@ -316,7 +322,7 @@
 					<div class="mbm">
 						
 					</div>
-					<abbr title="Monday, September 5, 2011 at 8:28pm" data-date="Mon, 05 Sep 2011 18:28:49 -0700" class="timestamp">Updated about a week ago</abbr>
+					<abbr title="Monday, September 5, 2011 at 8:28pm" data-date="Mon, 05 Sep 2011 18:28:49 -0700" class="timestamp">Ultima modifiacion</abbr>
 				</div>
 
 			</div>
