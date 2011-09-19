@@ -45,6 +45,7 @@
 			html += 	'</td>';
 			
 			html += 	'<td><input name="default_'+param_count+'" id="args_default_'+param_count+'" value="null" onKeyUp="m.render()"></td>';
+			html +=		'<td>Borrar<input type="checkbox" name="borrar_argumento_'+param_count+'"></td>';
 			html += 	'</tr>'	;
 					
 			$("#param_space").append(html);
@@ -107,6 +108,7 @@
 			html += 	'</td>';
 			
 			html += 	'<td><input name="default_'+param_count+'" id="args_default_'+param_count+'" value="'+Default+'" onKeyUp="m.render()"></td>';
+			html +=		'<td>Borrar<input type="checkbox" name="borrar_argumento_'+param_count+'"></td>';
 			html += 	'</tr>'	;
 					
 			$("#param_space").append(html);
@@ -137,6 +139,10 @@
 				html += 	'<td>';
 				html += 		'<textarea name="descripcion_respuesta_'+response_count+'" placeholder="descripcion" id="response_desc_'+response_count+'" onKeyUp="m.render()"></textarea>';
 				html += 	'</td>';
+				
+				html +=		'<td>';
+				html +=			'Borrar<input type="checkbox" name="borrar_respuesta_'+response_count+'">';
+				html +=		'</td>';
 				
 			html += 	'</tr>'	;
 					
@@ -182,6 +188,10 @@
 				html += 	'<td>';
 				html += 		'<textarea name="descripcion_respuesta_'+response_count+'" placeholder="descripcion" id="response_desc_'+response_count+'" onKeyUp="m.render()">'+descripcion+'</textarea>';
 				html += 	'</td>';
+				
+				html +=		'<td>';
+				html +=			'Borrar<input type="checkbox" name="borrar_respuesta_'+response_count+'">';
+				html +=		'</td>';
 				
 			html += 	'</tr>'	;
 					
@@ -302,7 +312,7 @@
 	
 	if(isset($_GET["mensaje"])) echo $_GET["mensaje"];
 	?>
-<form id="form_insercion" method="POST" action="negocios.php">
+<form id="form_insercion" method="POST" action="negocios_editar.php">
 	<table border=0>
 		<tr style="width:50%">
 			<td valign=top>
@@ -560,9 +570,10 @@
 		</tr>
 
 	</table>	
-	<!--<input type=submit value="Insertar">-->
+	<input type=submit value="Editar">
 	<input type="hidden" name="numero_argumentos" id="numero_argumentos" value=0>
 	<input type="hidden" name="numero_respuestas" id="numero_respuestas" value=0>
+	<input type="hidden" name="id_metodo" id="id_metodo" value=<?php echo $mid;?>>
 </form>
 	<script type="text/javascript">
 		var a = new ApiMethod();
