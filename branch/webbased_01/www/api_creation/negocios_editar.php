@@ -84,6 +84,7 @@ ob_start();
 					}
 				}
 			}
-		header("Location: edit_method.php?mensaje=".$mensaje."&m=".$id_metodo);
+		header("Location: ../render/api_doc.php?mensaje=OK&m=".$id_metodo);
+		
 		ob_end_flush();
 ?>

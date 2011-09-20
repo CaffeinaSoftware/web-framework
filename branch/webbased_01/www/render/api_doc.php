@@ -145,7 +145,11 @@
 			<div id="bodyText" class="bodyText">
 				<div class="header">
 					<div class="content">
+						
 						<?php
+							if(isset($_GET["mensaje"])){
+								echo "<h3>" . $_GET["mensaje"] . "</h3>";
+							}
 							if(isset($_GET["m"])){
 								$res = mysql_query("select * from metodo where id_metodo = " . $_GET["m"]) or die(mysql_error());
 								$metodo = mysql_fetch_assoc($res);
@@ -304,7 +308,7 @@
 		
 						
 
-						$q = "select * from metodo where id_clasificacion = " . $_GET["cat"];
+						$q = "select * from metodo where id_clasificacion = " . $_GET["cat"] ."  order by nombre";
 						$res = mysql_query( $q ) or die(mysql_error());
 
 						while( ($row = mysql_fetch_assoc( $res )) != null )

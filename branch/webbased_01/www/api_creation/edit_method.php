@@ -2,7 +2,7 @@
 
 
 	require_once("../../server/bootstrap.php");
-   $mid = $_GET["m"];
+   	$mid = $_GET["m"];
 
 
 ?><html>
@@ -592,7 +592,16 @@
 		if($argumentos!=-1)
 		for($i=0;$i<count($argumentos);$i++)
 		{
-				echo "addParamEdit('".$argumentos[$i][2]."','".$argumentos[$i][5]."',".$argumentos[$i][4].",'".$argumentos[$i][3]."','".$argumentos[$i][6]."');";
+			echo "addParamEdit('"
+			. $argumentos[$i][2] 
+			. "','"
+			.$argumentos[$i][5]
+			."',"
+			.$argumentos[$i][4]
+			.",'"
+			. preg_replace('/[^(\x20-\x7F)]*/','', $argumentos[$i][3] )
+			."','"
+			.$argumentos[$i][6]."');";
 		}
 		if($respuestas!=-1)
 		for($i=0;$i<count($respuestas);$i++)
