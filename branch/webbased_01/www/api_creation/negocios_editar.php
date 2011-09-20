@@ -31,7 +31,7 @@ ob_start();
 			$regresa_html=0;
 		   $sql="update metodo set id_clasificacion=".$_POST["clasificacion_metodo"].",nombre='".$_POST["nombre_metodo"]."',tipo='".$_POST["tipo_metodo"]."',sesion_valida=".$combo.",grupo=".$_POST["grupo"].",ejemplo_peticion='".$_POST["ejemplo_peticion"]."',ejemplo_respuesta='".$_POST["ejemplo_respuesta"]."',descripcion='".$_POST["descripcion_metodo"]."',subtitulo='".$_POST["subtitulo"]."',regresa_html=".$regresa_html." where id_metodo=".$_POST["id_metodo"];
 		   $Consulta_ID = mysql_query($sql);
-
+			$id_metodo=$_POST["id_metodo"];
 		   if (!$Consulta_ID){
 			$mensaje= $sql."<br>";
 			$mensaje.= mysql_error();

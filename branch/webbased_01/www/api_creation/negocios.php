@@ -22,24 +22,9 @@ ob_start();
 //	descripcion			----------	$_POST["descripcion_respuesta_n"]
 //	tipo				----------	$_POST["tipo_respuesta_n"]
 
-    $BaseDatos="api_pos";
-    $Servidor="localhost";
-    $Usuario="root";
-    $Clave="";
+    require_once("../../server/bootstrap.php");
 
-       $Conexion_ID = mysql_connect($Servidor, $Usuario, $Clave);
-	   
-       if (!$Conexion_ID){
-          $Error = "ERROR : El intento de conexión ha fallado.";
-		  $mensaje= $Error;
-       }
-
-       else if (!@mysql_select_db($BaseDatos, $Conexion_ID)){
-          $Error = "ERROR : Imposible abrir la base de datos ".$BaseDatos ;
-		  $mensaje= $Error;
-       }
-	   else
-	   {
+			$id_metodo=-1;
 			$combo=isset($_POST["sesion_valida"]);
 			if(!$combo)
 			$combo=0;
@@ -47,7 +32,7 @@ ob_start();
 			if(!$regresa_html)
 			$regresa_html=0;
 		   $sql="Insert into metodo(id_clasificacion,nombre,tipo,sesion_valida,grupo,ejemplo_peticion,ejemplo_respuesta,descripcion,subtitulo,regresa_html) values(".$_POST["clasificacion_metodo"].",'".$_POST["nombre_metodo"]."','".$_POST["tipo_metodo"]."',".$combo.",".$_POST["grupo"].",'".$_POST["ejemplo_peticion"]."','".$_POST["ejemplo_respuesta"]."','".$_POST["descripcion_metodo"]."','".$_POST["subtitulo"]."',".$regresa_html.")";
-		   $Consulta_ID = mysql_query($sql, $Conexion_ID);
+		   $Consulta_ID = mysql_query($sql);
 
 		   if (!$Consulta_ID){
 			$mensaje= $sql."<br>";
@@ -56,7 +41,7 @@ ob_start();
 			else
 			{
 				$sql="Select LAST_INSERT_ID()";
-				$Consulta_ID = mysql_query($sql, $Conexion_ID);
+				$Consulta_ID = mysql_query($sql);
 				if (!$Consulta_ID){
 				$mensaje= $sql."<br>";
 				$mensaje.= mysql_error();
@@ -64,11 +49,12 @@ ob_start();
 				else
 				{
 					$mensaje="";
+					unset($id_metodo);
 					$id_metodo= mysql_fetch_row($Consulta_ID);
 					for($i = 0; $i < $_POST["numero_argumentos"]; $i++)
 					{
 						$sql="Insert into argumento(id_metodo,nombre,descripcion,ahuevo,tipo,defaults) values(".$id_metodo[0].",'".$_POST["nombre_argumento_".$i]."','".$_POST["descripcion_argumento_".$i]."','".$_POST["ahuevo_".$i]."','".$_POST["tipo_argumento_".$i]."','".$_POST["default_".$i]."')";
-						$Consulta_ID = mysql_query($sql, $Conexion_ID);
+						$Consulta_ID = mysql_query($sql);
 						if (!$Consulta_ID){
 						$mensaje.= $sql."<br>";
 						$mensaje.= mysql_error()."<br>";
@@ -78,7 +64,7 @@ ob_start();
 					for($i = 0; $i < $_POST["numero_respuestas"]; $i++)
 					{
 						$sql="Insert into respuesta(id_metodo,nombre,descripcion,tipo) values(".$id_metodo[0].",'".$_POST["nombre_respuesta_".$i]."','".$_POST["descripcion_respuesta_".$i]."','".$_POST["tipo_respuesta_".$i]."')";
-						$Consulta_ID = mysql_query($sql, $Conexion_ID);
+						$Consulta_ID = mysql_query($sql);
 						if (!$Consulta_ID){
 						$mensaje.= $sql."<br>";
 						$mensaje.= mysql_error();
@@ -91,7 +77,6 @@ ob_start();
 					}
 				}
 			}
-		}
 		header("Location: ../render/api_doc.php?mensaje=".$mensaje."&m=".$id_metodo[0]);
 		ob_end_flush();
 ?>
