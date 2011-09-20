@@ -218,7 +218,7 @@
 						
 
 
-						$argsq = mysql_query("select * from argumento where id_metodo = ". $metodo["id_metodo"] ." order by ahuevo,id_argumento desc;") or die(mysql_error());
+						$argsq = mysql_query("select * from argumento where id_metodo = ". $metodo["id_metodo"] ." order by ahuevo desc,id_argumento asc;") or die(mysql_error());
 
 
 						?>
