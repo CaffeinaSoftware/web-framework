@@ -205,6 +205,7 @@
 			this.metodo 	= "";
 			this.http 		= "GET";
 			this.desc 		= "";
+			this.html		= false;
 			this.auth 		= {
 				sesion  : true,
 				grupo 	: null,
@@ -222,6 +223,7 @@
 				$("#preview_desc").html(this.desc);
 				//clean the space
 				
+				$("#preview_regresa_html").html(  this.html ? "Si" : "No" );
 
 				$("#preview_auth_sesion").html(  this.auth.sesion ? "Si" : "No" );
 				$("#preview_auth_grupo").html(  this.auth.grupo );
@@ -393,6 +395,10 @@
 							</select>
 							</td>
 				     	</tr>
+						<tr>
+							<td>Regresa HTML</td>
+							<td><input type="checkbox" name="regresa_html" value="false" <?php if($info_metodo[10]) echo "checked"?> id="html_metodo" onChange="m.html = !m.html; m.render()"></td>
+						</tr>
 				     	<tr>
 				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Autenticacion</h3></td>
 				     	</tr>	
@@ -470,6 +476,8 @@
 </tbody>
 </table>
 <p class="c22 c15" id="preview_desc"></p>
+<br>
+<h4 class="c15"><span>Regresa HTML</span></h4><span class="c7" id="preview_regresa_html">No</span>
 <h4 class="c15"><span>Autenticaci&oacute;n</span></h4>
 <table cellpadding="0" cellspacing="0" class="c0">
 <tbody>
@@ -587,6 +595,7 @@
 		m.auth.grupo = document.getElementById('auth_grupo_metodo').value;
 		m.entrada = document.getElementById('entrada_metodo').value;
 		m.salida = document.getElementById('salida_metodo').value;
+		m.html = document.getElementById('html_metodo').value;
 		
 	<?php
 		if($argumentos!=-1)

@@ -42,7 +42,10 @@
 			$combo=isset($_POST["sesion_valida"]);
 			if(!$combo)
 			$combo=0;
-		   $sql="Insert into metodo(id_clasificacion,nombre,tipo,sesion_valida,grupo,ejemplo_peticion,ejemplo_respuesta,descripcion,subtitulo) values(".$_POST["clasificacion_metodo"].",'".$_POST["nombre_metodo"]."','".$_POST["tipo_metodo"]."',".$combo.",".$_POST["grupo"].",'".$_POST["ejemplo_peticion"]."','".$_POST["ejemplo_respuesta"]."','".$_POST["descripcion_metodo"]."','".$_POST["subtitulo"]."')";
+			$regresa_html=isset($_POST["regresa_html"]);
+			if(!$regresa_html)
+			$regresa_html=0;
+		   $sql="Insert into metodo(id_clasificacion,nombre,tipo,sesion_valida,grupo,ejemplo_peticion,ejemplo_respuesta,descripcion,subtitulo,regresa_html) values(".$_POST["clasificacion_metodo"].",'".$_POST["nombre_metodo"]."','".$_POST["tipo_metodo"]."',".$combo.",".$_POST["grupo"].",'".$_POST["ejemplo_peticion"]."','".$_POST["ejemplo_respuesta"]."','".$_POST["descripcion_metodo"]."','".$_POST["subtitulo"]."',".$regresa_html.")";
 		   $Consulta_ID = mysql_query($sql, $Conexion_ID);
 
 		   if (!$Consulta_ID){
@@ -88,5 +91,5 @@
 				}
 			}
 		}
-		header("Location: new_method.php?mensaje=".$mensaje);
+		header("Location: ../render/api_doc.php?mensaje=".$mensaje."&m=".$id_metodo[0]);
 ?>

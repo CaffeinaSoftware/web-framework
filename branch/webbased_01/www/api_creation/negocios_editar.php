@@ -26,7 +26,10 @@ ob_start();
 			$combo=isset($_POST["sesion_valida"]);
 			if(!$combo)
 			$combo=0;
-		   $sql="update metodo set id_clasificacion=".$_POST["clasificacion_metodo"].",nombre='".$_POST["nombre_metodo"]."',tipo='".$_POST["tipo_metodo"]."',sesion_valida=".$combo.",grupo=".$_POST["grupo"].",ejemplo_peticion='".$_POST["ejemplo_peticion"]."',ejemplo_respuesta='".$_POST["ejemplo_respuesta"]."',descripcion='".$_POST["descripcion_metodo"]."',subtitulo='".$_POST["subtitulo"]."' where id_metodo=".$_POST["id_metodo"];
+			$regresa_html=isset($_POST["regresa_html"]);
+			if(!$regresa_html)
+			$regresa_html=0;
+		   $sql="update metodo set id_clasificacion=".$_POST["clasificacion_metodo"].",nombre='".$_POST["nombre_metodo"]."',tipo='".$_POST["tipo_metodo"]."',sesion_valida=".$combo.",grupo=".$_POST["grupo"].",ejemplo_peticion='".$_POST["ejemplo_peticion"]."',ejemplo_respuesta='".$_POST["ejemplo_respuesta"]."',descripcion='".$_POST["descripcion_metodo"]."',subtitulo='".$_POST["subtitulo"]."',regresa_html=".$regresa_html." where id_metodo=".$_POST["id_metodo"];
 		   $Consulta_ID = mysql_query($sql);
 
 		   if (!$Consulta_ID){
@@ -84,7 +87,7 @@ ob_start();
 					}
 				}
 			}
-		header("Location: ../render/api_doc.php?mensaje=OK&m=".$id_metodo);
+		header("Location: ../render/api_doc.php?mensaje=".$mensaje."&m=".$id_metodo);
 		
 		ob_end_flush();
 ?>

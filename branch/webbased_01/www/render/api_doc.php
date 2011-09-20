@@ -199,7 +199,17 @@
 					?>
 				</p>
 
-
+				<?php
+					if(isset($_GET["m"]))
+					{
+						echo "<h2>Respuesta HTML    ";
+						if($metodo["regresa_html"])
+						echo "Si";
+						else
+						echo "No";
+						echo "</h2>";
+					}
+				?>
 
 				<?php
 					if(isset($_GET["m"])){
@@ -208,7 +218,7 @@
 						
 
 
-						$argsq = mysql_query("select * from argumento where id_metodo = ". $metodo["id_metodo"] ." order by ahuevo desc;") or die(mysql_error());
+						$argsq = mysql_query("select * from argumento where id_metodo = ". $metodo["id_metodo"] ." order by ahuevo,id_argumento desc;") or die(mysql_error());
 
 
 						?>
