@@ -7,11 +7,19 @@
 <head>
 <meta charset="utf-8"/>
 <title>POS</title>
-
+<script>
+      function Borrar(id)
+	  {
+		 var selection = confirm("Esta seguro de querer borrar el método con todos sus argumentos y repsuestas?");
+		 
+		 if(selection)
+			window.location="../api_creation/delete_method.php?m="+id;
+	  }
+</script>
 
 <link type="text/css" rel="stylesheet" href="../css/f.css"/>
 
-<head>
+</head>
 <body class="safari4 mac Locale_en_US">
 <input type="hidden" autocomplete="off" id="post_form_id" name="post_form_id" value="d8f38124ed9e31ef3947198c6d26bff1"/>
 <div id="FB_HiddenContainer" style="position:absolute; top:-10000px; width:0px; height:0px;">
@@ -26,7 +34,7 @@
 			<?php
 			if(isset($_GET["m"])){
 				echo '<a class="l" href="../api_creation/edit_method.php?m='. $_GET["m"] .'">Editar este metodo</a>';
-				echo '<a class="l" href="../api_creation/delete_method.php?m='. $_GET["m"] .'">Borrar este metodo</a>';
+				echo '<a class="l" onClick="Borrar('. $_GET["m"] .')">Borrar este metodo</a>';
 
 			}
 			?>
