@@ -3,7 +3,7 @@
     $BaseDatos="api_pos";
     $Servidor="localhost";
     $Usuario="root";
-    $Clave="56022";
+    $Clave="";
 
 	$Conexion_ID = mysql_connect($Servidor, $Usuario, $Clave);
 

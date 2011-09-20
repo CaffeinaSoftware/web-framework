@@ -26,24 +26,19 @@
 			<?php
 			if(isset($_GET["m"])){
 				echo '<a class="l" href="../api_creation/edit_method.php?m='. $_GET["m"] .'">Editar este metodo</a>';
-
-			}
-			?>
-			
-			<?php
-			if(isset($_GET["m"])){
 				echo '<a class="l" href="../api_creation/delete_method.php?m='. $_GET["m"] .'">Borrar este metodo</a>';
 
 			}
 			?>
 
-			<a class="l" href="">Generar</a>
-			<a class="l" href="">Nuevo metodo</a>
+			
+			<a class="l" href="../api_creation/new_method.php">Nuevo metodo</a>
 
 			<!--
 			<a class="l" href="/support/">Support</a>
 			<a class="l" href="/blog/">Blog</a>
 			<a class="l" href="">Apps</a>
+			<a class="l" href="">Generar</a>
 			-->
 			<div class="search">
 				<form method="get" action="/search">
@@ -112,7 +107,7 @@
 										<ul class="subsections">
 											
 										<?php
-										$argsq = mysql_query("select * from metodo where id_clasificacion = ". $row["id_clasificacion"] .";");
+										$argsq = mysql_query("select * from metodo where id_clasificacion = ". $row["id_clasificacion"] ." order by nombre;");
 
 										while(($m = mysql_fetch_assoc($argsq)) != null)
 										{
