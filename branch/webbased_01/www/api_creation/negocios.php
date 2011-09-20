@@ -1,4 +1,5 @@
 <?php
+ob_start();
 //			       metodo
 //  nombre				----------	$_POST["nombre_metodo"]
 //	subtitulo  			----------	$_POST["subtitulo"]
@@ -86,10 +87,11 @@
 					}
 					if($mensaje=="")
 					{
-						$mensaje="Inserción exitosa!! :D";
+						$mensaje="Insercion exitosa!! :D";
 					}
 				}
 			}
 		}
 		header("Location: ../render/api_doc.php?mensaje=".$mensaje."&m=".$id_metodo[0]);
+		ob_end_flush();
 ?>
