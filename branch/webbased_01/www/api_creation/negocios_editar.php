@@ -90,4 +90,3 @@ ob_start();
 		header("Location: ../render/api_doc.php?mensaje=".$mensaje."&m=".$id_metodo);
 		
 ob_end_flush();
-?>

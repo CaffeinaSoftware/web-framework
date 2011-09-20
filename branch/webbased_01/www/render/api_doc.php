@@ -121,6 +121,7 @@
 										{
 												
 												$n = str_replace("api/", "", $m["nombre"] );
+												$n = substr(  $n , strpos( $n , "/" ) +1 );
 												echo '<li><a href="?&cat='.$row["id_clasificacion"].'&m='.$m["id_metodo"].'">' . $n .  '</a></li>';
 										}
 										?>
@@ -169,6 +170,7 @@
 								$res = mysql_query("select * from clasificacion where id_clasificacion = " . $_GET["cat"]) or die(mysql_error());
 								$metodo = mysql_fetch_assoc($res);
 								echo "<h1>" . $metodo["nombre"] . "</h1>";
+								
 							}
 						?>
 						
@@ -184,7 +186,15 @@
 							?>
 							
 						</div>
-						
+							<?php
+							if(isset($_GET["cat"]) && !isset($_GET["m"])){
+								$res = mysql_query("select * from clasificacion where id_clasificacion = " . $_GET["cat"]) or die(mysql_error());
+								$metodo = mysql_fetch_assoc($res);
+								
+								echo "<p>" . $metodo["descripcion"] . "</p>";
+							}
+							?>
+
 					</div>
 				</div>
 
@@ -202,12 +212,9 @@
 				<?php
 					if(isset($_GET["m"]))
 					{
-						echo "<h2>Respuesta HTML    ";
-						if($metodo["regresa_html"])
-						echo "Si";
-						else
-						echo "No";
-						echo "</h2>";
+						
+						if($metodo["regresa_html"]) echo "<h2>Regresa HTML </h2>";
+
 					}
 				?>
 
