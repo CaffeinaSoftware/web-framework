@@ -1,4 +1,5 @@
 <?php
+ob_start();
 //			       metodo
 //  nombre				----------	$_POST["nombre_metodo"]
 //	subtitulo  			----------	$_POST["subtitulo"]
@@ -84,4 +85,5 @@
 				}
 			}
 		header("Location: edit_method.php?mensaje=".$mensaje."&m=".$id_metodo);
+		ob_end_flush();
 ?>
