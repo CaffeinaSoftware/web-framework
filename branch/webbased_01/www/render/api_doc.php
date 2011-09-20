@@ -29,6 +29,13 @@
 
 			}
 			?>
+			
+			<?php
+			if(isset($_GET["m"])){
+				echo '<a class="l" href="../api_creation/delete_method.php?m='. $_GET["m"] .'">Borrar este metodo</a>';
+
+			}
+			?>
 
 			<a class="l" href="">Generar</a>
 			<a class="l" href="">Nuevo metodo</a>
