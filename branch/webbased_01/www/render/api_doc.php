@@ -13,7 +13,7 @@
 		 var selection = confirm("Esta seguro de querer borrar el método con todos sus argumentos y repsuestas?");
 		 
 		 if(selection)
-			window.location="../api_creation/delete_method.php?m="+id;
+			window.location="../api_creation/delete_method.php?m="+id+"&cat="+<?php echo $_GET["cat"];?>;
 	  }
 </script>
 
@@ -33,14 +33,14 @@
 
 			<?php
 			if(isset($_GET["m"])){
-				echo '<a class="l" href="../api_creation/edit_method.php?m='. $_GET["m"] .'">Editar este metodo</a>';
+				echo '<a class="l" href="../api_creation/edit_method.php?m='. $_GET["m"] .'&cat='.$_GET["cat"].'">Editar este metodo</a>';
 				echo '<a class="l" onClick="Borrar('. $_GET["m"] .')">Borrar este metodo</a>';
 
 			}
 			?>
 
 			
-			<a class="l" href="../api_creation/new_method.php">Nuevo metodo</a>
+			<a class="l" href="../api_creation/new_method.php<?php if(isset($_GET["cat"])) echo "?cat=".$_GET["cat"];?>">Nuevo metodo</a>
 
 			<!--
 			<a class="l" href="/support/">Support</a>
