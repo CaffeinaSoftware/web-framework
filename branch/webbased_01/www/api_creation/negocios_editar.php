@@ -1,5 +1,5 @@
 <?php
-//ob_start();
+ob_start();
 			require_once("../../server/bootstrap.php");
 			$combo=isset($_POST["sesion_valida"]);
 			if(!$combo)
@@ -7,7 +7,7 @@
 			$regresa_html=isset($_POST["regresa_html"]);
 			if(!$regresa_html)
 			$regresa_html=0;
-		   $sql="update metodo set id_clasificacion=".$_POST["clasificacion_metodo"].",nombre='".$_POST["nombre_metodo"]."',tipo='".$_POST["tipo_metodo"]."',sesion_valida=".$combo.",grupo=".$_POST["grupo"].",ejemplo_peticion='".$_POST["ejemplo_peticion"]."',ejemplo_respuesta='".$_POST["ejemplo_respuesta"]."',descripcion='".$_POST["descripcion_metodo"]."',subtitulo='".$_POST["subtitulo"]."',regresa_html=".$regresa_html." where id_metodo=".$_POST["id_metodo"];
+		   $sql="update metodo set id_clasificacion=".$_POST["clasificacion_metodo"].",nombre='".$_POST["nombre_metodo"]."',tipo='".$_POST["tipo_metodo"]."',sesion_valida=".$combo.",grupo=".$_POST["grupo"].",ejemplo_peticion='".$_POST["ejemplo_peticion"]."',ejemplo_respuesta='".$_POST["ejemplo_respuesta"]."',descripcion='".preg_replace('/[^(\x20-\x7F)]*/','', $_POST["descripcion_metodo"] )."',subtitulo='".$_POST["subtitulo"]."',regresa_html=".$regresa_html." where id_metodo=".$_POST["id_metodo"];
 		   $Consulta_ID = mysql_query($sql);
 			$id_metodo=$_POST["id_metodo"];
 		   if (!$Consulta_ID){
@@ -72,6 +72,6 @@
 				}
 			}
 			echo $mensaje;
-		//header("Location: ../render/api_doc.php?mensaje=".$mensaje."&m=".$id_metodo);
-//ob_end_flush();
+		header("Location: ../render/api_doc.php?mensaje=".$mensaje."&m=".$id_metodo);
+ob_end_flush();
 ?>
