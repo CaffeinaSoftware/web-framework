@@ -77,6 +77,6 @@ ob_start();
 					}
 				}
 			}
-		header("Location: ../render/api_doc.php?mensaje=".$mensaje."&m=".$id_metodo[0]);
+		header("Location: ../render/api_doc.php?mensaje=".$mensaje."&m=".$id_metodo[0]."&cat=".$_POST["clasificacion_metodo"]);
 		ob_end_flush();
 ?>

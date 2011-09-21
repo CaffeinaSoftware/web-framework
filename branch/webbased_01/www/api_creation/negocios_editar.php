@@ -72,6 +72,6 @@ ob_start();
 				}
 			}
 			echo preg_replace('\'','`', $_POST["descripcion_metodo"] );
-		header("Location: ../render/api_doc.php?mensaje=".$mensaje."&m=".$id_metodo);
+		header("Location: ../render/api_doc.php?mensaje=".$mensaje."&m=".$id_metodo."&cat=".$_POST["clasificacion_metodo"]);
 ob_end_flush();
 ?>

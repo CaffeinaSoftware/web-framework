@@ -1,3 +1,6 @@
+<?php 
+require_once("../../server/bootstrap.php");
+?>
 <html>
 <head>
 	<link rel="stylesheet" type="text/css" href="../css/final_api.css">
@@ -171,12 +174,20 @@
 				     		<td>
 								<select name="clasificacion_metodo" style="width:100%" >
 									<?php
+										if(isset($_GET["cat"]))
+										$cat=$_GET["cat"];
+										else
+										$cat=-1;
 										$sql="select * from clasificacion";
-										$Conexion_ID = mysql_connect('localhost', 'root', '');
-										mysql_select_db('api_pos', $Conexion_ID);
-										$result=mysql_query($sql,$Conexion_ID);
+										$result=mysql_query($sql);
 										while($row=mysql_fetch_row($result))
 										{
+											if($cat==$row[0])
+											echo 
+											'
+												<option value="'.$row[0].'" selected>'.$row[1].'</option>
+											';
+											else
 											echo 
 											'
 												<option value="'.$row[0].'">'.$row[1].'</option>

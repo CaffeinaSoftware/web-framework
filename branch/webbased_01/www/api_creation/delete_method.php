@@ -30,7 +30,7 @@ ob_start();
 					}
 				}
 			}
-		header("Location: ../render/api_doc.php?mensaje=OK");
+		header("Location: ../render/api_doc.php?mensaje=OK&cat=".$_GET["cat"]);
 		
 		ob_end_flush();
 ?>
