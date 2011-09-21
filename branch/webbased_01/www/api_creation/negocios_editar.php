@@ -1,5 +1,5 @@
 <?php
-ob_start();
+//ob_start();
 			require_once("../../server/bootstrap.php");
 			$combo=isset($_POST["sesion_valida"]);
 			if(!$combo)
@@ -72,5 +72,5 @@ ob_start();
 				}
 			}
 		//header("Location: ../render/api_doc.php?mensaje=".$mensaje."&m=".$id_metodo);
-ob_end_flush();
+//ob_end_flush();
 ?>
