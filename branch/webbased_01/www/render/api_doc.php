@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" >
 <head>
-<meta charset="utf-8"/>
+
 <title>POS</title>
 <script>
       function Borrar(id)
@@ -197,6 +197,46 @@
 
 					</div>
 				</div>
+
+<!-- ----------------------------------------------------------------------
+	 ---------------------------------------------------------------------- -->
+
+						<?php
+							if(!isset($_GET["m"]) && !isset($_GET["cat"])){
+								$query = mysql_query("select * from clasificacion order by nombre;");
+								
+								while( ($row = mysql_fetch_assoc( $query )) != null )
+								{
+
+									?>
+									<li class="active withsubsections">
+									<a class="selected" href="api_doc.php?cat=<?php echo $row["id_clasificacion"]; ?>">
+									<div class="navSectionTitle">
+										<?php echo $row["nombre"]; ?>
+									</div>
+									</a>
+									<ul class="subsections">
+										
+									<?php
+									$argsq = mysql_query("select * from metodo where id_clasificacion = ". $row["id_clasificacion"] ." order by nombre;");
+
+									while(($m = mysql_fetch_assoc($argsq)) != null)
+									{
+											
+											
+										echo '<li><a href="?&cat='.$row["id_clasificacion"].'&m='.$m["id_metodo"].'">' . $m["nombre"] .  '</a></li>';
+									}
+									?>
+									</ul>
+									</li>
+									<?php
+
+								}
+							}
+						?>
+
+
+
 
 				<p>
 					<?php

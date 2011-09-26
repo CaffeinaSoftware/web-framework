@@ -87,6 +87,26 @@
 
 		$fname = "api/" . str_replace("/",".", $metodo["nombre"]) . ".php";
 		$out .= "  require_once(\"" . $fname . "\");\n";
+
+
+		
+
+		$cargs = mysql_query("select * from argumento where id_metodo = ". $metodo["id_metodo"] ." and ahuevo = 1;");
+		$TIPO = $metodo["tipo"];
+
+		while(($row = mysql_fetch_assoc($cargs)) != null)
+		{
+
+			echo " if(!isset($". "_". $TIPO ."[\"". $row["nombre"] ."\"])) \n";
+
+		}
+
+	    $nombre = str_replace("/"," ", $metodo["nombre"] );
+	    $nombre = str_replace(" ", "", ucwords( $nombre) );
+
+	    $out .= "  $"."api = new ". $nombre . "(  );";
+	    $out .= "  $"."api->ProcessRequest();";
+		
 		return $out;
 
 	}
@@ -188,6 +208,8 @@
 	function write_controller($clasificacion)
 	{
 		
+		$nombre = str_replace(" ","", ucwords( $clasificacion["nombre"] ));
+
 		$out = 	"<?php\n";
 		$out .=	"/**\n";
 		$out .= "  *\n";
@@ -195,7 +217,7 @@
 		$out .= "  *\n";
 		$out .= "  **/\n";		
 		$out .= "	\n";
-		$out .= "  class ". $clasificacion["nombre"] ."Controller implements I" . $clasificacion["nombre"] . "{\n";
+		$out .= "  class ". $nombre ."Controller implements I" . $nombre . "{\n";
 		$out .= "  \n";
 
 		$argsq = mysql_query("select * from metodo where id_clasificacion = ". $clasificacion["id_clasificacion"] .";");
