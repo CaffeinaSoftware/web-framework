@@ -814,7 +814,7 @@ public class PhpDAO{
 				pw.println("	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link "+toCamelCase(tabla)+"} de la base de datos siempre y cuando ");
 				pw.println("	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link "+toCamelCase(tabla)+"}.");
 				pw.println("	  * ");
-				pw.println("	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. ");
+				pw.println("	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .");
 				pw.println("	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.");
 				pw.println("	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.");
 				pw.println("	  *	");
@@ -854,13 +854,13 @@ public class PhpDAO{
 				for(Field f : fields)
 				{
 
-					pw.println("		if( (($a = $"+tabla+"A->get"+toCamelCase(f.title)+"()) != NULL) & ( ($b = $"+tabla+"B->get"+toCamelCase(f.title)+"()) != NULL) ){");
+					pw.println("		if( (($a = $"+tabla+"A->get"+toCamelCase(f.title)+"()) !== NULL) & ( ($b = $"+tabla+"B->get"+toCamelCase(f.title)+"()) !== NULL) ){");
 					pw.println("				$sql .= \" "+ f.title +" >= ? AND "+ f.title +" <= ? AND\";");
 					pw.println("				array_push( $val, min($a,$b)); ");
 					pw.println("				array_push( $val, max($a,$b)); ");
-					pw.println("		}elseif( $a || $b ){");
+					pw.println("		}elseif( $a !== NULL|| $b !== NULL ){");
 					pw.println("			$sql .= \" "+ f.title +" = ? AND\"; ");
-					pw.println("			$a = $a == NULL ? $b : $a;");
+					pw.println("			$a = $a === NULL ? $b : $a;");
 					pw.println("			array_push( $val, $a);");
 					pw.println("			");						
 					pw.println("		}");
