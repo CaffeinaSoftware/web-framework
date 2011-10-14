@@ -96,7 +96,7 @@
 
 		while(($row = mysql_fetch_assoc($cargs)) != null)
 		{
-
+			
 			echo " if(!isset($". "_". $TIPO ."[\"". $row["nombre"] ."\"])) \n";
 
 		}
@@ -211,6 +211,7 @@
 		$nombre = str_replace(" ","", ucwords( $clasificacion["nombre"] ));
 
 		$out = 	"<?php\n";
+		$out .= "require_once(\"".$nombre.".interface.php\");\n";
 		$out .=	"/**\n";
 		$out .= "  *\n";
 		$out .= "  *\n";
@@ -227,8 +228,40 @@
 			$out .= "  \n";
 			$out .=	"	/**\n";
 			$out .= " 	 *\n";
-			$out .= " 	 *" . $m["descripcion"] . "\n";
+			$out .= " 	 *" . utf8_decode($m["descripcion"]) . "\n";
 			$out .= " 	 *\n";
+
+			//---------
+			//  PARAMETROS
+			//---------
+
+			$params = "";
+
+			$args_params = mysql_query("select * from argumento where id_metodo = ". $m["id_metodo"] ." order by ahuevo desc;");
+
+			while(($row_param = mysql_fetch_assoc( $args_params )) != null )
+			{
+				$out .= " 	 * @param ". $row_param["nombre"] ." ". $row_param["tipo"] ." ". $row_param["descripcion"] ."\n";
+
+				$params .= "\n\t\t$" . $row_param["nombre"] ;
+				if($row_param["ahuevo"] == "0") $params .= " = null";
+				$params .=  ", ";
+			}
+
+			$params = substr( $params, 0, -2 );
+
+
+			$respuesta_out = "";
+
+			$returns_query = mysql_query("select * from respuesta where id_metodo = ". $m["id_metodo"] .";");
+
+			while(($row_respuesta = mysql_fetch_assoc( $returns_query )) != null )
+			{
+				$out .= " 	 * @return ". $row_respuesta["nombre"] ." ". $row_respuesta["tipo"] ." ". $row_respuesta["descripcion"] ."\n";
+
+				//$respuesta_out .= "\n\t\t$" . $row_respuesta["nombre"] . ", ";
+			}
+
 			$out .= " 	 **/\n";
 
 			$iname = str_replace("api/", "", $m["nombre"] );
@@ -246,11 +279,14 @@
 			$iname = str_replace(" ","", $iname );
 
 
-			$out .= "	protected function " . $iname . "();";
+
+
+
+			$out .= "\tpublic function " . $iname . "\n\t(".$params."\n\t)\n\t{";
 			$out .= "  \n";
 			$out .= "  \n";
 			$out .= "  \n";
-			$out .= "  \n";
+			$out .= "\t}\n";
 		}
 
 		$out .= "  }\n";
@@ -263,7 +299,107 @@
 
 
 
+
+
+/////////////////////////////////////////////////////////////////////////////////
 	function write_controller_interface($clasificacion)
+	{
+		
+		$nombre = str_replace(" ","", ucwords( $clasificacion["nombre"] ));
+	
+		$out = 	"<?php\n";
+		
+		$out .=	"/**\n";
+		$out .= "  *\n";
+		$out .= "  *\n";
+		$out .= "  *\n";
+		$out .= "  **/\n";		
+		$out .= "	\n";
+		$out .= "  interface I". $nombre ." {\n";
+		$out .= "  \n";
+
+		$argsq = mysql_query("select * from metodo where id_clasificacion = ". $clasificacion["id_clasificacion"] ." order by nombre;");
+
+		while(($m = mysql_fetch_assoc($argsq)) != null)
+		{
+			$out .= "  \n";
+			$out .=	"	/**\n";
+			$out .= " 	 *\n";
+			$out .= " 	 *" . utf8_decode($m["descripcion"]) . "\n";
+			$out .= " 	 *\n";
+
+			//---------
+			//  PARAMETROS
+			//---------
+
+			$params = "";
+
+			$args_params = mysql_query("select * from argumento where id_metodo = ". $m["id_metodo"] ." order by ahuevo desc;");
+
+			while(($row_param = mysql_fetch_assoc( $args_params )) != null )
+			{
+				$out .= " 	 * @param ". $row_param["nombre"] ." ". $row_param["tipo"] ." ". $row_param["descripcion"] ."\n";
+
+				$params .= "\n\t\t$" . $row_param["nombre"] ;
+				if($row_param["ahuevo"] == "0") $params .= " = null";
+				$params .=  ", ";
+			}
+
+			$params = substr( $params, 0, -2 );
+
+
+			$respuesta_out = "";
+
+			$returns_query = mysql_query("select * from respuesta where id_metodo = ". $m["id_metodo"] ." ;");
+
+			while(($row_respuesta = mysql_fetch_assoc( $returns_query )) != null )
+			{
+				$out .= " 	 * @return ". $row_respuesta["nombre"] ." ". $row_respuesta["tipo"] ." ". $row_respuesta["descripcion"] ."\n";
+
+				//$respuesta_out .= "\n\t\t$" . $row_respuesta["nombre"] . ", ";
+			}
+
+			$out .= " 	 **/\n";
+
+			$iname = str_replace("api/", "", $m["nombre"] );
+			$iname = str_replace("/", " ", $iname );
+
+			$parts = explode(" ", $iname);
+			$iname = "";
+
+			for ($i= sizeof($parts) - 1; $i > 0  ; $i--) 
+			{ 
+				$iname .= $parts[$i]." ";
+			}
+
+			$iname = ucwords($iname);
+			$iname = str_replace(" ","", $iname );
+
+
+
+
+
+			$out .= "  function " . $iname . "\n\t(".$params."\n\t);";
+			$out .= "  \n";
+			$out .= "  \n";
+			$out .= "  \n";
+			$out .= "\t\n";
+		}
+
+		$out .= "  }\n";
+
+
+		return $out;
+
+
+	}
+
+/////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+	function write_controller_interface2($clasificacion)
 	{
 
 
@@ -274,10 +410,10 @@
 		$out .= "  *\n";
 		$out .= "  **/\n";		
 		$out .= "\n";
-		$out .= "  interaface I". $clasificacion["nombre"] ." {\n";
+		$out .= "  interface I". $clasificacion["nombre"] ." {\n";
 		$out .= "  \n";
 
-		$argsq = mysql_query("select * from metodo where id_clasificacion = ". $clasificacion["id_clasificacion"] .";");
+		$argsq = mysql_query("select * from metodo where id_clasificacion = ". $clasificacion["id_clasificacion"] ." order by nombre;");
 
 		while(($m = mysql_fetch_assoc($argsq)) != null)
 		{
@@ -303,7 +439,7 @@
 			$iname = str_replace(" ","", $iname );
 
 
-			$out .= "	protected function " . $iname . "();";
+			$out .= "	function " . $iname . "();";
 			$out .= "  \n";
 			$out .= "  \n";
 			$out .= "  \n";
@@ -328,7 +464,7 @@
 
 
 
-
+	
  	if(is_dir("../../tmp/out"))
  	{
  		delete_directory( "../../tmp/out" );
@@ -338,6 +474,7 @@
 	create_structure("../../tmp/out/www/api/");
 	create_structure("../../tmp/out/docs/api/");
 	create_structure("../../tmp/out/server/controller/");
+	create_structure("../../tmp/builds/");
 
 
 	$res = mysql_query("select * from metodo order by id_clasificacion") or die(mysql_error());
@@ -395,11 +532,62 @@
 
 
 	}
+	
 
 
+	//ok al terminar enzipar todo en builds
+	function Zip($source, $destination)
+	{
+	    if (extension_loaded('zip') === false)
+	    {
+	    	throw new Exception ("zip extension not loaded");
+	    }
+	    
 
+        if (file_exists($source) === false)
+        {
+        	throw new Exception ("source does not exist");
+        }
+	        
+        $zip = new ZipArchive();
 
+        if ($zip->open( $destination, ZIPARCHIVE::CREATE ) === true)
+        {
+                $source = realpath($source);
 
+                if (is_dir($source) === true)
+                {
+                        $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source), RecursiveIteratorIterator::SELF_FIRST);
+
+                        foreach ($files as $file)
+                        {
+                                $file = realpath($file);
+
+                                if (is_dir($file) === true)
+                                {
+                                        $zip->addEmptyDir(str_replace($source . '/', '', $file . '/'));
+                                }
+
+                                else if (is_file($file) === true)
+                                {
+                                        $zip->addFromString(str_replace($source . '/', '', $file), file_get_contents($file));
+                                }
+                        }
+                }
+
+                else if (is_file($source) === true)
+                {
+                        $zip->addFromString(basename($source), file_get_contents($source));
+                }
+        }
+
+        return $zip->close();
+	        
+	    
+	    return false;
+	}
+
+	Zip('../../tmp/out/', '../../tmp/builds/full_api.zip');
 
 
 

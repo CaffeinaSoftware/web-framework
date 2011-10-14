@@ -46,8 +46,9 @@
 			<a class="l" href="/support/">Support</a>
 			<a class="l" href="/blog/">Blog</a>
 			<a class="l" href="">Apps</a>
-			<a class="l" href="">Generar</a>
 			-->
+			<a class="l" href="build.php">Generar Codigo</a>
+			
 			<div class="search">
 				<form method="get" action="/search">
 					<div class="uiTypeahead" id="u272751_1">
