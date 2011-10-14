@@ -166,14 +166,14 @@
 					<a href="dl.php?what=full_api&out_name=full_api">Descargar Todo</a>
 				</p>
 
-				<p>
+				
 
 					
-					<div style="height:500px; overflow: scroll" >
-					<?php require_once( "../api_creation/write_api.php" ); ?>
-					</div>
 					
-				</p>
+					<?php require_once( "../api_creation/write_api.php" ); ?>
+					
+					
+				
 
 				
 
