@@ -47,7 +47,7 @@
 			<a class="l" href="/blog/">Blog</a>
 			<a class="l" href="">Apps</a>
 			-->
-			<a class="l" href="build.php">Generar Codigo</a>
+			<a class="l" href="build.php">Generar</a>
 			
 			<div class="search">
 				<form method="get" action="/search">
@@ -280,7 +280,7 @@
 								Tipo
 							</th>
 							<th>
-								A huevo
+								Defaults
 							</th>
 							<th>
 								Desc
@@ -304,7 +304,9 @@
 								<code><?php echo $argumento["tipo"]; ?></code>
 							</td>
 							<td class="args">
-								<?php echo $argumento["ahuevo"]; ?>
+								<?php //echo $argumento["ahuevo"];
+								 echo $argumento["defaults"]; 
+								?>
 							</td>
 							<td class="args">
 								<?php echo $argumento["descripcion"]; ?>

@@ -28,7 +28,23 @@
 		$out .= "  **/\n";
 
 		$fname = "api/" . str_replace("/",".", $metodo["nombre"]) . ".php";
-		$out .= "  require_once(\"" . $fname . "\");\n\n";
+
+
+		$foo = explode( "/" , $metodo["nombre"] );
+
+		
+		$path_to_bootstrap = "../../../";
+
+		for ($i=0; $i < sizeof($foo); $i++) 
+		{
+			$path_to_bootstrap .= "../";
+		}
+		
+		$path_to_bootstrap .= "server/bootstrap.php";
+		
+		
+		$out .= "require_once(\"" . $path_to_bootstrap . "\");\n";
+		$out .= "require_once(\"" . $fname . "\");\n\n";
 
 	    $nombre = str_replace("/"," ", $metodo["nombre"] );
 	    $nombre = str_replace(" ", "", ucwords( $nombre) );
@@ -55,7 +71,7 @@
 				 #    # #      # 
 				 #    # #      # 
 ################################################################################
-	function write_api_file($metodo)
+	function write_api_file( $metodo )
 	{
 
 
@@ -84,8 +100,10 @@
 
 
 
-		$out .= "\tprotected function DeclareAllowedRoles(){}\n";
+		$out .= "\tprotected function DeclareAllowedRoles(){  return BYPASS;  }\n";
+
 		$out .= "\tprotected function CheckAuthorization() {}\n";
+
 		$out .= "\tprotected function GetRequest()\n";
 		$out .= "\t{\n";
 		
@@ -111,7 +129,59 @@
 				
 		
 
-		$out .= "\tprotected function GenerateResponse() {}\n";
+		$out .= "\tprotected function GenerateResponse() {";
+
+		$out .= "\t\t\n";
+
+		// ----- ----- ----- -----
+			$controller_name = "";
+			$method_name	 = "";
+			$args 			 = "";
+			
+
+			//controller
+			$args_clas = mysql_query("select * from clasificacion where id_clasificacion = ". $metodo["id_clasificacion"] .";");
+			$controller_name = mysql_fetch_assoc( $args_clas );
+			$controller_name = str_replace( " ", "", ucwords( $controller_name["nombre"] ) );
+			
+
+
+			$iname = str_replace("api/", "", $metodo["nombre"] );
+			$iname = str_replace("/", " ", $iname );
+
+			$parts = explode(" ", $iname);
+			$iname = "";
+
+			for ($i= sizeof($parts) - 1; $i > 0  ; $i--) 
+			{ 
+				$iname .= $parts[$i]." ";
+			}
+
+			$iname = ucwords($iname);
+			$iname = str_replace(" ","", $iname );
+			
+		// ----- ----- ----- -----
+
+		$out .= "\t\ttry{\n ";
+		$out .= "\t\t$"."this->response = ". $controller_name . "Controller::". $iname ."( \n ";
+		$out .= "\t\t\t\n";
+		$out .= "\t\t\t\n";
+
+			//argumentos
+			$args_params = mysql_query("select * from argumento where id_metodo = ". $metodo["id_metodo"] ." order by ahuevo desc;");
+
+			while(($row_param = mysql_fetch_assoc( $args_params )) != null )
+			{
+				$out .= "\t\t\tisset($"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] ) ? $"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] : null,\n";
+			}
+			$out = substr( $out, 0, -2 );
+
+		$out .= "\n\t\t\t\n";
+		$out .= "\t\t\t);\n";
+		$out .= "\t\t}catch(Exception $e){\n ";
+		$out .= "\t\t\tthrow new ApiException( $e->getMessage() );\n ";
+		$out .= "\t\t}\n ";
+		$out .= "\t}\n";
 
 
 		$out .= "  }\n";
@@ -126,8 +196,6 @@
 
 	}
 
-
-
 ################################################################################
 	  ####   ####  #    # ##### #####   ####  #      #      ###### #####   ####  
 	 #    # #    # ##   #   #   #    # #    # #      #      #      #    # #      
@@ -136,7 +204,7 @@
 	 #    # #    # #   ##   #   #   #  #    # #      #      #      #   #  #    # 
 	  ####   ####  #    #   #   #    #  ####  ###### ###### ###### #    #  ####  
 ################################################################################
-	function write_controller($clasificacion)
+	function write_controller( $clasificacion )
 	{
 		
 		$nombre = str_replace(" ","", ucwords( $clasificacion["nombre"] ));
@@ -175,7 +243,15 @@
 				$out .= " 	 * @param ". $row_param["nombre"] ." ". $row_param["tipo"] ." ". strip_tags($row_param["descripcion"]) ."\n";
 
 				$params .= "\n\t\t$" . $row_param["nombre"] ;
-				if($row_param["ahuevo"] == "0") $params .= " = null";
+				
+				if($row_param["ahuevo"] == "0") { 
+					if(strlen($row_param["defaults"]) == 0){
+						$params .= " = \"\""; 
+					}else{
+						$params .= " = " . $row_param["defaults"]; 	
+					}
+				}
+
 				$params .=  ", ";
 			}
 
@@ -277,7 +353,13 @@
 				$out .= " 	 * @param ". $row_param["nombre"] ." ". $row_param["tipo"] ." ". strip_tags($row_param["descripcion"]) ."\n";
 
 				$params .= "\n\t\t$" . $row_param["nombre"] ;
-				if($row_param["ahuevo"] == "0") $params .= " = null";
+				if($row_param["ahuevo"] == "0") { 
+					if(strlen($row_param["defaults"]) == 0){
+						$params .= " = \"\""; 
+					}else{
+						$params .= " = " . $row_param["defaults"]; 	
+					}
+				}
 				$params .=  ", ";
 			}
 
@@ -400,6 +482,7 @@
 		//write the actual controller
 		$fn = "../../tmp/out/server/controller/" . $iname . ".controller.php";
 		$f = fopen($fn, 'w') or die("can't open file");
+
 		fwrite($f, write_controller(  $row) );
 		fclose($f);
 	}
