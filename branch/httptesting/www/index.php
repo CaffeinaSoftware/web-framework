@@ -2,23 +2,28 @@
 
 	require_once("../server/bootstrap.php");
 
+?>
 
-	HTTPClient::setUrlBase( "http://127.0.0.1/caffeina/pos/branches/v1_5/www/front_ends/123/api");
+<form action="test.php" method="POST">
+<textarea cols="80"  rows="10" name="tests">
 
-	
-	$r = HTTPClient::POST( "/personal/rol/nuevo/", array( "asdf" => "asf" ) );
-
-	//var_dump($r);
-	//echo $r["header"];
-
-
-
-	echo $r["content"];
-
+#beginTest
+	#Desc Nueva empresa
+	#URL /empresas/nueva
+	#Input { "des" : 12 }
+	#JSONOutput { "success": false , "reason" : "Invalid method call for dispatching." }
+#endTest
 
 
 
+#beginTest
+	#Desc Envio a login sin argumentos
+	#URL asdf
+	#Input action=2099
+	#JSONOutput {"success": false , "reason": "Invalidas", "text" : "Credenciales invalidas. Intento numero <b>1</b>. " }
+#endTest
 
-
-
+</textarea><br>
+	<input type="submit" value="Iniciar pruebas">
+</form>
 

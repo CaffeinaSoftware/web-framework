@@ -12,4 +12,5 @@ ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . POS_PATH_TO_S
 
 #require http client for posts and gets
 require_once("utils/http.php");
-
+require_once("utils/TestParser.php");
+require_once("utils/Tester.php");
