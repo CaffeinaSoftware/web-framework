@@ -1,5 +1,9 @@
 <?php
 
+if(!isset($_POST["tests"])) die(header("Location: ."));
+
+?><pre><?php
+
 	require_once("../server/bootstrap.php");
 
 
@@ -7,7 +11,7 @@
 	#########################################################
 	## retrive tests
 	#########################################################
-	if(!isset($_POST["tests"])) die(header("Location: ."));
+	
 
 
 	#########################################################
@@ -38,12 +42,22 @@
 		
 		$tester = new Tester( $tparser->nextTest() );
 		
-		$tester->test();
+
+
+		if($tester->test() === true){
+			//passed
+			
+
+		}else{
+			//valio madres
+			
+			
+		}
 					
 	}
 
 
-	
+?></pre>	
 
 	
 	

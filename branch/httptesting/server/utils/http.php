@@ -12,13 +12,28 @@ class HTTPClient{
 		self::$url_base = $base;
 	}
 
+	static public function ForceUrlPOST ( $forced_url, $data, $referer = "" ) 
+	{
+		$url_base = self::$url_base;
+		self::$url_base = "";
+		$r = self::POST ( $forced_url, $data, $referer );
+
+		self::$url_base = $url_base;
+		return $r;
+
+	}
+
 	static public function POST ( $url, $data, $referer = "" )
 	{
 		// Convert the data array into URL Parameters like a=b&foo=bar etc.
 		$data = http_build_query( $data);
 
+		echo "Target: " . (self::$url_base . $url) . "\n";
+
 		// parse the given URL
 		$url = parse_url(self::$url_base . $url);
+		
+		
 
 		if ($url['scheme'] != 'http') { 
 		    die('Error: Only HTTP request are supported !');
@@ -29,12 +44,23 @@ class HTTPClient{
 		$path = $url['path'];
 
 		// open a socket connection on port 80 - timeout: 30 sec
+		
+
 		$fp = fsockopen($host, 80, $errno, $errstr, 30);
 
 		if ($fp){
 
 		    // send the request headers:
-		    fputs($fp, "POST $path HTTP/1.1\r\n");
+		    ############### HARCODEADISISISISMO ##########################################
+		    ############### HARCODEADISISISISMO ##########################################
+		    ############### HARCODEADISISISISMO ##########################################
+		    //fputs($fp, "POST $path HTTP/1.1\r\n");
+		    fputs($fp, "POST $path?_instance_=123 HTTP/1.1\r\n");
+		    ############### HARCODEADISISISISMO ##########################################
+		    ############### HARCODEADISISISISMO ##########################################
+		    ############### HARCODEADISISISISMO ##########################################
+		    
+
 		    fputs($fp, "Host: $host\r\n");
 
 		    if ($referer != '')

@@ -43,7 +43,7 @@ class TestParser{
 			}
 		}
 
-		var_dump($this->tests);
+		//var_dump($this->tests);
 	}
 
 
