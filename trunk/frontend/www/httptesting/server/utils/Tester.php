@@ -47,20 +47,23 @@ class Tester{
 
 
 		if( strpos( $r["header"], "HTTP/1.1 400 BAD REQUEST" ) !==  false) {
-			echo "[FAILED: 400 BAD REQUEST]\n";
+			echo "<b style='color:red;'>[FAILED: 400 BAD REQUEST]</b>\n";
+			echo "EXPECTED: " . $this->test->output . "\n"; 
+			echo "RESPONSE: " . $r["content"] . "\n\n";
 			return;
 		}
 
 
-		if( strpos( $r["header"], "HTTP/1.1 404 NOT FOUND" ) !==  false) {
-			echo "Imposible localizar : " . $this->test->url. "\n";
+
+		if( strpos( $r["header"], "HTTP/1.1 404 Not Found" ) !==  false) {
+			echo "<b style='color:red;'>[FAILED: 404 NOT FOUND]</b>\n";
 			return;
 		}
 
 		$foo = json_decode( $r["content"] );
 
 		if(is_null($foo)) {
-			echo "[FAILED : RESPONSE IS NOT JSON]\n";
+			echo "<b style='color:red;'>[FAILED : RESPONSE IS NOT JSON]</b>\n";
 			echo "RESPONSE: " . stripslashes($r["content"]) . "\n";
 			return;
 		}
@@ -73,9 +76,9 @@ class Tester{
 			echo "[OK]\n"; 
 
 		else{
-			echo "[FAILED]\n";
+			echo "<b style='color:red;'>[FAILED]</b>\n";
 			echo "EXPECTED: " . $this->test->output . "\n"; 
-			echo "RESPONSE: " . $r["content"] . "\n";
+			echo "RESPONSE: " . $r["content"] . "\n\n";
 		}
 			
 		

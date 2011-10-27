@@ -30,8 +30,8 @@
 			</a>
 
 
-			<a class="l" href="test.php">Iniciar Pruebas</a>
-			<a class="l" href="Salir">Salir</a>
+			<a class="l" href="index.php">UnitTester</a>
+			<a class="l" href="index.php">ApiGen</a>
 
 			<div class="search">
 				<form method="get" action="/search">
@@ -89,16 +89,7 @@
 						
 						<h1>HTTP REST API Test Suite</h1>
 						<div class="breadcrumbs">
-							<a href=".">POS ERP</a> 
-							<?php
-							if(isset($_GET["cat"])){
-								$res = mysql_query("select * from clasificacion where id_clasificacion = " . $_GET["cat"]) or die(mysql_error());
-								$metodo = mysql_fetch_assoc($res);
-
-								echo'&rsaquo; <a href=".">'  . $metodo["nombre"] .  '</a>';
-							}
-							?>
-							
+							<a href="index.php">Unit tester </a> 
 						</div>
 
 
