@@ -36,6 +36,11 @@ class TestParser{
 				$t->input = substr ( $t->input, strpos( $t->input, " " ) + 1);
 				$t->output = substr ( $t->output, strpos( $t->output, " " ) + 1);
 
+				#vamos a ver si hay parseo de variables
+				//$in 	= json_decode($t->input  );
+				//$out 	= json_decode($t->output );
+
+
 				array_push($this->tests , $t);
 
 				$l += 5;
@@ -53,7 +58,7 @@ class TestParser{
 
 		$this->tests = $na;
 		unset($na);
-		//var_dump($this->tests);
+
 	}
 
 

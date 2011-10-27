@@ -115,20 +115,6 @@
 
 <textarea cols="80"  rows="50" name="tests"  >
 #beginTest
-	#Desc Crear un nuevo rol con parametros invalidos
-	#Method api/personal/rol/nuevo
-	#Input { "d" : "nada", "n" : "nombre" }
-	#Output {"status":"error" }
-#endTest
-
-#beginTest
-	#Desc Crear un nuevo rol con solo un parametro
-	#Method api/personal/rol/nuevo
-	#Input { "nombre" : "nombre" }
-	#Output {"status":"error" }
-#endTest
-
-#beginTest
 	#Desc Crear un nuevo rol con un nombre vacio
 	#Method api/personal/rol/nuevo
 	#Input { "nombre" : "", "descripcion" : "descripcion"  }
@@ -139,7 +125,7 @@
 	#Desc Crear un nuevo rol correctamente
 	#Method api/personal/rol/nuevo
 	#Input { "nombre" : "nombre", "descripcion" : "descripcion" }
-	#Output {"status":"ok" }
+	#Output {"status":"ok", "id_rol" : "<SET_VAR:ID_ROL>" }
 #endTest
 
 
@@ -184,6 +170,23 @@
 	#Input { "nombre" : "nombre5", "descripcion" : "descripcion5", "descuento" : -123 }
 	#Output {"status":"error" }
 #endTest
+
+#beginTest
+	#Desc Eliminar un id_rol negativo
+	#Method api/personal/rol/eliminar
+	#Input { "id_rol" : -1  }
+	#Output {"status":"error"  }
+#endTest
+
+
+#beginTest
+	#Desc elimnar un rol creado
+	#Method api/personal/rol/eliminar
+	#Input { "id_rol" : "<GET_VAR:ID_ROL>"  }
+	#Output {"status":"ok"  }
+#endTest
+
+
 
 
 
