@@ -45,6 +45,18 @@ class Tester{
 
 		echo self::$n . "] " . $this->test->description .  "...";
 
+
+		if( strpos( $r["header"], "HTTP/1.1 400 BAD REQUEST" ) !==  false) {
+			echo "[FAILED: 400 BAD REQUEST]\n";
+			return;
+		}
+
+
+		if( strpos( $r["header"], "HTTP/1.1 404 NOT FOUND" ) !==  false) {
+			echo "Imposible localizar : " . $this->test->url. "\n";
+			return;
+		}
+
 		$foo = json_decode( $r["content"] );
 
 		if(is_null($foo)) {
