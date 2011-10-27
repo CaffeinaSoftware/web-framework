@@ -457,7 +457,7 @@ public class PhpDAO{
 
 			pks = pks.substring(0, pks.length() -1 );
 			
-			pw.println("		if(  self::getByPK( " + pks + ") !== NULL )");
+			pw.println("		if( ! is_null ( self::getByPK( " + pks + ") ) )");
 			pw.println("		{");
 			pw.println("			try{ return " + className +"DAOBase::update( $"+ tabla +") ; } catch(Exception $e){ throw $e; }");
 			pw.println("		}else{");
@@ -559,10 +559,10 @@ public class PhpDAO{
 			pw.println("	{");
 			pw.println("		$sql = \"SELECT * from "+tabla+"\";");				
 
-			pw.println("		if($orden != NULL)");
+			pw.println("		if( ! is_null ( $orden ) )");
 			pw.println("		{ $sql .= \" ORDER BY \" . $orden . \" \" . $tipo_de_orden;	}");
 			
-			pw.println("		if($pagina != NULL)");
+			pw.println("		if( ! is_null ( $pagina ) )");
 			pw.println("		{");
 			pw.println("			$sql .= \" LIMIT \" . (( $pagina - 1 )*$columnas_por_pagina) . \",\" . $columnas_por_pagina; ");
 			pw.println("		}");
@@ -633,7 +633,7 @@ public class PhpDAO{
 
 			for(Field f : fields)
 			{
-				pw.println("		if( $"+tabla+"->get"+toCamelCase(f.title)+"() != NULL){");
+				pw.println("		if( ! is_null( $"+tabla+"->get"+toCamelCase(f.title)+"() ) ){");
 				pw.println("			$sql .= \" "+ f.title +" = ? AND\";");
 				pw.println("			array_push( $val, $"+tabla+"->get"+toCamelCase(f.title)+"() );");
 				pw.println("		}");
@@ -644,7 +644,7 @@ public class PhpDAO{
 	
 			pw.println("		$sql = substr($sql, 0, -3) . \" )\";" );
 
-  			pw.println("		if( $orderBy !== null ){");
+  			pw.println("		if( ! is_null ( $orderBy ) ){");
 			pw.println("		    $sql .= \" order by \" . $orderBy . \" \" . $orden ;");
 			pw.println("		");
 			pw.println("		}");
@@ -854,13 +854,13 @@ public class PhpDAO{
 				for(Field f : fields)
 				{
 
-					pw.println("		if( (($a = $"+tabla+"A->get"+toCamelCase(f.title)+"()) !== NULL) & ( ($b = $"+tabla+"B->get"+toCamelCase(f.title)+"()) !== NULL) ){");
+					pw.println("		if( ( !is_null (($a = $"+tabla+"A->get"+toCamelCase(f.title)+"()) ) ) & ( ! is_null ( ($b = $"+tabla+"B->get"+toCamelCase(f.title)+"()) ) ) ){");
 					pw.println("				$sql .= \" "+ f.title +" >= ? AND "+ f.title +" <= ? AND\";");
 					pw.println("				array_push( $val, min($a,$b)); ");
 					pw.println("				array_push( $val, max($a,$b)); ");
-					pw.println("		}elseif( $a !== NULL|| $b !== NULL ){");
+					pw.println("		}elseif( !is_null ( $a ) || !is_null ( $b ) ){");
 					pw.println("			$sql .= \" "+ f.title +" = ? AND\"; ");
-					pw.println("			$a = $a === NULL ? $b : $a;");
+					pw.println("			$a = is_null ( $a ) ? $b : $a;");
 					pw.println("			array_push( $val, $a);");
 					pw.println("			");						
 					pw.println("		}");
@@ -868,7 +868,7 @@ public class PhpDAO{
 				}
 
 				pw.println("		$sql = substr($sql, 0, -3) . \" )\";" );
-  	    		pw.println("		if( $orderBy !== null ){");
+  	    		pw.println("		if( !is_null ( $orderBy ) ){");
 	    		pw.println("		    $sql .= \" order by \" . $orderBy . \" \" . $orden ;");
 	    		pw.println("		");
     			pw.println("		}");
@@ -941,7 +941,7 @@ public class PhpDAO{
 					pkargs = pkargs.substring(0, pkargs.length() -2 ) ;
 					pk = pk.substring(0, pk.length() - 4 ) ;
 					
-					pw.println("		if(self::getByPK("+ pkargs +") === NULL) throw new Exception('Campo no encontrado.');");
+					pw.println("		if( is_null( self::getByPK("+ pkargs +") ) ) throw new Exception('Campo no encontrado.');");
 										//DELETE FROM `pos`.`cliente` WHERE `cliente`.`id_cliente` = 54 LIMIT 1
 					pw.println("		$sql = \"DELETE FROM "+tabla+" WHERE " +pk+ ";\";" );
 
