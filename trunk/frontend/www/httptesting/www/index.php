@@ -93,7 +93,7 @@
 							<a href=".">POS ERP</a> 
 						</div>
 						-->
-
+						<p>Hacer llamadas HTTP al API. </p>
 
 					</div>
 				</div>

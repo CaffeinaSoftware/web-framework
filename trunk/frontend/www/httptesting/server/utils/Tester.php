@@ -47,7 +47,7 @@ class Tester{
 
 
 		if( strpos( $r["header"], "HTTP/1.1 400 BAD REQUEST" ) !==  false) {
-			echo "<b style='color:red;'>[FAILED: 400 BAD REQUEST]</b>\n";
+			echo "<b style='color:orange;'>[FAILED: 400 BAD REQUEST]</b>\n";
 			echo "EXPECTED: " . $this->test->output . "\n"; 
 			echo "RESPONSE: " . $r["content"] . "\n\n";
 			return;
@@ -60,17 +60,29 @@ class Tester{
 			return;
 		}
 
-		$foo = json_decode( $r["content"] );
+		$reality = json_decode( $r["content"] );
 
-		if(is_null($foo)) {
+		if(is_null($reality)) {
 			echo "<b style='color:red;'>[FAILED : RESPONSE IS NOT JSON]</b>\n";
 			echo "RESPONSE: " . stripslashes($r["content"]) . "\n";
 			return;
 		}
 
-		$bar = json_decode( $this->test->output );
+		$expected = json_decode( $this->test->output );
 
-		$PASSED = $foo->status == $bar->status;
+
+		foreach ($expected as $ek => $ev) 
+		{
+			
+			if( !property_exists($reality, $ek) )	{
+				echo "<b style='color:red;'>[FAILED: MISSING `".$ek."` RETURN PARAMETER]</b>\n";
+				return;
+			}
+
+		}
+
+		$PASSED = $reality->status === $expected->status;
+
 
 		if($PASSED) 
 			echo "[OK]\n"; 
