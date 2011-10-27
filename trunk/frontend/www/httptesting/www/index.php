@@ -100,95 +100,36 @@
 
 				<!-- ----------------------------------------------------------------------
 					 ---------------------------------------------------------------------- -->
+<script type="text/javascript">
 
+	function save(){
 
-<form action="test.php" method="POST"  >
-<input type="submit" value="Iniciar pruebas"><br>
+		document.getElementById("forma").action = "save_tests.php";
+		document.getElementById("forma").submit();
+	}
+
+</script>
+
+<form action="test.php" method="POST" id="forma" >
+
+<input type="submit" value="Iniciar pruebas">
+<input type="button" onClick="save()" value="Guardar estas pruebas"><br>
+
 <textarea
 	name="url_base" 
 	placeholder="Base url"
 	cols="80"
->http://192.168.1.68/caffeina/pos/branches/v1_5/www/front_ends/123/</textarea>
+>http://<?php echo $_SERVER["HTTP_HOST"]; ?>/caffeina/pos/branches/v1_5/www/front_ends/123/</textarea>
 
 
 <br>
 
-<textarea cols="80"  rows="50" name="tests"  >
-#beginTest
-	#Desc Crear un nuevo rol con un nombre vacio
-	#Method api/personal/rol/nuevo
-	#Input { "nombre" : "", "descripcion" : "descripcion"  }
-	#Output {"status":"error" }
-#endTest
+<textarea cols="80"  rows="50" name="tests"  ><?php
 
-#beginTest
-	#Desc Crear un nuevo rol correctamente
-	#Method api/personal/rol/nuevo
-	#Input { "nombre" : "nombre", "descripcion" : "descripcion" }
-	#Output {"status":"ok", "id_rol" : "<SET_VAR:ID_ROL>" }
-#endTest
+	$tests  = mysql_fetch_assoc(mysql_query("select * from http_tests limit 1;")) or die (mysql_error());
+	echo $tests["tests"]; 
 
-
-#beginTest
-	#Desc Crear un nuevo rol correctamente con el mismo nombre
-	#Method api/personal/rol/nuevo
-	#Input { "nombre" : "nombre", "descripcion" : "descripcion"  }
-	#Output {"status":"error" }
-#endTest
-
-#beginTest
-	#Desc Crear un nuevo rol correctamente con salario
-	#Method api/personal/rol/nuevo
-	#Input { "nombre" : "nombre2", "descripcion" : "descripcion", "salario" : 1 }
-	#Output {"status": "ok" }
-#endTest
-
-#beginTest
-	#Desc Crear un nuevo rol correctamente con salario negativo
-	#Method api/personal/rol/nuevo
-	#Input { "nombre" : "nombre3", "descripcion" : "descripcion", "salario" : -12 }
-	#Output {"status":"error" }
-#endTest
-
-#beginTest
-	#Desc Crear un nuevo rol correctamente con descripcion vacia
-	#Method api/personal/rol/nuevo
-	#Input { "nombre" : "nombre4", "descripcion" : "" }
-	#Output {"status":"error" }
-#endTest
-
-#beginTest
-	#Desc Crear un nuevo rol correctamente con nombre muy largo
-	#Method api/personal/rol/nuevo
-	#Input { "nombre" : "12345678901234567890123456789012345678901234567890", "descripcion" : "descripcion"  }
-	#Output {"status":"error" }
-#endTest
-
-#beginTest
-	#Desc Crear un nuevo rol correctamente con descuento negativo
-	#Method api/personal/rol/nuevo
-	#Input { "nombre" : "nombre5", "descripcion" : "descripcion5", "descuento" : -123 }
-	#Output {"status":"error" }
-#endTest
-
-#beginTest
-	#Desc Eliminar un id_rol negativo
-	#Method api/personal/rol/eliminar
-	#Input { "id_rol" : -1  }
-	#Output {"status":"error"  }
-#endTest
-
-
-#beginTest
-	#Desc elimnar un rol creado
-	#Method api/personal/rol/eliminar
-	#Input { "id_rol" : "<GET_VAR:ID_ROL>"  }
-	#Output {"status":"ok"  }
-#endTest
-
-
-
-
+?>
 
 </textarea>
 					<br>

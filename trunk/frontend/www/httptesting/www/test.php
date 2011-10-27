@@ -170,7 +170,7 @@
 	<div class="footer">
 		<div class="content">
 			<div class="copyright">
-				x © 2011
+				x &copy; 2011
 			</div>
 			<div class="links">
 				<a href="https://www.facebook.com/platform">About</a><a href="/policy/">Platform Policies</a><a href="https://www.facebook.com/policy.php">Privacy Policy</a>
