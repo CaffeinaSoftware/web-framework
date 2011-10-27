@@ -31,7 +31,7 @@ class Tester{
 
 			$this->test->url = substr( $r["header"], $loc, $nloc - $loc - 1);
 
-			echo "Redirected to: " . $this->test->url . "\n";
+			//echo "Redirected to: " . $this->test->url . "\n";
 
 			$r = HTTPClient::ForceUrlPOST( 
 					$this->test->url, 

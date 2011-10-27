@@ -28,7 +28,7 @@ class HTTPClient{
 		// Convert the data array into URL Parameters like a=b&foo=bar etc.
 		$data = http_build_query( $data);
 
-		echo "Target: " . (self::$url_base . $url) . "\n";
+		//echo "Target: " . (self::$url_base . $url) . "\n";
 
 		// parse the given URL
 		$url = parse_url(self::$url_base . $url);
