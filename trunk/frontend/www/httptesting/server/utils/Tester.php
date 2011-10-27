@@ -45,7 +45,17 @@ class Tester{
 
 		echo self::$n . "] " . $this->test->description .  "...";
 
-		$PASSED = $r["content"] == $this->test->output;
+		$foo = json_decode( $r["content"] );
+
+		if(is_null($foo)) {
+			echo "[FAILED : RESPONSE IS NOT JSON]\n";
+			echo "RESPONSE: " . $r["content"] . "\n";
+			return;
+		}
+
+		$bar = json_decode( $this->test->output );
+
+		$PASSED = $foo->status == $bar->status;
 
 		if($PASSED) 
 			echo "[OK]\n"; 

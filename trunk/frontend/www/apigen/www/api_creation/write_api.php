@@ -291,7 +291,7 @@
 
 
 
-			$out .= "\tpublic function " . $iname . "\n\t(".$params."\n\t)\n\t{";
+			$out .= "\tpublic static function " . $iname . "\n\t(".$params."\n\t)\n\t{";
 			$out .= "  \n";
 			$out .= "  \n";
 			$out .= "  \n";
@@ -399,7 +399,7 @@
 
 
 
-			$out .= "  function " . $iname . "\n\t(".$params."\n\t);";
+			$out .= "  static function " . $iname . "\n\t(".$params."\n\t);";
 			$out .= "  \n";
 			$out .= "  \n";
 			$out .= "  \n";
