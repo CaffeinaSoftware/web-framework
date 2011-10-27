@@ -29,8 +29,9 @@
 			</a>
 
 
-			<a class="l" href="test.php">Iniciar Pruebas</a>
-			<a class="l" href="Salir">Salir</a>
+			<a class="l" href="index.php">UnitTester</a>
+			<a class="l" href="index.php">ApiGen</a>
+			
 
 			<div class="search">
 				<form method="get" action="/search">
@@ -73,7 +74,7 @@
 			<div id="bodyMenu" class="bodyMenu">
 				<div class="toplevelnav">
 					<ul>
-
+						
 					</ul>
 				</div>
 
@@ -87,18 +88,11 @@
 						
 						
 						<h1>HTTP REST API Test Suite</h1>
+						<!--
 						<div class="breadcrumbs">
 							<a href=".">POS ERP</a> 
-							<?php
-							if(isset($_GET["cat"])){
-								$res = mysql_query("select * from clasificacion where id_clasificacion = " . $_GET["cat"]) or die(mysql_error());
-								$metodo = mysql_fetch_assoc($res);
-
-								echo'&rsaquo; <a href=".">'  . $metodo["nombre"] .  '</a>';
-							}
-							?>
-							
 						</div>
+						-->
 
 
 					</div>
@@ -109,13 +103,13 @@
 
 
 <form action="test.php" method="POST"  >
-
-<input 
+<input type="submit" value="Iniciar pruebas"><br>
+<textarea
 	name="url_base" 
 	placeholder="Base url"
-	type="text" 
-	value="http://127.0.0.1/caffeina/pos/branches/v1_5/www/front_ends/123/"
-	width="300">
+	cols="80"
+>http://192.168.1.68/caffeina/pos/branches/v1_5/www/front_ends/123/</textarea>
+
 
 <br>
 
@@ -195,7 +189,7 @@
 
 </textarea>
 					<br>
-						<input type="submit" value="Iniciar pruebas">
+						
 					</form>
 	 		
 				

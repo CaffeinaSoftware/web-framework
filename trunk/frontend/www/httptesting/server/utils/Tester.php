@@ -61,7 +61,7 @@ class Tester{
 
 		if(is_null($foo)) {
 			echo "[FAILED : RESPONSE IS NOT JSON]\n";
-			echo "RESPONSE: " . $r["content"] . "\n";
+			echo "RESPONSE: " . stripslashes($r["content"]) . "\n";
 			return;
 		}
 
