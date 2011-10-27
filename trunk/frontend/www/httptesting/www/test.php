@@ -1,6 +1,7 @@
 <?php
 
 	require_once("../server/bootstrap.php");
+	if(!isset($_POST["tests"])) die(header("Location: ."));
 
 ?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" >
@@ -110,11 +111,11 @@
 
 <?php
 
-if(!isset($_POST["tests"])) die(header("Location: ."));
+
 
 ?><pre><?php
 
-	require_once("../server/bootstrap.php");
+	
 
 
 
@@ -140,7 +141,7 @@ if(!isset($_POST["tests"])) die(header("Location: ."));
 	#########################################################
 	## bit of configuration
 	#########################################################	
-	HTTPClient::setUrlBase( "http://127.0.0.1/caffeina/pos/branches/v1_5/www/front_ends/123/api");
+	HTTPClient::setUrlBase( $_POST["url_base"] );
 	
 	
 

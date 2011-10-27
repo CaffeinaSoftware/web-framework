@@ -108,22 +108,91 @@
 					 ---------------------------------------------------------------------- -->
 
 
-					<form action="test.php" method="POST" target="_blank" >
+<form action="test.php" method="POST"  >
 
-<textarea cols="80"  rows="50" name="tests" >
+<input 
+	name="url_base" 
+	placeholder="Base url"
+	type="text" 
+	value="http://127.0.0.1/caffeina/pos/branches/v1_5/www/front_ends/123/"
+	width="300">
+
+<br>
+
+<textarea cols="80"  rows="50" name="tests"  >
 #beginTest
-	#Desc Nueva empresa
-	#URL /empresa/nuevo
-	#Input { "des" : 12 }
-	#JSONOutput {"status":"error","error":"Required parameter ciudad is missing.","errorcode":100}
+	#Desc Crear un nuevo rol con parametros invalidos
+	#Method api/personal/rol/nuevo
+	#Input { "d" : "nada", "n" : "nombre" }
+	#Output {"status":"error" }
 #endTest
 
 #beginTest
-	#Desc Nueva empresa
-	#URL /empresa/nuevo
-	#Input { "ciudad" : "12" }
-	#JSONOutput {"status":"error","error":"Required parameter rfc is missing.","errorcode":100}
+	#Desc Crear un nuevo rol con solo un parametro
+	#Method api/personal/rol/nuevo
+	#Input { "nombre" : "nombre" }
+	#Output {"status":"error" }
 #endTest
+
+#beginTest
+	#Desc Crear un nuevo rol con un nombre vacio
+	#Method api/personal/rol/nuevo
+	#Input { "nombre" : "", "descripcion" : "descripcion"  }
+	#Output {"status":"error" }
+#endTest
+
+#beginTest
+	#Desc Crear un nuevo rol correctamente
+	#Method api/personal/rol/nuevo
+	#Input { "nombre" : "nombre", "descripcion" : "descripcion" }
+	#Output {"status":"ok" }
+#endTest
+
+
+#beginTest
+	#Desc Crear un nuevo rol correctamente con el mismo nombre
+	#Method api/personal/rol/nuevo
+	#Input { "nombre" : "nombre", "descripcion" : "descripcion"  }
+	#Output {"status":"error" }
+#endTest
+
+#beginTest
+	#Desc Crear un nuevo rol correctamente con salario
+	#Method api/personal/rol/nuevo
+	#Input { "nombre" : "nombre2", "descripcion" : "descripcion", "salario" : 1 }
+	#Output {"status": "ok" }
+#endTest
+
+#beginTest
+	#Desc Crear un nuevo rol correctamente con salario negativo
+	#Method api/personal/rol/nuevo
+	#Input { "nombre" : "nombre3", "descripcion" : "descripcion", "salario" : -12 }
+	#Output {"status":"error" }
+#endTest
+
+#beginTest
+	#Desc Crear un nuevo rol correctamente con descripcion vacia
+	#Method api/personal/rol/nuevo
+	#Input { "nombre" : "nombre4", "descripcion" : "" }
+	#Output {"status":"error" }
+#endTest
+
+#beginTest
+	#Desc Crear un nuevo rol correctamente con nombre muy largo
+	#Method api/personal/rol/nuevo
+	#Input { "nombre" : "12345678901234567890123456789012345678901234567890", "descripcion" : "descripcion"  }
+	#Output {"status":"error" }
+#endTest
+
+#beginTest
+	#Desc Crear un nuevo rol correctamente con descuento negativo
+	#Method api/personal/rol/nuevo
+	#Input { "nombre" : "nombre5", "descripcion" : "descripcion5", "descuento" : -123 }
+	#Output {"status":"error" }
+#endTest
+
+
+
 </textarea>
 					<br>
 						<input type="submit" value="Iniciar pruebas">

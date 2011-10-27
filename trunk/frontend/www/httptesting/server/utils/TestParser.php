@@ -43,6 +43,16 @@ class TestParser{
 			}
 		}
 
+		$na = array();
+		$s = sizeof($this->tests);
+
+		for ($i=0; $i < $s ; $i++)
+		{ 
+			$na[ $i ] = $this->tests[ $s - $i - 1];
+		}
+
+		$this->tests = $na;
+		unset($na);
 		//var_dump($this->tests);
 	}
 
