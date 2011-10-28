@@ -32,7 +32,15 @@ class TestParser{
 				$t->output 		= trim( $lines[ $l + 4 ] );
 
 				$t->description = substr ( $t->description, strpos( $t->description, " " ) + 1);
-				$t->url = substr ( $t->url, strpos( $t->url, " " ) + 1);
+
+				//explode the url #Method POST api/pos/bd/drop 
+				
+				$foo = explode( " ", $t->url );
+				
+				//$t->url = substr ( $t->url, strpos( $t->url, " " ) + 1);
+				$t->url = $foo[ 2 ];
+				$t->method = $foo[ 1 ];
+
 				$t->input = substr ( $t->input, strpos( $t->input, " " ) + 1);
 				$t->output = substr ( $t->output, strpos( $t->output, " " ) + 1);
 

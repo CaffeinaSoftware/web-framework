@@ -12,6 +12,25 @@ class HTTPClient{
 		self::$url_base = $base;
 	}
 
+
+	static public function Request( $method, $url, $data, $referer = "" ){
+		if($method === "POST") return self::POST ( $url, $data, $referer );
+		if($method === "GET") return self::GET ( $url, $data, $referer );
+	}
+
+	static public function ForcedUrlRequest( $method, $forced_url, $data, $referer = "" ){
+		if($method === "POST") return self::ForceUrlPOST ( $forced_url, $data, $referer );
+		if($method === "GET") return self::ForceUrlGET ( $forced_url, $data, $referer );		
+	}
+
+
+	static private function GET( $url, $data, $referer = "" ){
+		
+		return file_get_contents( self::$url_base . $url );
+	}
+
+
+
 	static public function ForceUrlPOST ( $forced_url, $data, $referer = "" ) 
 	{
 		$url_base = self::$url_base;

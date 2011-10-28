@@ -88,7 +88,8 @@ class Tester{
 
 	public function test(){
 
-		$r = HTTPClient::POST( 
+		$r = HTTPClient::Request(
+				$this->test->method,
 				$this->test->url, 
 				$this->parseInputTesterScripting(json_decode( $this->test->input ))
 			);
@@ -105,7 +106,8 @@ class Tester{
 
 			//echo "Redirected to: " . $this->test->url . "\n";
 
-			$r = HTTPClient::ForceUrlPOST( 
+			$r = HTTPClient::ForcedUrlRequest( 
+					$this->test->method,
 					$this->test->url, 
 					$this->parseInputTesterScripting(json_decode( $this->test->input  ))
 				);
