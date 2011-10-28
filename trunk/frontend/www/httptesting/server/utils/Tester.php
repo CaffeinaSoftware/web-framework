@@ -172,7 +172,6 @@ class Tester{
 
 		
 		echo "" . self::$n . "] " . $this->test->description .  "...[OK]\n"; 
-
 	
 		
 	}
