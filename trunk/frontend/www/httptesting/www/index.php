@@ -119,7 +119,7 @@
 	name="url_base" 
 	placeholder="Base url"
 	cols="80"
->http://<?php echo $_SERVER["HTTP_HOST"]; ?>/caffeina/pos/branches/v1_5/www/front_ends/123/</textarea>
+>http://<?php echo $_SERVER["REMOTE_ADDR"]; ?>/caffeina/pos/branches/v1_5/www/front_ends/123/</textarea>
 
 
 <br>
