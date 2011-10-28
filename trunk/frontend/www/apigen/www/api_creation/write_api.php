@@ -181,7 +181,7 @@
 		$out .= "\t\t}catch(Exception $"."e){\n ";
 		//$out .= "\t\t\tthrow new ApiException( $e->getMessage() );\n ";
 		$out .= "\t\t\t//Logger::error($"."e);\n";
-		$out .= "\t\t\tthrow new ApiException( $this->error_dispatcher->invalidDatabaseOperation( $e->getMessage() ) );\n";
+		$out .= "\t\t\tthrow new ApiException( $"."this->error_dispatcher->invalidDatabaseOperation( $"."e->getMessage() ) );\n";
 		
 		$out .= "\t\t}\n ";
 		$out .= "\t}\n";
