@@ -234,11 +234,11 @@ public class PhpDAO{
 			
 
 			
-			pw.println( "	  * @access protected" );
+			pw.println( "	  * @access public" );
 			pw.println( "	  * @var "+ f.type );
 			pw.println( "	  */");
 			
-			pw.println( "	protected $" + f.title + ";" );
+			pw.println( "	public $" + f.title + ";" );
 			pw.println();
 
 		}
