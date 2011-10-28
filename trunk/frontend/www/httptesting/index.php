@@ -1,6 +1,6 @@
 <?php
 
-	require_once("../server/bootstrap.php");
+	require_once("../../server/bootstrap.php");
 
 ?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" >
@@ -119,8 +119,7 @@
 	name="url_base" 
 	placeholder="Base url"
 	cols="80"
->http://<?php echo $_SERVER["REMOTE_ADDR"]; ?>/caffeina/pos/branches/v1_5/www/front_ends/123/</textarea>
-
+>http://pos15.labs.caffeina.mx/front_ends/123/</textarea>
 
 <br>
 
