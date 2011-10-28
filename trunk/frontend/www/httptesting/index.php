@@ -9,7 +9,7 @@
 <title>POS</title>
 
 
-<link type="text/css" rel="stylesheet" href="css/f.css"/>
+<link type="text/css" rel="stylesheet" href="../media/f.css"/>
 
 </head>
 <body class="safari4 mac Locale_en_US">
@@ -22,7 +22,7 @@
 			<a class="logo" href="/">
 				
 				<!-- https://s-static.ak.facebook.com/rsrc.php/v1/yW/r/N2f0JA5UPFU.png -->
-				<img class="img" src="cwhite.png" alt="Facebook Developers" width="166" height="17"/>
+				<img class="img" src="../media/cwhite.png" alt="Facebook Developers" width="166" height="17"/>
 				
 
 				
