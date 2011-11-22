@@ -1,6 +1,6 @@
 <?php
 
-	require_once("../server/bootstrap.php");
+	require_once("../../server/bootstrap.php");
 	if(!isset($_POST["tests"])) die(header("Location: ."));
 
 ?><!DOCTYPE html>
@@ -10,7 +10,7 @@
 <title>POS</title>
 
 
-<link type="text/css" rel="stylesheet" href="css/f.css"/>
+<link type="text/css" rel="stylesheet" href="../media/f.css"/>
 
 </head>
 <body class="safari4 mac Locale_en_US">
