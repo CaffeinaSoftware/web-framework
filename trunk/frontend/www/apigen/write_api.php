@@ -46,10 +46,19 @@
 		$out .= "require_once(\"" . $path_to_bootstrap . "\");\n";
 		$out .= "require_once(\"" . $fname . "\");\n\n";
 
-	    $nombre = str_replace("/"," ", $metodo["nombre"] );
-	    $nombre = str_replace(" ", "", ucwords( $nombre) );
+	    /*$nombre = str_replace("/"," ", $metodo["nombre"] );
+	    $nombre = str_replace(" ", "", ucwords( $nombre) );*/
 
-		$out .= "$"."api = new ". $nombre . "();\n";
+		$cname = ucwords(
+				str_replace("/"," ", 
+					str_replace("_"," ", $metodo["nombre"])
+				)
+			);
+		$cname = str_replace(" ","", $cname) ;
+
+
+
+		$out .= "$"."api = new ". $cname . "();\n";
 		$out .= "$"."apiOutput = ApiOutputFormatter::getInstance();\n";
 		$out .= "$"."apiOutput->PrintOuput($"."api);\n";
 
@@ -429,17 +438,17 @@
 					 #    #   #   #    # #   #    #   
 					  ####    #   #    # #    #   #  	
 ################################################################################
- 	if(is_dir("../../tmp/out"))
+ 	if(is_dir("tmp/out"))
  	{
- 		delete_directory( "../../tmp/out" );
+ 		delete_directory( "tmp/out" );
  	}
 
-	create_structure("../../tmp/out/server/api/");
-	create_structure("../../tmp/out/www/api/");
-	create_structure("../../tmp/out/docs/api/");
-	create_structure("../../tmp/out/server/controller/");
-	create_structure("../../tmp/out/server/controller/interfaces/");
-	create_structure("../../tmp/builds/");
+	create_structure("tmp/out/server/api/");
+	create_structure("tmp/out/www/api/");
+	create_structure("tmp/out/docs/api/");
+	create_structure("tmp/out/server/controller/");
+	create_structure("tmp/out/server/controller/interfaces/");
+	create_structure("tmp/builds/");
 
 
 	$res = mysql_query("select * from metodo order by id_clasificacion") or die(mysql_error());
@@ -450,8 +459,8 @@
 		echo "Procesando " . $row["nombre"] . " ... \n";
 
 		//create www/space
-		create_structure( "../../tmp/out/www/" . $row["nombre"] . "/");
-		$f = "../../tmp/out/www/" . $row["nombre"] . "/index.php";
+		create_structure( "tmp/out/www/" . $row["nombre"] . "/");
+		$f = "tmp/out/www/" . $row["nombre"] . "/index.php";
 		$f = fopen($f, 'w') or die("can't open file");
 		fwrite($f, write_www_file(  $row ) );
 		fclose($f);
@@ -459,7 +468,7 @@
 
 		//create api 
 		$fname = str_replace("/",".", $row["nombre"]);
-		$f = "../../tmp/out/server/api/" . $fname . ".php";
+		$f = "tmp/out/server/api/" . $fname . ".php";
 		$f = fopen($f, 'w') or die("can't open file");
 		fwrite($f, write_api_file(  $row) );
 		fclose($f);
@@ -476,14 +485,14 @@
 	{
 		// write the interface
 		$iname = str_replace(" ","", ucwords($row["nombre"]));
-		$fn = "../../tmp/out/server/controller/interfaces/" . $iname . ".interface.php";
+		$fn = "tmp/out/server/controller/interfaces/" . $iname . ".interface.php";
 		$f = fopen($fn, 'w') or die("can't open file");
 		fwrite($f, write_controller_interface(  $row) );
 		fclose($f);			
 
 
 		//write the actual controller
-		$fn = "../../tmp/out/server/controller/" . $iname . ".controller.php";
+		$fn = "tmp/out/server/controller/" . $iname . ".controller.php";
 		$f = fopen($fn, 'w') or die("can't open file");
 
 		fwrite($f, write_controller(  $row) );
@@ -493,7 +502,7 @@
 
 
 	//ok al terminar enzipar todo en builds
-	Zip('../../tmp/out/', '../../tmp/builds/full_api.zip');
+	Zip('tmp/out/', 'tmp/builds/full_api.zip');
 
 
 

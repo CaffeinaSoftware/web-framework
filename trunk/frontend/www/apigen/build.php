@@ -17,7 +17,7 @@
 	  }
 </script>
 
-<link type="text/css" rel="stylesheet" href="../css/f.css"/>
+<link type="text/css" rel="stylesheet" href="../media/f.css"/>
 
 </head>
 <body class="safari4 mac Locale_en_US">
@@ -170,7 +170,7 @@
 
 					
 					
-					<?php require_once( "../api_creation/write_api.php" ); ?>
+					<?php require_once( "write_api.php" ); ?>
 					
 					
 				
