@@ -13,11 +13,11 @@
 		 var selection = confirm("Esta seguro de querer borrar el método con todos sus argumentos y repsuestas?");
 		 
 		 if(selection)
-			window.location="../api_creation/delete_method.php?m="+id+"&cat="+<?php echo $_GET["cat"];?>;
+			window.location="delete_method.php?m="+id+"&cat="+<?php echo $_GET["cat"];?>;
 	  }
 </script>
 
-<link type="text/css" rel="stylesheet" href="../css/f.css"/>
+<link type="text/css" rel="stylesheet" href="../media/f.css"/>
 
 </head>
 <body class="safari4 mac Locale_en_US">
@@ -33,14 +33,14 @@
 
 			<?php
 			if(isset($_GET["m"])){
-				echo '<a class="l" href="../api_creation/edit_method.php?m='. $_GET["m"] .'&cat='.$_GET["cat"].'">Editar este metodo</a>';
+				echo '<a class="l" href="edit_method.php?m='. $_GET["m"] .'&cat='.$_GET["cat"].'">Editar este metodo</a>';
 				echo '<a class="l" onClick="Borrar('. $_GET["m"] .')">Borrar este metodo</a>';
 
 			}
 			?>
 
 			
-			<a class="l" href="../api_creation/new_method.php<?php if(isset($_GET["cat"])) echo "?cat=".$_GET["cat"];?>">Nuevo metodo</a>
+			<a class="l" href="new_method.php<?php if(isset($_GET["cat"])) echo "?cat=".$_GET["cat"];?>">Nuevo metodo</a>
 
 			<!--
 			<a class="l" href="/support/">Support</a>
@@ -108,7 +108,7 @@
 									if(isset($_GET["cat"]) && ($_GET["cat"] == $row["id_clasificacion"]) ){
 										?>
 										<li class="active withsubsections">
-										<a class="selected" href="api_doc.php?cat=<?php echo $row["id_clasificacion"]; ?>">
+										<a class="selected" href="index.php?cat=<?php echo $row["id_clasificacion"]; ?>">
 										<div class="navSectionTitle">
 											<?php echo $row["nombre"]; ?>
 										</div>
@@ -134,7 +134,7 @@
 
 										?>
 										<li>
-										<a href="api_doc.php?cat=<?php echo $row["id_clasificacion"]; ?>">
+										<a href="index.php?cat=<?php echo $row["id_clasificacion"]; ?>">
 											<div class="navSectionTitle">
 											<?php echo $row["nombre"]; ?>
 											</div>
@@ -211,7 +211,7 @@
 
 									?>
 									<li class="active withsubsections">
-									<a class="selected" href="api_doc.php?cat=<?php echo $row["id_clasificacion"]; ?>">
+									<a class="selected" href="index.php?cat=<?php echo $row["id_clasificacion"]; ?>">
 									<div class="navSectionTitle">
 										<?php echo $row["nombre"]; ?>
 									</div>
@@ -383,7 +383,7 @@
 
 						while( ($row = mysql_fetch_assoc( $res )) != null )
 						{
-							echo "<h3><a href='api_doc.php?cat=". $_GET["cat"] ."&m=". $row["id_metodo"] ."'>" . $row["tipo"] . " " . $row["nombre"] . "</a></h3>";
+							echo "<h3><a href='index.php?cat=". $_GET["cat"] ."&m=". $row["id_metodo"] ."'>" . $row["tipo"] . " " . $row["nombre"] . "</a></h3>";
 							echo "<p>" . $row["subtitulo"] . "</p>";
 						}
 					}
