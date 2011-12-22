@@ -117,7 +117,7 @@ Set maximum execution time in seconds (0 means no limit).
 */
 set_time_limit(0);
 if(isset( $_GET["what"] ) && isset($_GET["out_name"])){
-	output_file("../../tmp/builds/".$_GET["what"].".zip", $_GET["out_name"] . '.zip', 'application/zip');	
+	output_file("tmp/builds/".$_GET["what"].".zip", $_GET["out_name"] . '.zip', 'application/zip');	
 }else{
 	die(header("HTTP/1.1 500 INTERNAL SERVER ERROR" ));
 }
