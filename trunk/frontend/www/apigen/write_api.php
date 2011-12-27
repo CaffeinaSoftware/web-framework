@@ -111,7 +111,8 @@
 
 		$out .= "\tprotected function DeclareAllowedRoles(){  return BYPASS;  }\n";
 
-		$out .= "\tprotected function CheckAuthorization() {}\n";
+		if( $metodo["sesion_valida"] == 0 )
+			$out .= "\tprotected function CheckAuthorization() { /*SESION NO NECESARIA*/ return; }\n";
 
 		$out .= "\tprotected function GetRequest()\n";
 		$out .= "\t{\n";
