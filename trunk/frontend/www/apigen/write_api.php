@@ -118,7 +118,7 @@
 		
 		$out .= "\t\t$"."this->request = array(	\n";
 
-		$args_params = mysql_query("select * from argumento where id_metodo = ". $metodo["id_metodo"] ." order by ahuevo desc;");
+		$args_params = mysql_query("select * from argumento where id_metodo = ". $metodo["id_metodo"] ." order by ahuevo, nombre desc;");
 
 		while(($row_param = mysql_fetch_assoc( $args_params )) != null )
 		{
@@ -177,7 +177,7 @@
 		$out .= "\t\t\t\n";
 
 			//argumentos
-			$args_params = mysql_query("select * from argumento where id_metodo = ". $metodo["id_metodo"] ." order by ahuevo desc;");
+			$args_params = mysql_query("select * from argumento where id_metodo = ". $metodo["id_metodo"] ." order by ahuevo, nombre desc;");
 
 			while(($row_param = mysql_fetch_assoc( $args_params )) != null )
 			{
@@ -248,7 +248,7 @@
 
 			$params = "";
 
-			$args_params = mysql_query("select * from argumento where id_metodo = ". $m["id_metodo"] ." order by ahuevo desc;");
+			$args_params = mysql_query("select * from argumento where id_metodo = ". $m["id_metodo"] ." order by ahuevo, nombre desc;");
 
 			while(($row_param = mysql_fetch_assoc( $args_params )) != null )
 			{
@@ -358,7 +358,7 @@
 
 			$params = "";
 
-			$args_params = mysql_query("select * from argumento where id_metodo = ". $m["id_metodo"] ." order by ahuevo desc;");
+			$args_params = mysql_query("select * from argumento where id_metodo = ". $m["id_metodo"] ." order by ahuevo, nombre desc;");
 
 			while(($row_param = mysql_fetch_assoc( $args_params )) != null )
 			{
