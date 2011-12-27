@@ -30,7 +30,7 @@
 
 
 			<a class="l" href="index.php">UnitTester</a>
-			<a class="l" href="index.php">ApiGen</a>
+			<a class="l" href="../apigen/">ApiGen</a>
 			
 
 			<div class="search">

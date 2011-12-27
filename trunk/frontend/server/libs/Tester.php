@@ -27,6 +27,8 @@ class Tester{
 
 		foreach ($input_to_send as $key => $value) 
 		{
+			if(is_array($value)) continue;
+			
 			if( strpos( $value , "<GET_VAR:"  ) !== false )
 			{
 				//ponerle el valor
@@ -56,6 +58,9 @@ class Tester{
 
 		//buscar en expected output <SET_VAR:VARIABLE>
 		$expected = json_decode( $this->test->output );
+		
+		//if($expected == null) var_dump( $this->test->output ); $actual_output;
+		
 		foreach ( $expected as $key => $value) 
 		{
 			//si hay un var set !
@@ -136,7 +141,12 @@ class Tester{
 		}
 
 		### BACK FROM SERVER !!! #####
-		$reality = $this->parseOuputTesterScripting ( json_decode( $r["content"] ) );
+		try{
+			$reality = $this->parseOuputTesterScripting ( json_decode( $r["content"] ) );			
+		}catch(Exception $e){
+			echo "RESPONSE: " . stripslashes($r["content"]) . "\n";
+			throw $e;
+		}
 		### BACK FROM SERVER !!! #####
 
 

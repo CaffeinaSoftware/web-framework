@@ -25,8 +25,12 @@ class HTTPClient{
 
 
 	static private function GET( $url, $data, $referer = "" ){
-		
-		return file_get_contents( self::$url_base . $url );
+		try{
+			return file_get_contents( self::$url_base . $url );			
+		}catch(Exception $e){
+			throw $e;
+		}
+
 	}
 
 

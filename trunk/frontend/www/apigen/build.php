@@ -27,7 +27,7 @@
 <div class="devsitePage">
 	<div class="menu">
 		<div class="content">
-			<a class="logo" href="/">
+			<a class="logo" href="../">
 				<img class="img" src="https://s-static.ak.facebook.com/rsrc.php/v1/yW/r/N2f0JA5UPFU.png" alt="Facebook Developers" width="166" height="17"/>
 			</a>
 
