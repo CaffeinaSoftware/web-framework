@@ -182,7 +182,14 @@
 
 			while(($row_param = mysql_fetch_assoc( $args_params )) != null )
 			{
-				$out .= "\t\t\tisset($"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] ) ? $"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] : null,\n";
+				if($row_param["tipo"] == "json"){
+					$out .= "\t\t\tisset($"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] ) ? json_decode($"."_".$metodo["tipo"]."['".$row_param["nombre"]."']) : null,\n";					
+					
+				}else{
+					$out .= "\t\t\tisset($"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] ) ? $"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] : null,\n";
+					
+				}
+
 			}
 			$out = substr( $out, 0, -2 );
 
