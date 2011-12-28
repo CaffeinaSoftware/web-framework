@@ -23,7 +23,33 @@ class Tester{
 	 *
 	 **/
 	public function parseInputTesterScripting( /* json */ $input_to_send ){
+
 		global $TESTER_SCRIPT_BARS ;	
+		
+/*
+		$s  = json_encode($input_to_send);
+		$s2 = "";
+		
+		echo $s . "<br>";
+
+		
+		while( FALSE === ($found  = strpos( $s, "<GET_VAR:"  )) ){
+			
+			
+			$final = strpos( $s, ">", $found +8 );
+			
+			//string substr ( $s , , int $length ] )
+			
+
+			
+		}
+		echo $s2 . "<br>";		
+		
+		return $input_to_send;
+*/
+		if(!is_array($input_to_send)){
+			//return $input_to_send;
+		} 
 
 		foreach ($input_to_send as $key => $value) 
 		{
@@ -96,7 +122,7 @@ class Tester{
 		$r = HTTPClient::Request(
 				$this->test->method,
 				$this->test->url, 
-				$this->parseInputTesterScripting(json_decode( $this->test->input ))
+				$this->parseInputTesterScripting( json_decode( $this->test->input ) )
 			);
 
 		

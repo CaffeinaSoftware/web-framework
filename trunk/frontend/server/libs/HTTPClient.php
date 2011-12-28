@@ -26,7 +26,16 @@ class HTTPClient{
 
 	static private function GET( $url, $data, $referer = "" ){
 		try{
-			return file_get_contents( self::$url_base . $url );			
+
+			$data = get_object_vars($data);
+
+			$parsed_d = "?";
+			foreach($data as $p => $k){
+				$parsed_d .= $p . "=" . $k;
+			}
+			//echo self::$url_base . $url . "/" . $parsed_d ;	
+			return file_get_contents( self::$url_base . $url . "/" . $parsed_d );
+					
 		}catch(Exception $e){
 			throw $e;
 		}

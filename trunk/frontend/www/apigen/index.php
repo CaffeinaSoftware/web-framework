@@ -51,47 +51,9 @@
 			
 			<a class="l" href="../httptesting/">Tester</a>
 			
-			<div class="search">
-				<form method="get" action="/search">
-					<div class="uiTypeahead" id="u272751_1">
-						<div class="wrap">
-							<input type="hidden" autocomplete="off" class="hiddenInput" name="path" value=""/>
-							<div class="innerWrap">
-								<span class="uiSearchInput textInput">
-								<span>
-<?php
 
-	//------------------------
-	//	BUSCAR
-	//------------------------
-	class buscable{
 			
-	}
-?>								
-								<input 
-									type="text" 
-									class="inputtext DOMControl_placeholder" 
-									name="selection" 
-									placeholder="Buscar" 
-									autocomplete="off" 
-									onfocus="" 
-									spellcheck="false"
-									title="Search Documentation / Apps"/>
-								<button type="submit" title="Search Documentation / Apps">
-								<span class="hidden_elem">
-								</span>
-								</button>
-								</span>
-								</span>
-							</div>
-						</div>
-									
-						
-
-
-					</div>
-				</form>
-			</div>
+			
 			<div class="clear">
 			</div>
 		</div>
