@@ -19,11 +19,18 @@
 	switch($_POST["metodo"])
 	{
 		case "editarPaquete" :
+		
+			//primero vamos a ver si se puede editar
+			$islocked = mysql_fetch_assoc(mysql_query("select locked from httptesting_paquete_de_pruebas where id_paquete_de_pruebas = ". $_POST["id_paquete_de_pruebas"] .";"));
+			if($islocked["locked"]){
+				die(json_encode(array("status" => "error", "reason" => "este paquete tiene lock" )));
+			}
+			
 			if(!isset($_POST["locked"]))
 				$locked = 0;
 			else 
 				$locked = $_POST["locked"];
-				
+			
 			$sql = "Update httptesting_paquete_de_pruebas set pruebas = '".$_POST["pruebas"]."', nombre='".$_POST["nombre"]."', descripcion='".$_POST["descripcion"]."', locked=".$locked." where id_paquete_de_pruebas=".$_POST["id_paquete_de_pruebas"];
 			doQuery($sql);
 	    break;

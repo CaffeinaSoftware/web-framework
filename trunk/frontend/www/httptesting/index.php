@@ -200,8 +200,22 @@
 					descripcion 	= $("#editar_paquete_descripcion").val(),
 					pruebas			= $("#editar_paquete_pruebas").val();
 					
-				var callback = function(r){
-					console.log(r)
+				var callback = function(a){
+
+					try{
+			    		r = $.parseJSON(a);
+					}catch( e){
+						console.error(e);
+						alert("Error");
+						return;
+					}
+					
+					if(r.status == "ok"){
+						window.location.reload();						
+					}else{
+						alert(r.reason);
+					}
+					
 				}
 
 				this.ajax({
