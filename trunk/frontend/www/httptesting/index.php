@@ -6,7 +6,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" >
 <head>
 
-<title>POS</title>
+<title>HTTP Testing | Caffeina WebFramework</title>
 
 
 <link type="text/css" rel="stylesheet" href="../media/f.css"/>
@@ -33,38 +33,7 @@
 			<a class="l" href="../apigen/">ApiGen</a>
 			
 
-			<div class="search">
-				<form method="get" action="/search">
-					<div class="uiTypeahead" id="u272751_1">
-						<div class="wrap">
-							<input type="hidden" autocomplete="off" class="hiddenInput" name="path" value=""/>
-							<div class="innerWrap">
-								<span class="uiSearchInput textInput">
-								<span>						
-								<input 
-									type="text" 
-									class="inputtext DOMControl_placeholder" 
-									name="selection" 
-									placeholder="Buscar" 
-									autocomplete="off" 
-									onfocus="" 
-									spellcheck="false"
-									title="Search Documentation / Apps"/>
-								<button type="submit" title="Search Documentation / Apps">
-								<span class="hidden_elem">
-								</span>
-								</button>
-								</span>
-								</span>
-							</div>
-						</div>
-									
-						
 
-
-					</div>
-				</form>
-			</div>
 			<div class="clear">
 			</div>
 		</div>
@@ -72,6 +41,12 @@
 	<div class="body nav">
 		<div class="content">
 			<div id="bodyMenu" class="bodyMenu">
+				<div>
+					<h3>Paquete</h3>
+				</div>
+				<div>
+					<h3>Paquete</h3>
+				</div>				
 				<div class="toplevelnav">
 					<ul>
 						
@@ -98,28 +73,36 @@
 					</div>
 				</div>
 
-				<!-- ----------------------------------------------------------------------
-					 ---------------------------------------------------------------------- -->
-<script type="text/javascript">
+</head>
+				<form action="test.php" method="POST" id="forma" >
 
-	function save(){
 
-		document.getElementById("forma").action = "save_tests.php";
-		document.getElementById("forma").submit();
-	}
 
-</script>
 
-<form action="test.php" method="POST" id="forma" >
+<body>
+<form>
+<span id="selector">
+	URL de pruebas
+	<select name="cSelect" >
+		<?php
+			/**
+			 * Obtener las urls
+			 * 
+			 * */
+			$res = mysql_query("select * from httptesting_ruta");
+			
+			while( ($row = mysql_fetch_assoc($res)) != null ){
 
-<input type="submit" value="Iniciar pruebas">
-<input type="button" onClick="save()" value="Guardar estas pruebas"><br>
-
-<textarea
-	name="url_base" 
-	placeholder="Base url"
-	cols="80"
->http://pos15.labs.caffeina.mx/front_ends/123/</textarea>
+				if(isset($_GET["url"]) && $_GET["url"] == $row["id_ruta"]){
+					echo "<option selected id='". $row["id_ruta"] ."'>" . $row["nombre"] . " | " . $row["ruta"] . "adsfadsf</option>";
+				}else{
+					echo "<option id='". $row["id_ruta"] ."'>" . $row["nombre"] . " | " . $row["ruta"] . "adsfadsf</option>";
+				}
+			}
+		?>
+	</select>
+</span>
+</form>
 
 <br>
 
@@ -157,18 +140,16 @@
 	<div class="footer">
 		<div class="content">
 			<div class="copyright">
-				x © 2011
+
 			</div>
 			<div class="links">
 				<a href="https://www.facebook.com/platform">About</a><a href="/policy/">Platform Policies</a><a href="https://www.facebook.com/policy.php">Privacy Policy</a>
 			</div>
 		</div>
 	</div>
-	<div id="fb-root">
-	</div>
-	<input type="hidden" autocomplete="off" id="post_form_id" name="post_form_id" value="d8f38124ed9e31ef3947198c6d26bff1"/>
-	<div id="fb-root">
-	</div>
+
+
+
 	
 </div>
 
