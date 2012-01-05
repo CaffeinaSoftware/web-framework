@@ -26,30 +26,12 @@ class Tester{
 
 		global $TESTER_SCRIPT_BARS ;	
 		
-/*
-		$s  = json_encode($input_to_send);
-		$s2 = "";
-		
-		echo $s . "<br>";
 
-		
-		while( FALSE === ($found  = strpos( $s, "<GET_VAR:"  )) ){
-			
-			
-			$final = strpos( $s, ">", $found +8 );
-			
-			//string substr ( $s , , int $length ] )
-			
-
-			
-		}
-		echo $s2 . "<br>";		
-		
-		return $input_to_send;
-*/
 		if(!is_array($input_to_send)){
 			//return $input_to_send;
 		} 
+		
+		
 
 		foreach ($input_to_send as $key => $value) 
 		{
@@ -82,7 +64,7 @@ class Tester{
 	 *
 	 *
 	 **/
-	public function parseOuputTesterScripting(  /* json */ $actual_output ){
+	public function parseOuputTesterScripting(  /* json */ $actual_output , $r){
 		global $TESTER_SCRIPT_BARS ;	
 
 		//buscar en expected output <SET_VAR:VARIABLE>
@@ -100,8 +82,12 @@ class Tester{
 				
 				$var_name = substr( $value, 9, -1 ) ;
 				if( !isset($actual_output->$key) ){
-					echo "<div style='color:blue'>TESTER SCRIPTING: `".$key."` is not defined in response.</div><br>";
-					throw new Exception("TESTER SCRIPTING FATAL ERROR");
+					
+					echo "<b style='cursor:pointer;color:red;' onClick='$(\"#end01293\").slideToggle()'>" . self::$n . "] " . $this->test->description .  "...[FAILED]</b><br>";
+					$this->printTestInfo( $r, "end01293");
+
+					echo "<div style='color:blue'>TESTER SCRIPTING FATAL ERROR: `".$key."` is not defined in response.</div><br>";
+					die;
 					
 				}
 				echo "<div style='color:blue'>" . $var_name . " = " . $actual_output->$key ." </div><br>";
@@ -188,10 +174,19 @@ class Tester{
 		/* *********************************
 		 *
 	     * ********************************* */
+	
+		$jsn_t_send = json_decode( $this->test->input );
+	
+		if($jsn_t_send == NULL){
+			echo "<b style='color:red;' >" . self::$n . "] " . $this->test->description .  "...[FAILED: INPUT IS NOT JSON]<br>";
+			echo "HERE IS THE INPUT I TRIED TO SEND: </b><br><code>" . $this->test->input  ."</code>";
+			die;
+		}
+	
 		$r = HTTPClient::Request(
 				$this->test->method,
 				$this->test->url, 
-				$this->parseInputTesterScripting( json_decode( $this->test->input ) )
+				$this->parseInputTesterScripting( $jsn_t_send )
 			);
 
 
@@ -248,7 +243,7 @@ class Tester{
 		 *	Parsear la salida, y  ponerle
 	     * ********************************* */
 		try{
-			$reality = $this->parseOuputTesterScripting ( json_decode( $r["content"] ) );
+			$reality = $this->parseOuputTesterScripting ( json_decode( $r["content"] ), $r );
 					
 		}catch(Exception $e){
 			$this->printTestInfo($r, $html_id);
