@@ -85,8 +85,8 @@ class HTTPClient{
 		    ############### HARCODEADISISISISMO ##########################################
 		    ############### HARCODEADISISISISMO ##########################################
 		    ############### HARCODEADISISISISMO ##########################################
-		    //fputs($fp, "POST $path HTTP/1.1\r\n");
-		    fputs($fp, "POST $path?_instance_=123 HTTP/1.1\r\n");
+		    fputs($fp, "POST $path HTTP/1.1\r\n");
+		    //fputs($fp, "POST $path?_instance_=123 HTTP/1.1\r\n");
 		    ############### HARCODEADISISISISMO ##########################################
 		    ############### HARCODEADISISISISMO ##########################################
 		    ############### HARCODEADISISISISMO ##########################################
