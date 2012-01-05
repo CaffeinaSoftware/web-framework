@@ -8,8 +8,8 @@
 	<script type="text/javascript" charset="utf-8" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<title>HTTP Testing | Caffeina WebFramework</title>
 	<link type="text/css" rel="stylesheet" href="../media/f.css"/>
-	<link rel="stylesheet" href="http://api.facebook.com/facebox/facebox.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<script type="text/javascript" src="http://api.facebook.com/facebox/facebox.js" charset="utf-8"></script>
+	<link rel="stylesheet" href="http://api.caffeina.mx/facebox/facebox.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script type="text/javascript" src="http://api.caffeina.mx/facebox/facebox.js" charset="utf-8"></script>
 	
 	<script type="text/javascript" charset="utf-8">
 	
@@ -101,9 +101,46 @@
 					url 	: url,
 					test_id	: test
 				},callback, false);
-			} 
+			},
 			
+			nuevo_url : function(){
+				var nombre  = $("#new_url_name").val(),
+					url 	= $("#new_url_url").val();
+					
+				var callback = function(){
+					window.location.reload();
+				}
+
+				this.ajax({
+					metodo : "nuevaRuta",
+					nombre : nombre,
+					ruta   : url
+				}, callback, true);
+			},
+			
+			nuevo_url_show : function(){
+				html = '<div id="agregar_url" >';
+				html += '	<h3>Agregar direccion de url</h3>';
+				html += '	<input type="text" id="new_url_name" placeholder="Nombre">';
+				html += '	<input type="text" id="new_url_url" placeholder="http://example.com/">			';
+				html += '	<input type="button" value="Agregar" onClick="httptesting.nuevo_url()" >';
+				html += '</div>';
+				$.facebox(html);				
+			},
+			
+			swap_url : function(new_url_id){
+				//Test params
+				var test = $.getUrlVar('test');
+				
+				if( test === undefined ){
+					window.location = "?url=" + new_url_id;
+				}else{
+					window.location = "?test="+ test +"&url=" + new_url_id;					
+				}
+			}
 		}
+		
+
 	</script>
 </head>
 <body class="mac Locale_en_US">
@@ -153,7 +190,7 @@
 				</div>
 				<span id="selector">
 				URL de pruebas
-				<select name="cSelect">
+				<select name="cSelect" onChange="httptesting.swap_url(this.value)">
 					<?php
 					/**
 					 * Obtener las urls
@@ -162,16 +199,16 @@
 					$res = mysql_query("select * from httptesting_ruta");
 					while( ($row = mysql_fetch_assoc($res)) != null ){
 						if(isset($_GET["url"]) && $_GET["url"] == $row["id_ruta"]){
-							echo "<option selected id='". $row["id_ruta"] ."'>" . $row["nombre"] . " | " . $row["ruta"] . "</option>"; 
+							echo "<option selected value='". $row["id_ruta"] ."'>" . $row["nombre"] . " | " . $row["ruta"] . "</option>"; 
 						}else{ 
-							echo "<option id='". $row["id_ruta"] ."'>" . $row["nombre"] . " | " . $row["ruta"] . "</option>"; 
+							echo "<option value='". $row["id_ruta"] ."'>" . $row["nombre"] . " | " . $row["ruta"] . "</option>"; 
 						} 
 					} 
 					
 					?>
 				</select>
-				<input type="button" name="" value="Iniciar pruebas" onClick="httptesting.test()" >
-				
+				<input type="button" name="" value="Iniciar pruebas" onClick="httptesting.test();" >
+				<input type="button" name="" value="Agregar url" onClick="httptesting.nuevo_url_show()">
 				</span>
 				<hr/>
 				
@@ -200,6 +237,10 @@
 			</div>
 		</div>
 	</div>
+	
+
+
+	
 	<div class="footer">
 		<div class="content">
 			<div class="copyright">
