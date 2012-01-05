@@ -30,6 +30,7 @@ class TestParser{
 				$t->url 		= trim( $lines[ $l + 2 ] );
 				$t->input 		= trim( $lines[ $l + 3 ] );
 				$t->output 		= trim( $lines[ $l + 4 ] );
+				$t->line 		= $l;
 
 				$t->description = substr ( $t->description, strpos( $t->description, " " ) + 1);
 
@@ -91,6 +92,7 @@ class Test{
 	public $input;
 	public $output;
 	public $method;
+	public $line;
 
 	function __construct($m = "POST"){
 		$this->method 	 = $m;

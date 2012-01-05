@@ -8,6 +8,9 @@
 	<script type="text/javascript" charset="utf-8" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<title>HTTP Testing | Caffeina WebFramework</title>
 	<link type="text/css" rel="stylesheet" href="../media/f.css"/>
+	<link rel="stylesheet" href="http://api.facebook.com/facebox/facebox.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script type="text/javascript" src="http://api.facebook.com/facebox/facebox.js" charset="utf-8"></script>
+	
 	<script type="text/javascript" charset="utf-8">
 	
 		$.extend({
@@ -91,6 +94,8 @@
 				
 				$("textarea").hide();
 				
+				$("#response").html("<div align=center><img src='l.gif'> Realizando pruebas...</div>").show();
+				
 				this.ajax({
 					metodo	: "test",
 					url 	: url,
@@ -169,9 +174,9 @@
 				
 				</span>
 				<hr/>
-				<div id="response">
-					
-				</div>
+				
+				<div id="response"></div>
+				
 				<?php
 				$s = mysql_query("select * from httptesting_paquete_de_pruebas");
 				while( ($row = mysql_fetch_assoc($s))  != null){

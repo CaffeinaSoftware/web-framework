@@ -7,8 +7,7 @@ class HTTPClient{
 
 
 
-	static public function setUrlBase( $base )
-	{
+	static public function setUrlBase( $base ){
 		self::$url_base = $base;
 	}
 
@@ -112,7 +111,8 @@ class HTTPClient{
 		else { 
 		    return array(
 		        'status' => 'err', 
-		        'error' => "$errstr ($errno)"
+		        'error' => "$errstr ($errno)",
+				'url'	=> $url
 		    );
 		}
 
@@ -129,7 +129,8 @@ class HTTPClient{
 		return array(
 		    'status' => 'ok',
 		    'header' => $header,
-		    'content' => $content
+		    'content' => $content,
+			'url'	=> $url
 		);
 	}
 
