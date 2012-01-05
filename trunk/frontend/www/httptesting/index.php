@@ -2,6 +2,10 @@
 
 	require_once("../../server/bootstrap.php");
 
+	if(!isset($_GET["url"])){
+		
+	}
+	
 ?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
@@ -103,20 +107,7 @@
 				},callback, false);
 			},
 			
-			nuevo_url : function(){
-				var nombre  = $("#new_url_name").val(),
-					url 	= $("#new_url_url").val();
-					
-				var callback = function(){
-					window.location.reload();
-				}
 
-				this.ajax({
-					metodo : "nuevaRuta",
-					nombre : nombre,
-					ruta   : url
-				}, callback, true);
-			},
 			
 			nuevo_url_show : function(){
 				html = '<div id="agregar_url" >';
@@ -137,7 +128,67 @@
 				}else{
 					window.location = "?test="+ test +"&url=" + new_url_id;					
 				}
+			},
+			
+			nuevo_url : function(){
+				var nombre  = $("#new_url_name").val(),
+					url 	= $("#new_url_url").val();
+					
+				var callback = function(){
+					window.location.reload();
+				}
+
+				this.ajax({
+					metodo : "nuevaRuta",
+					nombre : nombre,
+					ruta   : url
+				}, callback, true);
+			},
+	
+			<?php
+			if(isset($_GET["test"])){
+				$t = mysql_fetch_assoc(
+						mysql_query(
+							"select * from httptesting_paquete_de_pruebas where id_paquete_de_pruebas = " . $_GET["test"]));
+							
+				$casos = str_replace ( "\n", " " , htmlspecialchars($t["pruebas"]) );
+				
+				$casos = "";
 			}
+			?>
+			editar_paquete_show : function(){
+				$("#editar_paquete_show").show();
+				$("#editar_paquete_pruebas").prop("disabled", false);
+				$(".editar_paquete_normal").hide();
+			},
+			
+			editar_paquete_cancel: function(){
+				$("#editar_paquete_show").hide();
+				$("#editar_paquete_pruebas").prop("disabled", true);
+				$(".editar_paquete_normal").show();				
+				
+			},
+			
+			editar_paquete : function(){
+				var nombre 			= $("#editar_paquete_nombre").val(),
+					descripcion 	= $("#editar_paquete_descripcion").val(),
+					pruebas			= $("#editar_paquete_pruebas").val();
+					
+				var callback = function(r){
+					console.log(r)
+				}
+
+				this.ajax({
+					metodo 		: "editarPaquete",
+					nombre 		: nombre,
+					descripcion	: descripcion,
+					pruebas 	: pruebas,
+					id_paquete_de_pruebas : <?php echo $t["id_paquete_de_pruebas"]; ?>
+				}, callback, true);
+			}
+			
+			
+			
 		}
 		
 
@@ -209,23 +260,38 @@
 				</select>
 				<input type="button" name="" value="Iniciar pruebas" onClick="httptesting.test();" >
 				<input type="button" name="" value="Agregar url" onClick="httptesting.nuevo_url_show()">
-				</span>
-				<hr/>
-				
-				<div id="response"></div>
 				
 				<?php
-				$s = mysql_query("select * from httptesting_paquete_de_pruebas");
-				while( ($row = mysql_fetch_assoc($s))  != null){
-					if(isset($_GET["test"]) && $_GET["test"] == $row["id_paquete_de_pruebas"]){
-						echo "<div style=''>"; 
-					}else{ 
-						echo "<div style='display:none'>"; 
-					} 
+				if(isset($t)){
+					echo '<input type="button" class="editar_paquete_normal" 	 name="" value="Editar paquete" onClick="httptesting.editar_paquete_show()">';
+				}
+				?>
+				
+
+				
+				</span>
+				<hr />
+				
+				<div id="response"></div>
+
+				<div id="editar_paquete_show" style="display: none">
 					
-					echo '<textarea disabled cols="80" rows="20" name="tests">' . $row["pruebas"] . "</textarea>"; 
-					echo "</div>"; 
-				} 
+
+					<h2 style="margin:0px">Editar este paquete</h2>
+					<input type="button"   value="Guardar" id="editar_paquete_show_btn" onClick="httptesting.editar_paquete()" >
+					<input type="button"   value="Cancelar" id="editar_paquete_cancel_btn" onClick="httptesting.editar_paquete_cancel()" >
+										
+					<br><br>Nombre del paquete<br>
+					<input type="text" value="<?php echo $t["nombre"]; ?>"	id="editar_paquete_nombre"  ><br>
+					
+					Descripcion<br>
+					<textarea 	cols="80" rows=4	id="editar_paquete_descripcion"><?php echo $t["descripcion"]; ?></textarea><br>
+					Pruebas
+				</div>
+
+				<?php
+					if(isset($t))
+						echo '<textarea disabled cols="80" rows="20" id="editar_paquete_pruebas">' . $t["pruebas"] . "</textarea>"; 
 				?>
 				<div class="mtm pvm uiBoxWhite topborder">
 					<div class="mbm">

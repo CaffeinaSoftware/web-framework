@@ -19,7 +19,12 @@
 	switch($_POST["metodo"])
 	{
 		case "editarPaquete" :
-			$sql = "Update httptesting_paquete_de_pruebas set pruebas = '".$_POST["pruebas"]."', nombre='".$_POST["nombre"]."', descripcion='".$_POST["descripcion"]."', locked=".$_POST["locked"]." where id_paquete_de_pruebas=".$_POST["id_paquete_de_pruebas"];
+			if(!isset($_POST["locked"]))
+				$locked = 0;
+			else 
+				$locked = $_POST["locked"];
+				
+			$sql = "Update httptesting_paquete_de_pruebas set pruebas = '".$_POST["pruebas"]."', nombre='".$_POST["nombre"]."', descripcion='".$_POST["descripcion"]."', locked=".$locked." where id_paquete_de_pruebas=".$_POST["id_paquete_de_pruebas"];
 			doQuery($sql);
 	    break;
 			
