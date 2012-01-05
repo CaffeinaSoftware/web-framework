@@ -179,7 +179,9 @@ class Tester{
 	
 		if($jsn_t_send == NULL){
 			echo "<b style='color:red;' >" . self::$n . "] " . $this->test->description .  "...[FAILED: INPUT IS NOT JSON]<br>";
+			echo "LINE: " . $this->test->line. "<br>";
 			echo "HERE IS THE INPUT I TRIED TO SEND: </b><br><code>" . $this->test->input  ."</code>";
+			echo '<br><input type="button" name="" value="Buscar y editar este caso de prueba" onClick="httptesting.editar_paquete_show_at(' . $this->test->line. ')"><br><br>';
 			die;
 		}
 	
