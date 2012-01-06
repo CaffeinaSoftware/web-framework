@@ -29,12 +29,17 @@ class HTTPClient{
 			$data = get_object_vars($data);
 
 			$parsed_d = "?";
+
 			foreach($data as $p => $k){
-				$parsed_d .= $p . "=" . $k;
+				$parsed_d .= $p . "=" . $k . "&";
 			}
-			//echo self::$url_base . $url . "/" . $parsed_d ;	
-			return file_get_contents( self::$url_base . $url . "/" . $parsed_d );
-					
+
+			return array(
+			    'status' 	=> 'ok',
+			    'header' 	=> "200",
+			    'content' 	=> @file_get_contents( self::$url_base . $url . "/" . $parsed_d ),
+				'url'		=> parse_url(self::$url_base . $url . "/" . $parsed_d)
+			);	
 		}catch(Exception $e){
 			throw $e;
 		}

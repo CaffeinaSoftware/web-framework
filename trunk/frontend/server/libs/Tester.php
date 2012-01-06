@@ -124,6 +124,11 @@ class Tester{
 						echo $r["url"]["scheme"] . "://";
 						echo $r["url"]["host"] ;
 						echo $r["url"]["path"];
+						
+						if(isset($r["url"]["query"])){
+							echo "?" . $r["url"]["query"];
+						}
+
 						?></td>
 					</tr>
 					<tr>
