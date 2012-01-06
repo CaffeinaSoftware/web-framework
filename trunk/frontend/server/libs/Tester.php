@@ -22,37 +22,50 @@ class Tester{
 	 *
 	 *
 	 **/
-	public function parseInputTesterScripting( /* json */ $input_to_send ){
+	public function parseInputTesterScripting( /* json as string */ $input_to_send ){
 
 		global $TESTER_SCRIPT_BARS ;	
 		
+		/*echo "PARSEANDO INPUT<BR>";
+		echo "<code>" . ( htmlspecialchars($input_to_send)) . "</code>";
+		echo "<br>";*/
 
-		if(!is_array($input_to_send)){
-			//return $input_to_send;
-		} 
-		
-		
 
-		foreach ($input_to_send as $key => $value) 
-		{
-			if(is_array($value)) continue;
-			
-			if( strpos( $value , "<GET_VAR:"  ) !== false )
+		if( ($where = strpos( $input_to_send , "<SET_VAR:"  ) ) !== false ){
+			echo "<div style='color:blue'>";
+			echo "TESTER FATAL ERROR: Estas usando un SET_VAR en el input en la linea ".$this->test->line."</div><br>";
+			echo '<br><input type="button" name="" value="Buscar y editar este caso de prueba" onClick="httptesting.editar_paquete_show_at(' . $this->test->line. ')"><br><br>';			
+			die;			
+		}
+
+
+		$changed = true;
+		while($changed){
+			$changed = false;
+			if( ($where = strpos( $input_to_send , "<GET_VAR:"  ) ) !== false )
 			{
 				//ponerle el valor
-				$var_name = substr( $value, 9, -1 ) ;
-				
+				$start 	= $where;
+				$end 	= strpos( $input_to_send, ">", $where+1) - ( $where + 9);
+
+				$var_name = substr( $input_to_send, $where + 9,   $end  ) ;
+
 				if(array_key_exists ( $var_name, $TESTER_SCRIPT_BARS )){
-					$input_to_send->$key = $TESTER_SCRIPT_BARS[ $var_name ];					
+					//$input_to_send->$key = ;
+					$input_to_send = substr_replace( $input_to_send, $TESTER_SCRIPT_BARS[ $var_name ], $start, $end + 10);
+					$changed = true;
 				}else{
 					echo "<div style='color:blue'>";
-					echo "VAR `" . $var_name . "` has not been set</div><br>";
+					echo "VAR `<b>" . htmlspecialchars($var_name) . "</b>` has not been set</div><br>";
 				}
-
 			}
 		}
 
-		return $input_to_send;
+		
+	
+		
+		return json_decode($input_to_send);
+
 	}
 
 
@@ -69,24 +82,20 @@ class Tester{
 
 		//buscar en expected output <SET_VAR:VARIABLE>
 		$expected = json_decode( $this->test->output );
-		
-		//if($expected == null) var_dump( $this->test->output ); $actual_output;
-		
+
 		foreach ( $expected as $key => $value) 
 		{
 			//si hay un var set !
 			if( strpos( $value , "<SET_VAR:"  ) !== false )
 			{
-				//var_dump($actual_output);
-				//echo "SET_VAR->".$key . "(". $actual_output->$key .")...<br>" ;
 				
 				$var_name = substr( $value, 9, -1 ) ;
 				if( !isset($actual_output->$key) ){
 					
 					echo "<b style='cursor:pointer;color:red;' onClick='$(\"#end01293\").slideToggle()'>" . self::$n . "] " . $this->test->description .  "...[FAILED]</b><br>";
 					$this->printTestInfo( $r, "end01293");
-
 					echo "<div style='color:blue'>TESTER SCRIPTING FATAL ERROR: `".$key."` is not defined in response.</div><br>";
+					echo '<br><input type="button" name="" value="Buscar y editar este caso de prueba" onClick="httptesting.editar_paquete_show_at(' . $this->test->line. ')"><br><br>';					
 					die;
 					
 				}
@@ -94,9 +103,6 @@ class Tester{
 
 				$TESTER_SCRIPT_BARS [ $var_name ] = $actual_output->$key;
 
-				//var_dump($TESTER_SCRIPT_BARS );
-			}else{
-				//echo " NO !<br>" ;
 			}
 		}
 
@@ -143,21 +149,21 @@ class Tester{
 						<td>
 							<b>Enviado</b>
 						</td>
-						<td><code><?php echo trim($this->test->input);?></code>
+						<td><code><?php echo htmlspecialchars(trim($this->test->input)); ?></code>
 						</td>
 					</tr>
 					<tr>
 						<td>
 							<b>Esperado</b>
 						</td>
-						<td><code><?php echo trim($this->test->output);?></code>
+						<td><code><?php echo trim(htmlspecialchars($this->test->output));?></code>
 						</td>
 					</tr>
 					<tr>
 						<td>
 							<b>Repuesta</b>
 						</td>
-						<td><code><?php echo $r["content"]; ?></code>
+						<td><code><?php echo htmlspecialchars($r["content"]); ?></code>
 						</td>
 					</tr>
 										
@@ -193,7 +199,7 @@ class Tester{
 		$r = HTTPClient::Request(
 				$this->test->method,
 				$this->test->url, 
-				$this->parseInputTesterScripting( $jsn_t_send )
+				$this->parseInputTesterScripting( $this->test->input /* $jsn_t_send */ )
 			);
 
 
@@ -217,7 +223,7 @@ class Tester{
 			$r = HTTPClient::ForcedUrlRequest( 
 					$this->test->method,
 					$this->test->url, 
-					$this->parseInputTesterScripting(json_decode( $this->test->input  ))
+					$this->parseInputTesterScripting( $this->test->input /* json_decode( $this->test->input  ) */ )
 				);
 			
 			
