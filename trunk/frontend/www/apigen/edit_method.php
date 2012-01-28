@@ -606,16 +606,17 @@
 			. "','"
 			.$argumentos[$i][5]
 			."',"
-			.$argumentos[$i][4]
+			.htmlspecialchars(str_replace("\n","<br>",$argumentos[$i][4]))
 			.",'"
 			. preg_replace('/[^(\x20-\x7F)]*/','', $argumentos[$i][3] )
 			."','"
-			.$argumentos[$i][6]."');";
+			.$argumentos[$i][6]."');\n";
 		}
 		if($respuestas!=-1)
 		for($i=0;$i<count($respuestas);$i++)
 		{
-				echo "addResponseEdit('".$respuestas[$i][2]."','".$respuestas[$i][4]."','".$respuestas[$i][3]."');"; 
+			echo "addResponseEdit('".$respuestas[$i][2]."','".$respuestas[$i][4]."',\"". 
+htmlentities(preg_replace('/[^(\x20-\x7F)]*/','',str_replace("\t","",str_replace("\n","\n",$respuestas[$i][3]))))."\");\n"; 
 		}
 	?>
 		m.render();
