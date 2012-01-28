@@ -1,24 +1,25 @@
 <!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" xmlns:fb="http://ogp.me/ns/fb#" xmlns:og="http://ogp.me/ns#" lang="en" id="facebook" class="no_js">
 <head>
 <meta charset="utf-8"/>
-<meta name="robots" content="noodp,noydir"/>
-<meta name="description" content=" facebook is a social utility that connects people with friends and others who work, study and live around them. people use facebook to keep up with friends, upload an unlimited number of photos, post links and videos, and learn more about the people they meet."/>
-<link rel="alternate" media="handheld" href="https://developers.facebook.com/"/>
-<title></title>
-<link rel="canonical" href="https://developers.facebook.com/"/>
-<link type="text/css" rel="stylesheet" href="https://s-static.ak.facebook.com/rsrc.php/v1/yd/r/UScOtw9XDgs.css"/>
-<link type="text/css" rel="stylesheet" href="https://s-static.ak.facebook.com/rsrc.php/v1/yR/r/DXKB648UQdW.css"/>
-<link type="text/css" rel="stylesheet" href="https://s-static.ak.facebook.com/rsrc.php/v1/yM/r/5SI8Yrveq93.css"/>
-<script type="text/javascript" src="https://s-static.ak.facebook.com/rsrc.php/v1/yE/r/URts6q-MHAk.js"></script>
+<title>Caffeina WebFramework</title>
+<link type="text/css" rel="stylesheet" href="media/UScOtw9XDgs.css"/>
+<link type="text/css" rel="stylesheet" href="media/DXKB648UQdW.css"/>
+<link type="text/css" rel="stylesheet" href="media/5SI8Yrveq93.css"/>
+
 </head>
 <body class="safari4 mac Locale_en_US">
-<input type="hidden" autocomplete="off" id="post_form_id" name="post_form_id" value="b1b7617ba12ba910a9109c7129e70651"/>
-<div id="FB_HiddenContainer" style="position:absolute; top:-10000px; width:0px; height:0px;">
-</div>
+
+<div id="FB_HiddenContainer" style="position:absolute; top:-10000px; width:0px; height:0px;"></div>
+
 <div class="devsitePage">
 	<div class="menu">
 		<div class="content">
-			<a class="logo" href="/"><i class="img sp_990tmg sx_a67319"><u>Facebook Developers</u></i></a><a class="l" href="/docs/">Documentation</a><a class="l" href="/support/">Support</a><a class="l" href="/blog/">Blog</a><a class="l" href="https://developers.facebook.com/apps">Apps</a>
+
+			<a class="logo" href="/"><i class="img sp_990tmg sx_a67319"><u>Facebook Developers</u></i></a>
+			<a class="l" href="/docs/">Documentation</a>
+			<a class="l" href="/support/">Support</a>
+			<a class="l" href="/blog/">Blog</a>
+			<a class="l" href="https://developers.facebook.com/apps">Apps</a>
 
 			<div class="clear">
 			</div>

@@ -41,7 +41,7 @@
 			html += 	'</td>'; 
 			
 			html += 	'<td>';
-			html += 		'<textarea name="descripcion_argumento_'+param_count+'""placeholder="descripcion" id="args_desc_'+param_count+'" onKeyUp="m.render()"></textarea>';
+			html += 		'<textarea rows=6 name="descripcion_argumento_'+param_count+'""placeholder="descripcion" id="args_desc_'+param_count+'" onKeyUp="m.render()"></textarea>';
 			html += 	'</td>';
 			
 			html += 	'<td><input name="default_'+param_count+'" id="args_default_'+param_count+'" value="null" onKeyUp="m.render()"></td>';
@@ -104,7 +104,7 @@
 			html += 	'</td>'; 
 			
 			html += 	'<td>';
-			html += 		'<textarea name="descripcion_argumento_'+param_count+'""placeholder="descripcion" id="args_desc_'+param_count+'" onKeyUp="m.render()">'+descripcion+'</textarea>';
+			html += 		'<textarea rows=6 name="descripcion_argumento_'+param_count+'""placeholder="descripcion" id="args_desc_'+param_count+'" onKeyUp="m.render()">'+descripcion+'</textarea>';
 			html += 	'</td>';
 			
 			html += 	'<td><input name="default_'+param_count+'" id="args_default_'+param_count+'" value="'+Default+'" onKeyUp="m.render()"></td>';
@@ -365,7 +365,7 @@
 				     	<tr>
 				     		<td>Descripcion</td>
 				     		<td>
-								<textarea name="descripcion_metodo" id="desc_metodo" style="width:100%" onKeyUp="m.desc = this.value; m.render()"><?php echo $info_metodo[8];?></textarea>
+								<textarea rows=12 name="descripcion_metodo" id="desc_metodo" style="width:100%" onKeyUp="m.desc = this.value; m.render()"><?php echo $info_metodo[8];?></textarea>
 				     		</td>
 				     	</tr>				     	
 				     	<tr>
@@ -441,14 +441,14 @@
 				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Ejemplo Peticion</h3></td>
 				     	</tr>
 				     	<tr>
-				     		<td colspan="2"><textarea style="width:100%" name="ejemplo_peticion" id="entrada_metodo" onKeyUp="m.entrada = this.value; m.render()"><?php echo $info_metodo[6];?></textarea></td>
+				     		<td colspan="2"><textarea rows=12 style="width:100%" name="ejemplo_peticion" id="entrada_metodo" onKeyUp="m.entrada = this.value; m.render()"><?php echo $info_metodo[6];?></textarea></td>
 				     	</tr>
 				     	<tr>
 				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Ejemplo Respuesta</h3></td>
 				     	</tr>
 				     	<tr>
 
-				     		<td colspan="2"><textarea style="width:100%" name="ejemplo_respuesta" id="salida_metodo" onKeyUp="m.salida = this.value; m.render()"><?php echo $info_metodo[7];?></textarea></td>
+				     		<td colspan="2"><textarea rows=12 style="width:100%" name="ejemplo_respuesta" id="salida_metodo" onKeyUp="m.salida = this.value; m.render()"><?php echo $info_metodo[7];?></textarea></td>
 				     	</tr>
 				     	
 
