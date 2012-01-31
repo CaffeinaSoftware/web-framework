@@ -33,7 +33,7 @@
 
 			<?php
 			if(isset($_GET["m"])){
-				echo '<a class="l" href="edit_method.php?m='. $_GET["m"] .'&cat='.$_GET["cat"].'">Editar este metodo</a>';
+				echo '<a class="l" href="em.php?m='. $_GET["m"] .'&cat='.$_GET["cat"].'">Editar este metodo</a>';
 				echo '<a class="l" onClick="Borrar('. $_GET["m"] .')">Borrar este metodo</a>';
 
 			}
@@ -237,17 +237,17 @@
 						<h2>Argumentos</h2>
 						<table class="methods" style="margin-left:0; width:100%">
 						<tr>
-							<th>
+							<th style="border:1px solid #ddd;">
 								Nombre
 							</th>
-							<th>
+							<th style="border:1px solid #ddd;">
 								Tipo
 							</th>
-							<th>
-								Defaults
+							<th style="border:1px solid #ddd;">
+								Default
 							</th>
-							<th>
-								Desc
+							<th style="border:1px solid #ddd;">
+								Descripcion
 							</th>
 						</tr>
 
@@ -257,22 +257,22 @@
 							
 							?>
 							<tr>
-							<td class="method">
+							<td class="method"  style="border:1px solid #ddd;">
 								<code><?php 
 									if($argumento["ahuevo"]) echo "<b>";
 									echo $argumento["nombre"]; 
 									if($argumento["ahuevo"]) echo "</b>";
 								?></code>
 							</td>
-							<td class="desc">
+							<td class="desc"  style="border:1px solid #ddd;">
 								<code><?php echo $argumento["tipo"]; ?></code>
 							</td>
-							<td class="args">
+							<td class="args"  style="border:1px solid #ddd;">
 								<?php //echo $argumento["ahuevo"];
 								 echo $argumento["defaults"]; 
 								?>
 							</td>
-							<td class="args">
+							<td class="args"  style="border:1px solid #ddd;">
 								<?php echo $argumento["descripcion"]; ?>
 							</td>							
 							</tr>
@@ -292,13 +292,13 @@
 						<h2>Respuesta</h2>
 						<table class="methods" style="margin-left:0; width:100%">
 						<tr>
-							<th>
+							<th  style="border:1px solid #ddd;">
 								Nombre
 							</th>
-							<th>
+							<th style="border:1px solid #ddd;">
 								Tipo
 							</th>
-							<th>
+							<th style="border:1px solid #ddd;">
 								Desc
 							</th>
 						</tr>
@@ -309,13 +309,13 @@
 							
 							?>
 							<tr>
-							<td class="method">
+							<td class="method" style="border:1px solid #ddd;">
 								<code><?php echo $respuesta["nombre"]; ?></code>
 							</td>
-							<td class="desc">
+							<td class="desc" style="border:1px solid #ddd;">
 								<code><?php echo $respuesta["tipo"]; ?></code>
 							</td>
-							<td class="args">
+							<td class="args" style="border:1px solid #ddd;">
 								<?php echo $respuesta["descripcion"]; ?>
 							</td>							
 							</tr>

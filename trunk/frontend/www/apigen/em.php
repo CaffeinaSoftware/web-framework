@@ -32,23 +32,9 @@
 			<a class="logo" href="../">
 				<img class="img" src="https://s-static.ak.facebook.com/rsrc.php/v1/yW/r/N2f0JA5UPFU.png" alt="Facebook Developers" width="166" height="17"/>
 			</a>
-
-			<?php
-			if(isset($_GET["m"])){
-				echo '<a class="l" href="../api_creation/edit_method.php?m='. $_GET["m"] .'&cat='.$_GET["cat"].'">Editar este metodo</a>';
-				echo '<a class="l" onClick="Borrar('. $_GET["m"] .')">Borrar este metodo</a>';
-
-			}
-			?>
-
 			
 			<a class="l" href="../api_creation/new_method.php<?php if(isset($_GET["cat"])) echo "?cat=".$_GET["cat"];?>">Nuevo metodo</a>
 
-			<!--
-			<a class="l" href="/support/">Support</a>
-			<a class="l" href="/blog/">Blog</a>
-			<a class="l" href="">Apps</a>
-			-->
 			<a class="l" href="build.php">Generar Codigo</a>
 			
 	
@@ -85,7 +71,7 @@
 												
 												$n = str_replace("api/", "", $m["nombre"] );
 												$n = substr(  $n , strpos( $n , "/" ) +1 );
-												echo '<li><a href="?&cat='.$row["id_clasificacion"].'&m='.$m["id_metodo"].'">' . $n .  '</a></li>';
+												echo '<li><a href="index.php?&cat='.$row["id_clasificacion"].'&m='.$m["id_metodo"].'">' . $n .  '</a></li>';
 										}
 										?>
 										</ul>
@@ -120,23 +106,19 @@
 				<div class="header">
 					<div class="content">
 
-						<h1>Generar codigo</h1>
+						<h1>Editar metodo</h1>
 						
 						
 						<div class="breadcrumbs">
 							<a href="api_doc.php">Regresar</a> 
-							
 						</div>
 							
 
 					</div>
 				</div>
 
-				<p>
-					<a href="dl.php?what=full_api&out_name=full_api">Descargar Todo</a>
-				</p>
 
-					<?php require_once( "write_api.php" ); ?>
+					<?php require_once( "edit_method.php" ); ?>
 
 				<hr/>
 

@@ -7,7 +7,7 @@
 
 ?><html>
 <head>
-	<link rel="stylesheet" type="text/css" href="../css/final_api.css">
+	<link rel="stylesheet" type="text/css" href="../media/final_api.css">
 	<script type="text/javascript" src="http://api.caffeina.mx/jquery/jquery-1.4.2.min.js"></script>
 	<title></title>
 	<script type="text/javascript">
@@ -18,12 +18,12 @@
 			document.getElementById("numero_argumentos").value=param_count+1;
 			var html = '';
 			
-			html += 	'<tr valign=top>';
-			html += 	'<td>';
-			html += 		'<input type="text" name="nombre_argumento_'+param_count+'" placeholder="nombre" id="args_nombre_'+param_count+'" onKeyUp="m.render()">';
+			html += 	'<tr valign="top" style="border-bottom:1px solid #ddd;">';
+			html += 	'<td style="border:1px solid #ddd;">';
+			html += 		'<input type="text" name="nombre_argumento_'+param_count+'" placeholder="nombre" id="args_nombre_'+param_count+'" >';
 			html += 	'</td>';
 			
-			html += 	'<td>';
+			html += 	'<td style="border:1px solid #ddd;">';
 			html += 		'<select name="tipo_argumento_'+param_count+'" id="args_tipo_'+param_count+'" onChange="m.render()">';
 			html += 			'<option value="string">string</option>';
 			html += 			'<option value="bool">bool</option>';
@@ -33,19 +33,19 @@
 			html += 		'</select>';
 			html += 	'</td>';
 			
-			html += 	'<td>';
+			html += 	'<td style="border:1px solid #ddd;">';
 			html += 		'<select name="ahuevo_'+param_count+'" id="args_ahuevo_'+param_count+'" onChange="m.render()">';
 			html += 			'<option value=1>Obligatorio</option>';
 			html += 			'<option value=0>Opcional</option>';
 			html += 		'</select>';
 			html += 	'</td>'; 
 			
-			html += 	'<td>';
-			html += 		'<textarea rows=6 name="descripcion_argumento_'+param_count+'""placeholder="descripcion" id="args_desc_'+param_count+'" onKeyUp="m.render()"></textarea>';
+			html += 	'<td style="border:1px solid #ddd;">';
+			html += 		'<textarea rows=6 name="descripcion_argumento_'+param_count+'""placeholder="descripcion" id="args_desc_'+param_count+'" ></textarea>';
 			html += 	'</td>';
 			
-			html += 	'<td><input name="default_'+param_count+'" id="args_default_'+param_count+'" value="null" onKeyUp="m.render()"></td>';
-			html +=		'<td>Borrar<input type="checkbox" name="borrar_argumento_'+param_count+'"></td>';
+			html += 	'<td style="border:1px solid #ddd;"><input name="default_'+param_count+'" id="args_default_'+param_count+'" value="null" ></td>';
+			html +=		'<td style="border:1px solid #ddd;">Borrar<input type="checkbox" name="borrar_argumento_'+param_count+'"></td>';
 			html += 	'</tr>'	;
 					
 			$("#param_space").append(html);
@@ -58,9 +58,9 @@
 			document.getElementById("numero_argumentos").value=param_count+1;
 			var html = '';
 			
-			html += 	'<tr valign=top>';
+			html += 	'<tr valign=top style="border:1px solid #ddd;">';
 			html += 	'<td>';
-			html += 		'<input type="text" name="nombre_argumento_'+param_count+'" value="'+nombre+'" id="args_nombre_'+param_count+'" onKeyUp="m.render()">';
+			html += 		'<input type="text" name="nombre_argumento_'+param_count+'" value="'+nombre+'" id="args_nombre_'+param_count+'" >';
 			html += 	'</td>';
 			
 			html += 	'<td>';
@@ -104,10 +104,10 @@
 			html += 	'</td>'; 
 			
 			html += 	'<td>';
-			html += 		'<textarea rows=6 name="descripcion_argumento_'+param_count+'""placeholder="descripcion" id="args_desc_'+param_count+'" onKeyUp="m.render()">'+descripcion+'</textarea>';
+			html += 		'<textarea rows=6 name="descripcion_argumento_'+param_count+'""placeholder="descripcion" id="args_desc_'+param_count+'" >'+descripcion+'</textarea>';
 			html += 	'</td>';
 			
-			html += 	'<td><input name="default_'+param_count+'" id="args_default_'+param_count+'" value="'+Default+'" onKeyUp="m.render()"></td>';
+			html += 	'<td><input name="default_'+param_count+'" id="args_default_'+param_count+'" value="'+Default+'" ></td>';
 			html +=		'<td>Borrar<input type="checkbox" name="borrar_argumento_'+param_count+'"></td>';
 			html += 	'</tr>'	;
 					
@@ -121,9 +121,9 @@
 			document.getElementById("numero_respuestas").value=response_count+1;
 			var html = '';
 			
-			html += 	'<tr valign=top>';
+			html += 	'<tr valign=top style="border:1px solid #ddd;">';
 				html += 	'<td>';
-				html += 		'<input type="text" name="nombre_respuesta_'+response_count+'" placeholder="nombre" id="response_nombre_'+response_count+'" onKeyUp="m.render()">';
+				html += 		'<input type="text" name="nombre_respuesta_'+response_count+'" placeholder="nombre" id="response_nombre_'+response_count+'" >';
 				html += 	'</td>';
 				
 				html += 	'<td>';
@@ -137,7 +137,7 @@
 				html += 	'</td>';
 				
 				html += 	'<td>';
-				html += 		'<textarea name="descripcion_respuesta_'+response_count+'" placeholder="descripcion" id="response_desc_'+response_count+'" onKeyUp="m.render()"></textarea>';
+				html += 		'<textarea name="descripcion_respuesta_'+response_count+'" placeholder="descripcion" id="response_desc_'+response_count+'" ></textarea>';
 				html += 	'</td>';
 				
 				html +=		'<td>';
@@ -155,9 +155,9 @@
 			document.getElementById("numero_respuestas").value=response_count+1;
 			var html = '';
 			
-			html += 	'<tr valign=top>';
+			html += 	'<tr valign=top style="border:1px solid #ddd;">';
 				html += 	'<td>';
-				html += 		'<input type="text" name="nombre_respuesta_'+response_count+'" value="'+nombre+'" id="response_nombre_'+response_count+'" onKeyUp="m.render()">';
+				html += 		'<input type="text" name="nombre_respuesta_'+response_count+'" value="'+nombre+'" id="response_nombre_'+response_count+'" >';
 				html += 	'</td>';
 				
 				html += 	'<td>';
@@ -186,7 +186,7 @@
 				html += 	'</td>';
 				
 				html += 	'<td>';
-				html += 		'<textarea name="descripcion_respuesta_'+response_count+'" placeholder="descripcion" id="response_desc_'+response_count+'" onKeyUp="m.render()">'+descripcion+'</textarea>';
+				html += 		'<textarea name="descripcion_respuesta_'+response_count+'" placeholder="Descripcion" id="response_desc_'+response_count+'" >'+descripcion+'</textarea>';
 				html += 	'</td>';
 				
 				html +=		'<td>';
@@ -316,7 +316,7 @@
 	?>
 <form id="form_insercion" method="POST" action="negocios_editar.php">
 	<table border=0>
-		<tr style="width:50%">
+		<tr >
 			<td valign=top>
 				<!-- --------------------------------------------------------------------
 						EDITOR
@@ -365,7 +365,14 @@
 				     	<tr>
 				     		<td>Descripcion</td>
 				     		<td>
-								<textarea rows=12 name="descripcion_metodo" id="desc_metodo" style="width:100%" onKeyUp="m.desc = this.value; m.render()"><?php echo $info_metodo[8];?></textarea>
+								<textarea 
+									rows=12 
+									name="descripcion_metodo" 
+									id="desc_metodo" 
+									style="width:100%" 
+									onKeyUp="m.desc = this.value; m.render()"><?php 
+										echo str_replace("<br>","\n", $info_metodo[8])
+									?></textarea>
 				     		</td>
 				     	</tr>				     	
 				     	<tr>
@@ -374,23 +381,17 @@
 				     		<select name="tipo_metodo" id="http_metodo" onChange="m.http = this.value; m.render()">
 							<?php
 							    if($info_metodo[3]=="GET")
-								echo '
-								<option value="GET" selected>GET</option> ';
+								echo '<option value="GET" selected>GET</option> ';
 								else
-								echo '
-								<option value="GET">GET</option> ';
+								echo '<option value="GET">GET</option> ';
 								if($info_metodo[3]=="POST")
-								echo '
-								<option value="POST" selected>POST</option> ';
+								echo '<option value="POST" selected>POST</option> ';
 								else
-								echo '
-								<option value="POST">POST</option> ';
+								echo '<option value="POST">POST</option> ';
 								if($info_metodo[3]=="POST/GET")
-								echo '
-								<option value="POST/GET" selected>POST/GET</option> ';
+								echo '<option value="POST/GET" selected>POST/GET</option> ';
 								else
-								echo '
-								<option value="POST/GET">POST/GET</option> ';
+								echo '<option value="POST/GET">POST/GET</option> ';
 							?>
 							</select>
 							</td>
@@ -418,7 +419,8 @@
 				     	
 				     	<tr>
 				     		
-				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Argumentos <a onClick='addParam()'>[+]</a></h3></td>
+				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;">
+								<h3 style="color: white;">Argumentos <a onClick='addParam()' style="color: white;">[+]</a></h3></td>
 				     	</tr>
 						<tr>
 				     		<td colspan="2">
@@ -428,7 +430,7 @@
 				     	</tr>				     	
 				     	<tr>
 				     		
-				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Respuesta <a onClick='addResponse()'>[+]</a></h3></td>
+				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Respuesta <a onClick='addResponse()' style="color: white;">[+]</a></h3></td>
 				     	</tr>
 				     	<tr>
 							<td colspan="2">
@@ -441,140 +443,58 @@
 				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Ejemplo Peticion</h3></td>
 				     	</tr>
 				     	<tr>
-				     		<td colspan="2"><textarea rows=12 style="width:100%" name="ejemplo_peticion" id="entrada_metodo" onKeyUp="m.entrada = this.value; m.render()"><?php echo $info_metodo[6];?></textarea></td>
+				     		<td colspan="2">
+								<textarea 
+								rows=12 
+								style="width:100%;<?php
+								
+									try{
+										$a = json_decode($info_metodo[6]);
+									}catch(Exception $e){
+										echo  "box-shadow: 0 0 5px 2px #f00;  -webkit-box-shadow: 0 0 5px 2px #f00;  -moz-box-shadow: 0 0 5px 2px #f00;";										
+									}
+
+									if(is_null($a)){
+										echo  "box-shadow: 0 0 5px 2px #f00;  -webkit-box-shadow: 0 0 5px 2px #f00;  -moz-box-shadow: 0 0 5px 2px #f00;";
+									}
+									
+								?>" 
+								name="ejemplo_peticion" 
+								id="entrada_metodo" 
+								onKeyUp="m.entrada = this.value; m.render();"><?php echo $info_metodo[6];?></textarea>
+							</td>
 				     	</tr>
 				     	<tr>
 				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Ejemplo Respuesta</h3></td>
 				     	</tr>
 				     	<tr>
 
-				     		<td colspan="2"><textarea rows=12 style="width:100%" name="ejemplo_respuesta" id="salida_metodo" onKeyUp="m.salida = this.value; m.render()"><?php echo $info_metodo[7];?></textarea></td>
+				     		<td colspan="2">
+								<textarea
+								 rows=12
+								 style="width:100%; <?php
+
+									try{
+										$a = json_decode($info_metodo[7]);
+									}catch(Exception $e){
+										echo  "box-shadow: 0 0 5px 2px #f00;  -webkit-box-shadow: 0 0 5px 2px #f00;  -moz-box-shadow: 0 0 5px 2px #f00;";										
+									}
+
+									if(is_null($a)){
+										echo  "box-shadow: 0 0 5px 2px #f00;  -webkit-box-shadow: 0 0 5px 2px #f00;  -moz-box-shadow: 0 0 5px 2px #f00;";
+									}
+
+								?>"
+								 name="ejemplo_respuesta"
+								 id="salida_metodo"
+								 onKeyUp="m.salida = this.value; m.render()"><?php echo $info_metodo[7];?></textarea></td>
 				     	</tr>
 				     	
 
 				     </table>	
 
 			</td>
-			<td width="50%" valign=top>
-				<!-- --------------------------------------------------------------------
-						PREVIEW
-				     -------------------------------------------------------------------- -->
-				<div id="render_preview">
 
-<table cellpadding="0" cellspacing="0" class="c0">
-<tbody>
-<tr class="c1">
-	<td class="c25 c41">
-		<p class="c3">
-			<span class="c19" id="preview_nombre"></span>
-		</p>
-		<p class="c3">
-			<span class="c31" id="preview_subtitle"></span>
-		</p>
-	</td>
-</tr>
-</tbody>
-</table>
-<p class="c22 c15" id="preview_desc"></p>
-<br>
-<h4 class="c15"><span>Regresa HTML</span></h4><span class="c7" id="preview_regresa_html">No</span>
-<h4 class="c15"><span>Autenticaci&oacute;n</span></h4>
-<table cellpadding="0" cellspacing="0" class="c0">
-<tbody>
-<tr>
-	<td class="c9">
-		<p class="c3">
-			<span class="c6">Sesion valida</span>
-		</p>
-	</td>
-	<td class="c16">
-		<p class="c3">
-			<span class="c7" id="preview_auth_sesion">Si</span>
-		</p>
-	</td>
-</tr>
-<tr class="c169">
-	<td class="c9">
-		<p class="c3">
-			<span class="c6">Grupo</span>
-		</p>
-	</td>
-	<td class="c16">
-		<p class="c3">
-			<span class="c7" id="preview_auth_grupo"></span>
-		</p>
-	</td>
-</tr>
-<tr class="c1">
-	<td class="c9">
-		<p class="c3">
-			<span class="c6">Permiso</span>
-		</p>
-	</td>
-	<td class="c16">
-		<p class="c22 c15">
-			<span class="c8 c7" id="preview_auth_permiso"></span>
-		</p>
-	</td>
-</tr>
-</tbody>
-</table>
-<h4 class="c15"><a name="h.fmkw97a0ehmh"></a><span>Argumentos</span></h4>
-<table cellpadding="0" cellspacing="0" class="c0">
-	<tbody id="preview_arg_table">
-
-		<!-- -------------------- -->
-
-	</tbody>
-</table>
-<h4 class="c15"><a name="h.vzpf48a1ugdo"></a><span>Respuesta</span></h4>
-<table cellpadding="0" cellspacing="0" class="c0">
-	<tbody id="preview_resp_table">
-
-	
-
-	</tbody>
-</table>
-<h4 class="c15"><span>Ejemplo</span></h4>
-<p class="c15">
-	<span>Peticion</span>
-</p>
-<table cellpadding="0" cellspacing="0" class="c0">
-<tbody>
-<tr>
-	<td class="c25 c13">
-		<p class="code" id="preview_peticion"></p>
-	</td>
-</tr>
-</tbody>
-</table>
-
-<p class="c15">
-	<span>Respuesta</span>
-</p>
-
-<table cellpadding="0" cellspacing="0" class="c0">
-<tbody>
-<tr class="c1">
-	<td class="c25 c13">
-		<p class="code" id="preview_respuesta"></p>
-	</td>
-</tr>
-</tbody>
-</table>
-
-					
-
-
-
-
-
-
-
-				</div>
-
-
-			</td>
 		</tr>
 
 	</table>	
@@ -615,8 +535,7 @@
 		if($respuestas!=-1)
 		for($i=0;$i<count($respuestas);$i++)
 		{
-			echo "addResponseEdit('".$respuestas[$i][2]."','".$respuestas[$i][4]."',\"". 
-htmlentities(preg_replace('/[^(\x20-\x7F)]*/','',str_replace("\t","",str_replace("\n","\n",$respuestas[$i][3]))))."\");\n"; 
+			echo "addResponseEdit('".$respuestas[$i][2]."','".$respuestas[$i][4]."',\"". htmlentities(preg_replace('/[^(\x20-\x7F)]*/','',str_replace("\t","",str_replace("\n","\n",$respuestas[$i][3]))))."\");\n"; 
 		}
 	?>
 		m.render();

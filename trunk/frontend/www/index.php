@@ -75,10 +75,10 @@
 					<div>
 					</div>
 					<div class="title">
-						<a href="/docs/guides/canvas/"><span class="fsxxl fwb">Build Apps on Facebook</span></a>
+						<a href=""><span class="fsxxl fwb">Build Apps</span></a>
 					</div>
 					<div class="caption">
-						<span class="fsm">Integrate with our core experience by building apps that operate within Facebook.</span>
+						<span class="fsm">Integrate with our core experience.</span>
 					</div>
 				</div>
 			</div>
