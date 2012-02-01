@@ -84,8 +84,8 @@
 	{
 
 
-		$out = 	"<?php\n";
-		$out .=	"/**\n";
+
+		/*$out =	"/**\n";
 		$out .= "  * " .  $metodo["tipo"] . " " . $metodo["nombre"] . "\n";
 		$out .= "  * " .  utf8_decode($metodo["subtitulo"]) . "\n";
 		$out .= "  *\n";
@@ -93,8 +93,10 @@
 		$out .= "  *\n";
 		$out .= "  *\n";
 		$out .= "  *\n";
-		$out .= "  **/\n";
-
+		$out .= "  * * /\n";*/
+		
+		$out = "\n";
+		
 		$cname = ucwords(
 				str_replace("/"," ", 
 					str_replace("_"," ", $metodo["nombre"])
@@ -155,10 +157,9 @@
 			$controller_name = str_replace( " ", "", ucwords( $controller_name["nombre"] ) );
 			
 
-
 			$iname = str_replace("api/", "", $metodo["nombre"] );
 			$iname = str_replace("/", " ", $iname );
-
+			$iname = str_replace("_", " ", $iname );
 			$parts = explode(" ", $iname);
 			$iname = "";
 
@@ -169,7 +170,7 @@
 
 			$iname = ucwords($iname);
 			$iname = str_replace(" ","", $iname );
-			
+
 		// ----- ----- ----- -----
 
 		$out .= "\t\ttry{\n ";
@@ -268,7 +269,7 @@
 					if(strlen($row_param["defaults"]) == 0){
 						$params .= " = \"\""; 
 					}else{
-						$params .= " = " . $row_param["defaults"]; 	
+						$params .= " = \"" . $row_param["defaults"] . "\""; 	
 					}
 				}
 
@@ -293,7 +294,7 @@
 
 			$iname = str_replace("api/", "", $m["nombre"] );
 			$iname = str_replace("/", " ", $iname );
-
+			$iname = str_replace("_", " ", $iname );
 			$parts = explode(" ", $iname);
 			$iname = "";
 
@@ -377,7 +378,7 @@
 					if(strlen($row_param["defaults"]) == 0){
 						$params .= " = \"\""; 
 					}else{
-						$params .= " = " . $row_param["defaults"]; 	
+						$params .= " = \"" . $row_param["defaults"] . "\""; 	
 					}
 				}
 				$params .=  ", ";
@@ -399,9 +400,12 @@
 
 			$out .= " 	 **/\n";
 
+
+
+
 			$iname = str_replace("api/", "", $m["nombre"] );
 			$iname = str_replace("/", " ", $iname );
-
+			$iname = str_replace("_", " ", $iname );
 			$parts = explode(" ", $iname);
 			$iname = "";
 
@@ -410,6 +414,7 @@
 				$iname .= $parts[$i]." ";
 			}
 
+			
 			$iname = ucwords($iname);
 			$iname = str_replace(" ","", $iname );
 
@@ -461,6 +466,14 @@
 
 	$res = mysql_query("select * from metodo order by id_clasificacion") or die(mysql_error());
 
+
+	$_api_file = fopen("tmp/out/server/api/ApiLoader.php", 'w') or die("can't open file");
+	fwrite( $_api_file, "<?php \n\n");
+	
+	
+	$_api_htaccess_file = fopen("tmp/out/www/api/.htaccess", 'w') or die("can't open file");
+	
+	
 	while(($row = mysql_fetch_assoc($res)) != null )
 	{
 
@@ -475,18 +488,19 @@
 
 
 		//create api 
-		$fname = str_replace("/",".", $row["nombre"]);
-		$f = "tmp/out/server/api/" . $fname . ".php";
-		$f = fopen($f, 'w') or die("can't open file");
-		fwrite($f, write_api_file(  $row) );
-		fclose($f);
+		//$fname = str_replace("/",".", $row["nombre"]);
+		//$f = "tmp/out/server/api/" . $fname . ".php";
+		//$f = fopen($f, 'w') or die("can't open file");
+		fwrite($_api_file, write_api_file(  $row ) );
+
 
 	}
 
-
+	fclose($_api_file);
+	fclose($_api_htaccess_file);
+	
 	
 	//create controller interface
-	
 	$query = mysql_query("select * from clasificacion ;");
 	
 	while( ($row = mysql_fetch_assoc( $query )) != null )
