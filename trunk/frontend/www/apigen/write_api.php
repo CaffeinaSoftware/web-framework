@@ -327,7 +327,7 @@
 					
 					if(!$foo){
 						$params .= " = \"" . $row_param["defaults"] . "\""; 	
-					}
+					} 
 				}
 				$params .=  ", ";
 			}
