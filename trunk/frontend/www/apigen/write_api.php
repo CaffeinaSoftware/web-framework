@@ -308,6 +308,7 @@
 
 				$params .= "\n\t\t$" . $row_param["nombre"] ;
 				if($row_param["ahuevo"] == "0") { 
+					/* ES OPCIONAL */
 					$foo = false;
 					
 					if(strlen($row_param["defaults"]) == 0){
@@ -325,8 +326,17 @@
 						$params .= " = \"\""; 	
 					}
 					
+					
+					
 					if(!$foo){
-						$params .= " = \"" . $row_param["defaults"] . "\""; 	
+						if( ($row_param["tipo"] == "bool") || ($row_param["tipo"] == "int")){
+							$params .= " =  " . $row_param["defaults"] . " "; 	
+							
+						}else{
+							$params .= " = \"" . $row_param["defaults"] . "\""; 
+							
+						}
+
 					} 
 				}
 				$params .=  ", ";
