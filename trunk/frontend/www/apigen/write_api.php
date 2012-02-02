@@ -5,69 +5,6 @@
 
 
 
-################################################################################
-			 #    # #    # #    #    ###### # #      ###### 
-			 #    # #    # #    #    #      # #      #      
-			 #    # #    # #    #    #####  # #      #####  
-			 # ## # # ## # # ## #    #      # #      #      
-			 ##  ## ##  ## ##  ##    #      # #      #      
-			 #    # #    # #    #    #      # ###### ###### 
-################################################################################
-	function write_www_file($metodo)
-	{
-		
-		$out = 	"<?php\n";
-		$out .=	"/**\n";
-		$out .= "  * " .  $metodo["tipo"] . " " . $metodo["nombre"] . "\n";
-		$out .= "  * " .  utf8_decode($metodo["subtitulo"]) . "\n";
-		$out .= "  *\n";
-		$out .= "  * " .  utf8_decode(strip_tags($metodo["descripcion"])) . "\n";
-		$out .= "  *\n";
-		$out .= "  *\n";
-		$out .= "  *\n";
-		$out .= "  **/\n";
-
-		$fname = "api/" . str_replace("/",".", $metodo["nombre"]) . ".php";
-
-
-		$foo = explode( "/" , $metodo["nombre"] );
-
-		
-		$path_to_bootstrap = "../../../";
-
-		for ($i=0; $i < sizeof($foo); $i++) 
-		{
-			$path_to_bootstrap .= "../";
-		}
-		
-		$path_to_bootstrap .= "server/bootstrap.php";
-		
-		
-		$out .= "require_once(\"" . $path_to_bootstrap . "\");\n";
-		$out .= "require_once(\"" . $fname . "\");\n\n";
-
-	    /*$nombre = str_replace("/"," ", $metodo["nombre"] );
-	    $nombre = str_replace(" ", "", ucwords( $nombre) );*/
-
-		$cname = ucwords(
-				str_replace("/"," ", 
-					str_replace("_"," ", $metodo["nombre"])
-				)
-			);
-		$cname = str_replace(" ","", $cname) ;
-
-
-
-		$out .= "$"."api = new ". $cname . "();\n";
-		$out .= "$"."apiOutput = ApiOutputFormatter::getInstance();\n";
-		$out .= "$"."apiOutput->PrintOuput($"."api);\n";
-
-		return $out;
-
-	}
-
-
-
 
 
 
@@ -80,32 +17,16 @@
 				 #    # #      # 
 				 #    # #      # 
 ################################################################################
-	function write_api_file( $metodo )
-	{
+	function write_api_file( $metodo ){
 
 
-
-		/*$out =	"/**\n";
-		$out .= "  * " .  $metodo["tipo"] . " " . $metodo["nombre"] . "\n";
-		$out .= "  * " .  utf8_decode($metodo["subtitulo"]) . "\n";
-		$out .= "  *\n";
-		$out .= "  * " .  utf8_decode(strip_tags($metodo["descripcion"])) . "\n";
-		$out .= "  *\n";
-		$out .= "  *\n";
-		$out .= "  *\n";
-		$out .= "  * * /\n";*/
 		
-		$out = "\n";
 		
-		$cname = ucwords(
-				str_replace("/"," ", 
-					str_replace("_"," ", $metodo["nombre"])
-				)
-			);
+		$cname = ucwords( str_replace("/"," ", str_replace("_"," ", $metodo["nombre"]) ) );
 		$cname = str_replace(" ","", $cname) ;
 
 
-		$out .= "\n";
+		$out = "\n";
 		$out .= "  class ". $cname ." extends ApiHandler {\n";
 		$out .= "  \n\n";
 
@@ -208,10 +129,6 @@
 		$out .= "  }\n";
 		$out .= "  \n";
 		$out .= "  \n";
-		$out .= "  \n";
-		$out .= "  \n";
-		$out .= "  \n";
-		$out .= "  \n";
 
 		return $out;
 
@@ -245,11 +162,11 @@
 
 		while(($m = mysql_fetch_assoc($argsq)) != null)
 		{
-			$out .= "  \n";
-			$out .=	"	/**\n";
-			$out .= " 	 *\n";
-			$out .= " 	 *" . utf8_decode(strip_tags($m["descripcion"])) . "\n";
-			$out .= " 	 *\n";
+			$out .= "\t\n";
+			$out .=	"\t/**\n";
+			$out .= "\t*\n";
+			$out .= "\t*" . utf8_decode(strip_tags($m["descripcion"])) . "\n";
+			$out .= "\t*\n";
 
 			//---------
 			//  PARAMETROS
@@ -451,14 +368,11 @@
 					 #    #   #   #    # #   #    #   
 					  ####    #   #    # #    #   #  	
 ################################################################################
- 	if(is_dir("tmp/out"))
- 	{
+ 	if(is_dir("tmp/out")){
  		delete_directory( "tmp/out" );
  	}
 
 	create_structure("tmp/out/server/api/");
-	//create_structure("tmp/out/www/api/");
-	//create_structure("tmp/out/docs/api/");
 	create_structure("tmp/out/server/controller/");
 	create_structure("tmp/out/server/controller/interfaces/");
 	create_structure("tmp/builds/");
@@ -466,40 +380,19 @@
 
 	$res = mysql_query("select * from metodo order by id_clasificacion") or die(mysql_error());
 
-
 	$_api_file = fopen("tmp/out/server/api/ApiLoader.php", 'w') or die("can't open file");
+	
 	fwrite( $_api_file, "<?php \n\n");
 	
 	
-	//$_api_htaccess_file = fopen("tmp/out/www/api/.htaccess", 'w') or die("can't open file");
-	
-	
-	while(($row = mysql_fetch_assoc($res)) != null )
-	{
+	while(($row = mysql_fetch_assoc($res)) != null ){
 
 		echo "Procesando " . $row["nombre"] . " ... \n";
 
-		//create www/space
-		/*create_structure( "tmp/out/www/" . $row["nombre"] . "/");
-		$f = "tmp/out/www/" . $row["nombre"] . "/index.php";
-		$f = fopen($f, 'w') or die("can't open file");
-		fwrite($f, write_www_file(  $row ) );
-		fclose($f);
-		*/
-
-		//fwrite($_api_htaccess_file, "\tRewriteRule ^time/?$		\t		/CallApiLoader.php?apicmd=Time [L]\n");
-
-		//create api 
-		//$fname = str_replace("/",".", $row["nombre"]);
-		//$f = "tmp/out/server/api/" . $fname . ".php";
-		//$f = fopen($f, 'w') or die("can't open file");
 		fwrite($_api_file, write_api_file(  $row ) );
-
-
 	}
 
 	fclose($_api_file);
-	//fclose($_api_htaccess_file);
 	
 	
 	//create controller interface
