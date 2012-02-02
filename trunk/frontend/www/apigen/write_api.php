@@ -372,6 +372,10 @@
  		delete_directory( "tmp/out" );
  	}
 
+ 	if(is_dir("tmp/builds")){
+ 		delete_directory( "tmp/builds" );
+ 	}
+
 	create_structure("tmp/out/server/api/");
 	create_structure("tmp/out/server/controller/");
 	create_structure("tmp/out/server/controller/interfaces/");
@@ -419,7 +423,7 @@
 
 
 	//ok al terminar enzipar todo en builds
-	Zip('tmp/out/', 'tmp/builds/full_api.zip');
+	Zip('tmp/out', 'tmp/builds/full_api.zip');
 
 
 

@@ -1,8 +1,7 @@
 <?php
 
 
-	function Zip($source, $destination)
-	{
+	function Zip($source, $destination){
 	    if (extension_loaded('zip') === false)
 	    {
 	    	throw new Exception ("zip extension not loaded");
@@ -74,19 +73,6 @@
  
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
  	function create_structure( $dir, $n = 1 ){
 
  		$p = explode( "/", $dir );
@@ -101,12 +87,6 @@
 		
 		create_structure($dir, ++$n);
  	}
-
-
-
-
-
-
 
 
 
