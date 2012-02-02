@@ -457,8 +457,8 @@
  	}
 
 	create_structure("tmp/out/server/api/");
-	create_structure("tmp/out/www/api/");
-	create_structure("tmp/out/docs/api/");
+	//create_structure("tmp/out/www/api/");
+	//create_structure("tmp/out/docs/api/");
 	create_structure("tmp/out/server/controller/");
 	create_structure("tmp/out/server/controller/interfaces/");
 	create_structure("tmp/builds/");
@@ -471,7 +471,7 @@
 	fwrite( $_api_file, "<?php \n\n");
 	
 	
-	$_api_htaccess_file = fopen("tmp/out/www/api/.htaccess", 'w') or die("can't open file");
+	//$_api_htaccess_file = fopen("tmp/out/www/api/.htaccess", 'w') or die("can't open file");
 	
 	
 	while(($row = mysql_fetch_assoc($res)) != null )
@@ -480,12 +480,14 @@
 		echo "Procesando " . $row["nombre"] . " ... \n";
 
 		//create www/space
-		create_structure( "tmp/out/www/" . $row["nombre"] . "/");
+		/*create_structure( "tmp/out/www/" . $row["nombre"] . "/");
 		$f = "tmp/out/www/" . $row["nombre"] . "/index.php";
 		$f = fopen($f, 'w') or die("can't open file");
 		fwrite($f, write_www_file(  $row ) );
 		fclose($f);
+		*/
 
+		//fwrite($_api_htaccess_file, "\tRewriteRule ^time/?$		\t		/CallApiLoader.php?apicmd=Time [L]\n");
 
 		//create api 
 		//$fname = str_replace("/",".", $row["nombre"]);
@@ -497,7 +499,7 @@
 	}
 
 	fclose($_api_file);
-	fclose($_api_htaccess_file);
+	//fclose($_api_htaccess_file);
 	
 	
 	//create controller interface
