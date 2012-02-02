@@ -182,10 +182,26 @@
 
 				$params .= "\n\t\t$" . $row_param["nombre"] ;
 				
-				if($row_param["ahuevo"] == "0") { 
+				if($row_param["ahuevo"] == "0") {
+					
+					$foo = false;
+					
 					if(strlen($row_param["defaults"]) == 0){
+						$foo = true;
 						$params .= " = \"\""; 
-					}else{
+					}
+					
+					if($row_param["defaults"] === "null"){
+						$foo = true;
+						$params .= " = null"; 	
+					}
+					
+					if($row_param["defaults"] === "\"\""){
+						$foo = true;						
+						$params .= " = \"\""; 	
+					}
+					
+					if(!$foo){
 						$params .= " = \"" . $row_param["defaults"] . "\""; 	
 					}
 				}
@@ -292,9 +308,24 @@
 
 				$params .= "\n\t\t$" . $row_param["nombre"] ;
 				if($row_param["ahuevo"] == "0") { 
+					$foo = false;
+					
 					if(strlen($row_param["defaults"]) == 0){
+						$foo = true;
 						$params .= " = \"\""; 
-					}else{
+					}
+					
+					if($row_param["defaults"] === "null"){
+						$foo = true;
+						$params .= " = null"; 	
+					}
+					
+					if($row_param["defaults"] === "\"\""){
+						$foo = true;						
+						$params .= " = \"\""; 	
+					}
+					
+					if(!$foo){
 						$params .= " = \"" . $row_param["defaults"] . "\""; 	
 					}
 				}
