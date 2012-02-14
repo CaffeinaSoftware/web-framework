@@ -387,7 +387,7 @@ public class PhpDAO{
 		pw.println("{");
 		pw.println();
 		
-		
+		/*
 		pw.println("		private static $loadedRecords = array();\n");
 		
 		pw.println("		private static function recordExists( "+pksVars+" ){");
@@ -416,7 +416,7 @@ public class PhpDAO{
 		}
 		pw.println("			return self::$loadedRecords[$pk];");
 		pw.println("		}");
-		
+		*/
 		
 		
 		
@@ -510,9 +510,9 @@ public class PhpDAO{
 			pw.println("	public static final function getByPK( " + pks + " )");
 			pw.println("	{");
 			
-			pw.println("		if(self::recordExists( "+ pks +")){");
-			pw.println("			return self::getRecord("+ pks +" );");
-			pw.println("		}");
+			//pw.println("		if(self::recordExists( "+ pks +")){");
+			//pw.println("			return self::getRecord("+ pks +" );");
+			//pw.println("		}");
 			
 			pw.println("		$sql = \"SELECT * FROM "+tabla+" WHERE ("+ sql + ") LIMIT 1;\";");
 			pw.println("		$params = array( "+ pks +" );");
@@ -521,7 +521,7 @@ public class PhpDAO{
 			pw.println("		if(count($rs)==0)return NULL;");
 			
 			pw.println("			$foo = new " + toCamelCase(tabla) + "( $rs );");
-			pw.println("			self::pushRecord( $foo, " + pks + " );");
+			//pw.println("			self::pushRecord( $foo, " + pks + " );");
 			pw.println("			return $foo;");
 
 			pw.println("	}");
@@ -581,7 +581,7 @@ public class PhpDAO{
 			}
 			
 			
-			pw.println("    		self::pushRecord( $bar, " + foo.substring(0, foo.length() -1  ) + " );");
+			//pw.println("    		self::pushRecord( $bar, " + foo.substring(0, foo.length() -1  ) + " );");
 			pw.println("		}");
 			pw.println("		return $allData;");
 			pw.println("	}");
@@ -640,7 +640,7 @@ public class PhpDAO{
 				pw.println();
 			}
 
-  			pw.println("		if(sizeof($val) == 0){return array();}");			
+  			pw.println("		if(sizeof($val) == 0){return self::getAll(/* $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' */);}");			
 	
 			pw.println("		$sql = substr($sql, 0, -3) . \" )\";" );
 
@@ -666,7 +666,7 @@ public class PhpDAO{
 				foo += "$foo[\"" +pk + "\"],";
 			}
 
-			pw.println("    		self::pushRecord( $bar, " + foo.substring(0, foo.length() -1  ) + " );");
+			//pw.println("    		self::pushRecord( $bar, " + foo.substring(0, foo.length() -1  ) + " );");
 
 			
 			pw.println("		}");
