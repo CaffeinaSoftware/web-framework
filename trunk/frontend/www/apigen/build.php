@@ -34,22 +34,35 @@
 			</a>
 
 			<?php
+                        
+                        $proyecto = null;
+                        if(isset($_GET["project"]) && is_numeric($_GET["project"]))
+                        {
+                            $proyecto = mysql_fetch_assoc(mysql_query(" Select * from proyecto where id_proyecto =".$_GET["project"]));
+                        }
+                        
 			if(isset($_GET["m"])){
-				echo '<a class="l" href="../api_creation/edit_method.php?m='. $_GET["m"] .'&cat='.$_GET["cat"].'">Editar este metodo</a>';
+				echo '<a class="l" href="../apigen/edit_method.php?m='. $_GET["m"] .'&cat='.$_GET["cat"].'&project='.$_GET["project"].'">Editar este metodo</a>';
 				echo '<a class="l" onClick="Borrar('. $_GET["m"] .')">Borrar este metodo</a>';
 
 			}
-			?>
 
 			
-			<a class="l" href="../api_creation/new_method.php<?php if(isset($_GET["cat"])) echo "?cat=".$_GET["cat"];?>">Nuevo metodo</a>
+			if(isset($_GET["project"]))
+                        {
+                            echo '<a class="l" href="new_method.php?project='.$_GET["project"];
+                                if(isset($_GET["cat"])) 
+                                    echo "&cat=".$_GET["cat"]; 
+                            echo '">Nuevo metodo</a> ';
+                        }
+                            ?>
 
 			<!--
 			<a class="l" href="/support/">Support</a>
 			<a class="l" href="/blog/">Blog</a>
 			<a class="l" href="">Apps</a>
 			-->
-			<a class="l" href="build.php">Generar Codigo</a>
+			<a class="l" href="build.php?project=<?php echo $_GET["project"] ?>">Generar Codigo</a>
 			
 	
 			<div class="clear">

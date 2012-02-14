@@ -77,6 +77,6 @@ ob_start();
 					}
 				}
 			}
-		header("Location: index.php?mensaje=".$mensaje."&m=".$id_metodo[0]."&cat=".$_POST["clasificacion_metodo"]);
+		header("Location: index.php?mensaje=".$mensaje."&m=".$id_metodo[0]."&cat=".$_POST["clasificacion_metodo"]."&project=".$_POST["id_proyecto"]);
 		ob_end_flush();
 ?>

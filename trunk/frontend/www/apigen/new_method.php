@@ -178,19 +178,19 @@ require_once("../../server/bootstrap.php");
 										$cat=$_GET["cat"];
 										else
 										$cat=-1;
-										$sql="select * from clasificacion";
+										$sql="select * from clasificacion where id_proyecto=".$_GET["project"];
 										$result=mysql_query($sql);
-										while($row=mysql_fetch_row($result))
+										while($row=mysql_fetch_assoc($result))
 										{
-											if($cat==$row[0])
+											if($cat==$row["id_clasificacion"])
 											echo 
 											'
-												<option value="'.$row[0].'" selected>'.$row[1].'</option>
+												<option value="'.$row["id_clasificacion"].'" selected>'.$row["nombre"].'</option>
 											';
 											else
 											echo 
 											'
-												<option value="'.$row[0].'">'.$row[1].'</option>
+												<option value="'.$row["id_clasificacion"].'">'.$row["nombre"].'</option>
 											';
 										}
 										
@@ -412,6 +412,7 @@ require_once("../../server/bootstrap.php");
 	<input type=submit value="Insertar">
 	<input type="hidden" name="numero_argumentos" id="numero_argumentos" value=0>
 	<input type="hidden" name="numero_respuestas" id="numero_respuestas" value=0>
+        <input type="hidden" name="id_proyecto" id="id_proyecto" value="<?php echo $_GET["project"] ?>"></input>
 </form>
 	<script type="text/javascript">
 		var a = new ApiMethod();

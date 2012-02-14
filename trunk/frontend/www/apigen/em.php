@@ -33,7 +33,7 @@
 				<img class="img" src="https://s-static.ak.facebook.com/rsrc.php/v1/yW/r/N2f0JA5UPFU.png" alt="Facebook Developers" width="166" height="17"/>
 			</a>
 			
-			<a class="l" href="../api_creation/new_method.php<?php if(isset($_GET["cat"])) echo "?cat=".$_GET["cat"];?>">Nuevo metodo</a>
+			<a class="l" href="../apigen/new_method.php<?php if(isset($_GET["cat"])) echo "?cat=".$_GET["cat"];?>">Nuevo metodo</a>
 
 			<a class="l" href="build.php">Generar Codigo</a>
 			

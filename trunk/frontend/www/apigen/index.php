@@ -13,8 +13,13 @@
 		 var selection = confirm("Esta seguro de querer borrar el método con todos sus argumentos y repsuestas?");
 		 
 		 if(selection)
-			window.location="delete_method.php?m="+id+"&cat="+<?php echo $_GET["cat"];?>;
+			window.location="delete_method.php?m="+id+<?php if(isset($_GET["cat"])) echo '"&cat='.$_GET["cat"]; echo '&project='.$_GET["project"].'"'?>;
 	  }
+      
+      function ProjectChange(val)
+      {
+          window.location = "index.php?project="+val;
+      }
 </script>
 
 <link type="text/css" rel="stylesheet" href="../media/f.css"/>
@@ -32,26 +37,62 @@
 			</a>
 
 			<?php
+                        $proyecto = null;
+                        if(isset($_GET["project"]) && is_numeric($_GET["project"]))
+                        {
+                            $proyecto = mysql_fetch_assoc(mysql_query(" Select * from proyecto where id_proyecto =".$_GET["project"]));
+                        }
+                        
 			if(isset($_GET["m"])){
-				echo '<a class="l" href="em.php?m='. $_GET["m"] .'&cat='.$_GET["cat"].'">Editar este metodo</a>';
+				echo '<a class="l" href="em.php?m='. $_GET["m"] .'&cat='.$_GET["cat"].'&project='.$_GET["project"].'">Editar este metodo</a>';
 				echo '<a class="l" onClick="Borrar('. $_GET["m"] .')">Borrar este metodo</a>';
 
 			}
-			?>
-
 			
-			<a class="l" href="new_method.php<?php if(isset($_GET["cat"])) echo "?cat=".$_GET["cat"];?>">Nuevo metodo</a>
 
+			if(isset($_GET["project"]))
+                        {
+                            echo '<a class="l" href="new_method.php?project='.$_GET["project"];
+                                if(isset($_GET["cat"])) 
+                                    echo "&cat=".$_GET["cat"]; 
+                            echo '">Nuevo metodo</a> ';
+                        }
+                            ?>
+                    
 			<!--
 			<a class="l" href="/support/">Support</a>
 			<a class="l" href="/blog/">Blog</a>
 			<a class="l" href="">Apps</a>
 			-->
-			<a class="l" href="build.php">Generar</a>
+                        
+                        <a class="l" href="build.php?project=<?php echo $_GET["project"] ?>">Generar</a>
 			
 			<a class="l" href="../httptesting/">Tester</a>
+                        
+                        <a class="l">Proyecto: 
+                            
+                        <select name="project" id="project" onChange = "ProjectChange(this.value)" >
+                            <option value = "null"> ------------ </option>
+                            <?php
+                            
+                            $query = "select id_proyecto,nombre from proyecto";
+                            $res = mysql_query($query);
+                            while($row = mysql_fetch_assoc($res))
+                            {
+                                if(isset($_GET["project"]) && $_GET["project"] == $row["id_proyecto"])
+                                {
+                                    echo "<option value = ".$row["id_proyecto"]." selected>".$row["nombre"]."</option>";
+                                }
+                                else
+                                {
+                                    echo "<option value = ".$row["id_proyecto"].">".$row["nombre"]."</option>";
+                                }
+                            }
+                            
+                            ?>
+                        </select>
 			
-
+                        </a>
 			
 			
 			<div class="clear">
@@ -65,14 +106,18 @@
 					<ul>
 
 						<?php
-								$query = mysql_query("select * from clasificacion order by nombre;");
+                                                
+                                                            if(isset($_GET["project"]))
+                                                            {
+                                                                    $query = mysql_query("select * from clasificacion where id_proyecto=".$_GET["project"]." order by nombre ;");
+                                                            
 								
 								while( ($row = mysql_fetch_assoc( $query )) != null )
 								{
 									if(isset($_GET["cat"]) && ($_GET["cat"] == $row["id_clasificacion"]) ){
 										?>
 										<li class="active withsubsections">
-										<a class="selected" href="index.php?cat=<?php echo $row["id_clasificacion"]; ?>">
+										<a class="selected" href="index.php?cat=<?php echo $row["id_clasificacion"]; ?>&project=<?php echo $_GET["project"]?>">
 										<div class="navSectionTitle">
 											<?php echo $row["nombre"]; ?>
 										</div>
@@ -87,7 +132,7 @@
 												
 												$n = str_replace("api/", "", $m["nombre"] );
 												$n = substr(  $n , strpos( $n , "/" ) +1 );
-												echo '<li><a href="?&cat='.$row["id_clasificacion"].'&m='.$m["id_metodo"].'">' . $n .  '</a></li>';
+												echo '<li><a href="?&cat='.$row["id_clasificacion"].'&m='.$m["id_metodo"].'&project='.$_GET["project"].'">' . $n .  '</a></li>';
 										}
 										?>
 										</ul>
@@ -98,7 +143,7 @@
 
 										?>
 										<li>
-										<a href="index.php?cat=<?php echo $row["id_clasificacion"]; ?>">
+										<a href="index.php?cat=<?php echo $row["id_clasificacion"]; ?>&project=<?php echo $_GET["project"] ?>">
 											<div class="navSectionTitle">
 											<?php echo $row["nombre"]; ?>
 											</div>
@@ -108,6 +153,7 @@
 									}
 
 								}
+                                                            }
 						?>
 
 						
@@ -140,13 +186,18 @@
 						?>
 						
 						<div class="breadcrumbs">
-							<a href=".">POS ERP</a> 
-							<?php
+                                                    <?php
+                                                    if(!is_null($proyecto))
+                                                    {
+							echo '<a href=".?project='.$_GET["project"].'">'.$proyecto["nombre"].'</a><br> ';
+                                                        echo $proyecto["descripcion"];
+                                                    }
+                                                            
 							if(isset($_GET["cat"])){
 								$res = mysql_query("select * from clasificacion where id_clasificacion = " . $_GET["cat"]) or die(mysql_error());
 								$metodo = mysql_fetch_assoc($res);
 
-								echo'&rsaquo; <a href=".">'  . $metodo["nombre"] .  '</a>';
+								echo'<br>&rsaquo; <a href=".?project='.$_GET["project"].'">'  . $metodo["nombre"] .  '</a>';
 							}
 							?>
 							
@@ -167,15 +218,21 @@
 	 ---------------------------------------------------------------------- -->
 
 						<?php
+                                                if(isset($_GET["project"]) && is_numeric($_GET["project"]))
+                                                {
 							if(!isset($_GET["m"]) && !isset($_GET["cat"])){
-								$query = mysql_query("select * from clasificacion order by nombre;");
+								$query = mysql_query("select * from clasificacion where id_proyecto = ".$_GET["project"]." order by nombre;");
 								
 								while( ($row = mysql_fetch_assoc( $query )) != null )
 								{
 
 									?>
 									<li class="active withsubsections">
-									<a class="selected" href="index.php?cat=<?php echo $row["id_clasificacion"]; ?>">
+									<a class="selected" href="index.php?cat=
+                                                                        <?php echo $row["id_clasificacion"]; 
+                                                                            echo "&project=".$_GET["project"] 
+                                                                        ?>
+                                                                           ">
 									<div class="navSectionTitle">
 										<?php echo $row["nombre"]; ?>
 									</div>
@@ -189,7 +246,7 @@
 									{
 											
 											
-										echo '<li><a href="?&cat='.$row["id_clasificacion"].'&m='.$m["id_metodo"].'">' . $m["nombre"] .  '</a></li>';
+										echo '<li><a href="?&cat='.$row["id_clasificacion"].'&m='.$m["id_metodo"].'&project='.$_GET["project"].'">' . $m["nombre"] .  '</a></li>';
 									}
 									?>
 									</ul>
@@ -198,6 +255,7 @@
 
 								}
 							}
+                                                }
 						?>
 
 
@@ -347,7 +405,7 @@
 
 						while( ($row = mysql_fetch_assoc( $res )) != null )
 						{
-							echo "<h3><a href='index.php?cat=". $_GET["cat"] ."&m=". $row["id_metodo"] ."'>" . $row["tipo"] . " " . $row["nombre"] . "</a></h3>";
+							echo "<h3><a href='index.php?cat=". $_GET["cat"] ."&m=". $row["id_metodo"] ."&project=".$_GET["project"]."'>" . $row["tipo"] . " " . $row["nombre"] . "</a></h3>";
 							echo "<p>" . $row["subtitulo"] . "</p>";
 						}
 					}
