@@ -502,6 +502,7 @@
 	<input type="hidden" name="numero_argumentos" id="numero_argumentos" value=0>
 	<input type="hidden" name="numero_respuestas" id="numero_respuestas" value=0>
 	<input type="hidden" name="id_metodo" id="id_metodo" value=<?php echo $mid;?>>
+        <input type="hidden" name="id_proyecto" id="id_proyecto" value="<?php echo $_GET["project"]?>">
 </form>
 	<script type="text/javascript">
 		var a = new ApiMethod();

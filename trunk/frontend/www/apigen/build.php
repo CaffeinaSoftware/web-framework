@@ -13,7 +13,7 @@
 		 var selection = confirm("Esta seguro de querer borrar el método con todos sus argumentos y repsuestas?");
 		 
 		 if(selection){
-			window.location="../api_creation/delete_method.php?m="+id+"&cat="+<?php echo $_GET["cat"];?>;
+			window.location="../api_creation/delete_method.php?m="+id<?php if(isset($_GET["cat"])) echo '+"&cat='.$_GET["cat"].'"'; if(isset($_GET["project"])) echo '+"&project='.$_GET["project"].'"'?>;
 		}
 			
 	  }
@@ -48,7 +48,7 @@
 			}
 
 			
-			if(isset($_GET["project"]))
+			if(isset($_GET["project"]) && is_numeric($_GET["project"]))
                         {
                             echo '<a class="l" href="new_method.php?project='.$_GET["project"];
                                 if(isset($_GET["cat"])) 
@@ -76,14 +76,14 @@
 					<ul>
 
 						<?php
-								$query = mysql_query("select * from clasificacion order by nombre;");
+								$query = mysql_query("select * from clasificacion where id_proyecto=".$_GET["project"]." order by nombre;");
 								
 								while( ($row = mysql_fetch_assoc( $query )) != null )
 								{
 									if(isset($_GET["cat"]) && ($_GET["cat"] == $row["id_clasificacion"]) ){
 										?>
 										<li class="active withsubsections">
-										<a class="selected" href="index.php?cat=<?php echo $row["id_clasificacion"]; ?>">
+										<a class="selected" href="index.php?cat=<?php echo ''.$row["id_clasificacion"].'&project='.$_GET["project"]; ?>">
 										<div class="navSectionTitle">
 											<?php echo $row["nombre"]; ?>
 										</div>
@@ -98,7 +98,7 @@
 												
 												$n = str_replace("api/", "", $m["nombre"] );
 												$n = substr(  $n , strpos( $n , "/" ) +1 );
-												echo '<li><a href="?&cat='.$row["id_clasificacion"].'&m='.$m["id_metodo"].'">' . $n .  '</a></li>';
+												echo '<li><a href="?&cat='.$row["id_clasificacion"].'&m='.$m["id_metodo"].'&project='.$_GET["project"].'">' . $n .  '</a></li>';
 										}
 										?>
 										</ul>
@@ -109,7 +109,7 @@
 
 										?>
 										<li>
-										<a href="index.php?cat=<?php echo $row["id_clasificacion"]; ?>">
+										<a href="index.php?cat=<?php echo ''.$row["id_clasificacion"].'&project='.$_GET["project"]; ?>">
 											<div class="navSectionTitle">
 											<?php echo $row["nombre"]; ?>
 											</div>
@@ -137,7 +137,7 @@
 						
 						
 						<div class="breadcrumbs">
-							<a href="api_doc.php">Regresar</a> 
+							<a href="index.php?project=<?php echo $_GET["project"] ?>">Regresar</a> 
 							
 						</div>
 							

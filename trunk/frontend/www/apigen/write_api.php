@@ -431,7 +431,7 @@
 	create_structure("tmp/builds/");
 
 
-	$res = mysql_query("select * from metodo order by id_clasificacion") or die(mysql_error());
+	$res = mysql_query("select m.* from metodo m,clasificacion c where c.id_proyecto = ".$_GET["project"]." and m.id_clasificacion = c.id_clasificacion order by id_clasificacion") or die(mysql_error());
 
 	$_api_file = fopen("tmp/out/server/api/ApiLoader.php", 'w') or die("can't open file");
 	
@@ -449,7 +449,7 @@
 	
 	
 	//create controller interface
-	$query = mysql_query("select * from clasificacion ;");
+	$query = mysql_query("select * from clasificacion where id_proyecto = ".$_GET["project"].";");
 	
 	while( ($row = mysql_fetch_assoc( $query )) != null )
 	{

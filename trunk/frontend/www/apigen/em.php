@@ -13,7 +13,7 @@
 		 var selection = confirm("Esta seguro de querer borrar el método con todos sus argumentos y repsuestas?");
 		 
 		 if(selection){
-			window.location="../api_creation/delete_method.php?m="+id+"&cat="+<?php echo $_GET["cat"];?>;
+			window.location="delete_method.php?m="+id<?php if(isset($_GET["cat"])) echo '+"&cat='.$_GET["cat"].'"'; echo '+"&project='.$_GET["project"].'"'?>;
 		}
 			
 	  }
@@ -33,9 +33,9 @@
 				<img class="img" src="https://s-static.ak.facebook.com/rsrc.php/v1/yW/r/N2f0JA5UPFU.png" alt="Facebook Developers" width="166" height="17"/>
 			</a>
 			
-			<a class="l" href="../apigen/new_method.php<?php if(isset($_GET["cat"])) echo "?cat=".$_GET["cat"];?>">Nuevo metodo</a>
+			<a class="l" href="../apigen/new_method.php?<?php if(isset($_GET["cat"])) echo "cat=".$_GET["cat"]; echo "&project=".$_GET["project"]?>">Nuevo metodo</a>
 
-			<a class="l" href="build.php">Generar Codigo</a>
+			<a class="l" href="build.php?project=<?php echo $_GET["project"]?>">Generar Codigo</a>
 			
 	
 			<div class="clear">
@@ -56,7 +56,7 @@
 									if(isset($_GET["cat"]) && ($_GET["cat"] == $row["id_clasificacion"]) ){
 										?>
 										<li class="active withsubsections">
-										<a class="selected" href="index.php?cat=<?php echo $row["id_clasificacion"]; ?>">
+										<a class="selected" href="index.php?cat=<?php echo ''.$row["id_clasificacion"].'&project='.$_GET["project"]; ?>">
 										<div class="navSectionTitle">
 											<?php echo $row["nombre"]; ?>
 										</div>
@@ -71,7 +71,7 @@
 												
 												$n = str_replace("api/", "", $m["nombre"] );
 												$n = substr(  $n , strpos( $n , "/" ) +1 );
-												echo '<li><a href="index.php?&cat='.$row["id_clasificacion"].'&m='.$m["id_metodo"].'">' . $n .  '</a></li>';
+												echo '<li><a href="index.php?&cat='.$row["id_clasificacion"].'&m='.$m["id_metodo"].'&project='.$_GET["project"].'">' . $n .  '</a></li>';
 										}
 										?>
 										</ul>
@@ -82,7 +82,7 @@
 
 										?>
 										<li>
-										<a href="index.php?cat=<?php echo $row["id_clasificacion"]; ?>">
+										<a href="index.php?cat=<?php echo ''.$row["id_clasificacion"].'&project='.$_GET["project"]; ?>">
 											<div class="navSectionTitle">
 											<?php echo $row["nombre"]; ?>
 											</div>
@@ -110,7 +110,7 @@
 						
 						
 						<div class="breadcrumbs">
-							<a href="api_doc.php">Regresar</a> 
+							<a href="apigen.php?project=<?php $_GET["project"] ?>">Regresar</a> 
 						</div>
 							
 

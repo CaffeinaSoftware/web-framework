@@ -72,6 +72,6 @@ ob_start();
 				}
 			}
 			echo preg_replace('\'','`', $_POST["descripcion_metodo"] );
-		header("Location: index.php?mensaje=".$mensaje."&m=".$id_metodo."&cat=".$_POST["clasificacion_metodo"]);
+		header("Location: index.php?mensaje=".$mensaje."&m=".$id_metodo."&cat=".$_POST["clasificacion_metodo"]."&project=".$_POST["id_proyecto"]);
 ob_end_flush();
 ?>

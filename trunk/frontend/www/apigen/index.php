@@ -13,7 +13,7 @@
 		 var selection = confirm("Esta seguro de querer borrar el método con todos sus argumentos y repsuestas?");
 		 
 		 if(selection)
-			window.location="delete_method.php?m="+id+<?php if(isset($_GET["cat"])) echo '"&cat='.$_GET["cat"]; echo '&project='.$_GET["project"].'"'?>;
+			window.location="delete_method.php?m="+id<?php if(isset($_GET["cat"])) echo '+"&cat='.$_GET["cat"].'"'; echo '+"&project='.$_GET["project"].'"'?>;
 	  }
       
       function ProjectChange(val)
@@ -50,7 +50,7 @@
 			}
 			
 
-			if(isset($_GET["project"]))
+			if(isset($_GET["project"])&&  is_numeric($_GET["project"]))
                         {
                             echo '<a class="l" href="new_method.php?project='.$_GET["project"];
                                 if(isset($_GET["cat"])) 
