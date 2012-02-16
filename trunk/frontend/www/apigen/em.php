@@ -5,18 +5,57 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" >
 <head>
-
-<title>POS</title>
+<script type="text/javascript" src="http://api.caffeina.mx/jquery/jquery-1.4.2.min.js"></script>
+<title>Web Framework</title>
 <script>
 
-      function Borrar(id){
+       var new_category_form_visible = false;
+    
+    function showNewCategoryForm()
+    {
+        if(!new_category_form_visible)
+        {
+            
+            new_category_form_visible = true;
+            
+            var html = '';
+            html += '<div id="nc">'
+            html += '<label> Nombre </label>';
+            html += '<input type="text" name="nombre_clasificacion" id="nombre_clasificacion">';
+            html += '<label> Descripcion </label>';
+            html += '<textarea name="descripcion_clasificacion" id="descripcion_clasificacion"></textarea>';
+            html += '<input type="hidden" name="id_proyecto" value="<?php if(isset($_GET["project"]) && is_numeric($_GET["project"])) echo $_GET["project"]; ?>">';
+            html += '<input type="submit">';
+            html += '<a onClick="hideNewCategoryForm()">Hide</a>';
+            html += '</div>';
+
+            $("#nueva_categoria").append(html);
+            
+        }
+    }
+    
+    function hideNewCategoryForm()
+    {
+        if(new_category_form_visible)
+            {
+                new_category_form_visible = false;
+                
+                $("#nc").remove();
+            }
+    }
+    
+      function Borrar(id)
+	  {
 		 var selection = confirm("Esta seguro de querer borrar el método con todos sus argumentos y repsuestas?");
 		 
-		 if(selection){
-			window.location="delete_method.php?m="+id<?php if(isset($_GET["cat"])) echo '+"&cat='.$_GET["cat"].'"'; echo '+"&project='.$_GET["project"].'"'?>;
-		}
-			
+		 if(selection)
+			window.location="delete_method.php?m="+id<?php if(isset($_GET["cat"])) echo '+"&cat='.$_GET["cat"].'"'; if(isset($_GET["project"])) echo '+"&project='.$_GET["project"].'"'?>;
 	  }
+      
+      function ProjectChange(val)
+      {
+          window.location = "index.php?project="+val;
+      }
 </script>
 
 <link type="text/css" rel="stylesheet" href="../media/f.css"/>
@@ -33,10 +72,61 @@
 				<img class="img" src="https://s-static.ak.facebook.com/rsrc.php/v1/yW/r/N2f0JA5UPFU.png" alt="Facebook Developers" width="166" height="17"/>
 			</a>
 			
-			<a class="l" href="../apigen/new_method.php?<?php if(isset($_GET["cat"])) echo "cat=".$_GET["cat"]; echo "&project=".$_GET["project"]?>">Nuevo metodo</a>
-
-			<a class="l" href="build.php?project=<?php echo $_GET["project"]?>">Generar Codigo</a>
+			<?php
+                        $proyecto = null;
+                        if(isset($_GET["project"]) && is_numeric($_GET["project"]))
+                        {
+                            $proyecto = mysql_fetch_assoc(mysql_query(" Select * from proyecto where id_proyecto =".$_GET["project"]));
+                        }
+                        
 			
+
+			if(isset($_GET["project"])&&  is_numeric($_GET["project"]))
+                        {
+                            echo '<a class="l" href="new_method.php?project='.$_GET["project"];
+                                if(isset($_GET["cat"])) 
+                                    echo "&cat=".$_GET["cat"]; 
+                            echo '">Nuevo metodo</a> ';
+                        }
+                            ?>
+                    
+			
+                        
+                        <a class="l" href="build.php<?php if(isset($_GET["project"])) echo '?project='.$_GET["project"] ?>">Generar</a>
+			
+			<a class="l" href="../httptesting/">Tester</a>
+                        
+                        <a class="l">Proyecto: 
+                            
+                        <select name="project" id="project" onChange = "ProjectChange(this.value)" >
+                            <option value = "null"> ------------ </option>
+                            <?php
+                            
+                            $query = "select id_proyecto,nombre from proyecto";
+                            $res = mysql_query($query);
+                            while($row = mysql_fetch_assoc($res))
+                            {
+                                if(isset($_GET["project"]) && $_GET["project"] == $row["id_proyecto"])
+                                {
+                                    echo "<option value = ".$row["id_proyecto"]." selected>".$row["nombre"]."</option>";
+                                }
+                                else
+                                {
+                                    echo "<option value = ".$row["id_proyecto"].">".$row["nombre"]."</option>";
+                                }
+                            }
+                            
+                            ?>
+                        </select>
+			
+                        </a>
+                        
+                        <a class="l">
+                            <form method="POST" action="negocios_proyecto.php">
+                                <input type="text"></input>
+                                <input type="submit" value="Nuevo Proyecto"></input>
+                            </form>
+                        </a>
 	
 			<div class="clear">
 			</div>
@@ -46,10 +136,16 @@
 		<div class="content">
 			<div id="bodyMenu" class="bodyMenu">
 				<div class="toplevelnav">
+                                    <div id="form_nueva_categoria">
+                                            <a onClick="showNewCategoryForm()">Nueva categoria</a>
+                                            <form id="nueva_categoria" method="POST" action="negocios_clasificacion.php">
+                                                
+                                            </form>
+                                        </div>
 					<ul>
 
 						<?php
-								$query = mysql_query("select * from clasificacion order by nombre;");
+								$query = mysql_query("select * from clasificacion where id_proyecto=".$_GET["project"]." order by nombre;");
 								
 								while( ($row = mysql_fetch_assoc( $query )) != null )
 								{

@@ -5,10 +5,45 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" >
 <head>
-
-<title>POS</title>
+<script type="text/javascript" src="http://api.caffeina.mx/jquery/jquery-1.4.2.min.js"></script>
+<title>Web Framework</title>
 <script>
 
+    var new_category_form_visible = false;
+    
+    function showNewCategoryForm()
+    {
+        if(!new_category_form_visible)
+        {
+            
+            new_category_form_visible = true;
+            
+            var html = '';
+            html += '<div id="nc">'
+            html += '<label> Nombre </label>';
+            html += '<input type="text" name="nombre_clasificacion" id="nombre_clasificacion">';
+            html += '<label> Descripcion </label>';
+            html += '<textarea name="descripcion_clasificacion" id="descripcion_clasificacion"></textarea>';
+            html += '<input type="hidden" name="id_proyecto" value="<?php if(isset($_GET["project"]) && is_numeric($_GET["project"])) echo $_GET["project"]; ?>">';
+            html += '<input type="submit">';
+            html += '<a onClick="hideNewCategoryForm()">Hide</a>';
+            html += '</div>';
+
+            $("#nueva_categoria").append(html);
+            
+        }
+    }
+    
+    function hideNewCategoryForm()
+    {
+        if(new_category_form_visible)
+            {
+                new_category_form_visible = false;
+                
+                $("#nc").remove();
+            }
+    }
+    
       function Borrar(id){
 		 var selection = confirm("Esta seguro de querer borrar el método con todos sus argumentos y repsuestas?");
 		 
@@ -17,6 +52,11 @@
 		}
 			
 	  }
+          
+          function ProjectChange(val)
+      {
+          window.location = "index.php?project="+val;
+      }
 </script>
 
 <link type="text/css" rel="stylesheet" href="../media/f.css"/>
@@ -41,11 +81,6 @@
                             $proyecto = mysql_fetch_assoc(mysql_query(" Select * from proyecto where id_proyecto =".$_GET["project"]));
                         }
                         
-			if(isset($_GET["m"])){
-				echo '<a class="l" href="../apigen/edit_method.php?m='. $_GET["m"] .'&cat='.$_GET["cat"].'&project='.$_GET["project"].'">Editar este metodo</a>';
-				echo '<a class="l" onClick="Borrar('. $_GET["m"] .')">Borrar este metodo</a>';
-
-			}
 
 			
 			if(isset($_GET["project"]) && is_numeric($_GET["project"]))
@@ -64,6 +99,30 @@
 			-->
 			<a class="l" href="build.php?project=<?php echo $_GET["project"] ?>">Generar Codigo</a>
 			
+                        <a class="l">Proyecto: 
+                            
+                        <select name="project" id="project" onChange = "ProjectChange(this.value)" >
+                            <option value = "null"> ------------ </option>
+                            <?php
+                            
+                            $query = "select id_proyecto,nombre from proyecto";
+                            $res = mysql_query($query);
+                            while($row = mysql_fetch_assoc($res))
+                            {
+                                if(isset($_GET["project"]) && $_GET["project"] == $row["id_proyecto"])
+                                {
+                                    echo "<option value = ".$row["id_proyecto"]." selected>".$row["nombre"]."</option>";
+                                }
+                                else
+                                {
+                                    echo "<option value = ".$row["id_proyecto"].">".$row["nombre"]."</option>";
+                                }
+                            }
+                            
+                            ?>
+                        </select>
+			
+                        </a>
 	
 			<div class="clear">
 			</div>
@@ -73,6 +132,12 @@
 		<div class="content">
 			<div id="bodyMenu" class="bodyMenu">
 				<div class="toplevelnav">
+                                    <div id="form_nueva_categoria">
+                                            <a onClick="showNewCategoryForm()">Nueva categoria</a>
+                                            <form id="nueva_categoria" method="POST" action="negocios_clasificacion.php">
+                                                
+                                            </form>
+                                    </div>
 					<ul>
 
 						<?php
