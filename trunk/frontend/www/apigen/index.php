@@ -142,12 +142,18 @@
 		<div class="content">
 			<div id="bodyMenu" class="bodyMenu">
 				<div class="toplevelnav">
+                                    
+                                    <?php if(isset($_GET["project"]) && is_numeric($_GET["project"]))
+                                    {
+                                    ?>
 					<div id="form_nueva_categoria">
                                             <a onClick="showNewCategoryForm()">Nueva categoria</a>
                                             <form id="nueva_categoria" method="POST" action="negocios_clasificacion.php">
                                                 
                                             </form>
                                         </div>
+                                    <?php } ?>
+                                    
                                     <ul>
 						<?php
                                                 
@@ -478,7 +484,7 @@
 				x © 2011
 			</div>
 			<div class="links">
-				<a href="https://www.facebook.com/platform">About</a><a href="/policy/">Platform Policies</a><a href="https://www.facebook.com/policy.php">Privacy Policy</a>
+                            <a href="build_bd.php?project=<?php echo ( isset($_GET["project"]) && is_numeric($_GET["project"]) )? $_GET["project"] : "null" ; ?>">Respaldar Base de Datos</a>
 			</div>
 		</div>
 	</div>

@@ -145,14 +145,18 @@
 					<ul>
 
 						<?php
-								$query = mysql_query("select * from clasificacion where id_proyecto=".$_GET["project"]." order by nombre;");
+                                                
+                                                if(isset($_GET["project"]) && is_numeric($_GET["project"]) )
+                                                            {
+                                                                    $query = mysql_query("select * from clasificacion where id_proyecto=".$_GET["project"]." order by nombre ;");
+                                                                
 								
 								while( ($row = mysql_fetch_assoc( $query )) != null )
 								{
 									if(isset($_GET["cat"]) && ($_GET["cat"] == $row["id_clasificacion"]) ){
 										?>
 										<li class="active withsubsections">
-										<a class="selected" href="index.php?cat=<?php echo ''.$row["id_clasificacion"].'&project='.$_GET["project"]; ?>">
+										<a class="selected" href="index.php?cat=<?php echo $row["id_clasificacion"]; ?>&project=<?php echo $_GET["project"]?>">
 										<div class="navSectionTitle">
 											<?php echo $row["nombre"]; ?>
 										</div>
@@ -178,7 +182,7 @@
 
 										?>
 										<li>
-										<a href="index.php?cat=<?php echo ''.$row["id_clasificacion"].'&project='.$_GET["project"]; ?>">
+										<a href="index.php?cat=<?php echo $row["id_clasificacion"]; ?>&project=<?php echo $_GET["project"] ?>">
 											<div class="navSectionTitle">
 											<?php echo $row["nombre"]; ?>
 											</div>
@@ -188,6 +192,7 @@
 									}
 
 								}
+                                                            }
 						?>
 
 						
@@ -202,7 +207,7 @@
 				<div class="header">
 					<div class="content">
 
-						<h1>Generar codigo</h1>
+						<h1>Generar base de datos</h1>
 						
 						
 						<div class="breadcrumbs">
@@ -215,10 +220,10 @@
 				</div>
 
 				<p>
-					<a href="dl.php?what=full_api&out_name=full_api">Descargar Todo</a>
+					<a href="dl.php?what=api_pos&out_name=api_pos">Descargar Base de Datos</a>
 				</p>
 
-					<?php require_once( "write_api.php" ); ?>
+					<?php require_once( "write_db.php" ); ?>
 
 				<hr/>
 

@@ -238,7 +238,7 @@
 				 &copy; 2011
 			</div>
 			<div class="links">
-				<a href="https://www.facebook.com/platform">About</a><a href="/policy/">Platform Policies</a><a href="https://www.facebook.com/policy.php">Privacy Policy</a>
+				<a href="build_bd.php?project=<?php echo ( isset($_GET["project"]) && is_numeric($_GET["project"]) )? $_GET["project"] : "null" ; ?>">Respaldar Base de Datos</a>
 			</div>
 		</div>
 	</div>
