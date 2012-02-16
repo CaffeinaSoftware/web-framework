@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 16-02-2012 a las 18:30:34
+-- Tiempo de generación: 16-02-2012 a las 20:34:03
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `argumento` (
   `defaults` varchar(50) NOT NULL,
   PRIMARY KEY (`id_argumento`),
   KEY `id_metodo` (`id_metodo`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13273 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13274 ;
 
 -- --------------------------------------------------------
 
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `clasificacion` (
   `descripcion` text NOT NULL,
   PRIMARY KEY (`id_clasificacion`),
   KEY `id_proyecto` (`id_proyecto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=33 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=34 ;
 
 -- --------------------------------------------------------
 
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `httptesting_paquete_de_pruebas` (
   `locked` tinyint(1) NOT NULL COMMENT 'Si el paquete puede ser editado o no',
   PRIMARY KEY (`id_paquete_de_pruebas`),
   KEY `id_proyecto` (`id_proyecto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `httptesting_ruta` (
   `ruta` varchar(100) NOT NULL COMMENT 'Ruta explicita',
   PRIMARY KEY (`id_ruta`),
   KEY `id_proyecto` (`id_proyecto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `metodo` (
   `regresa_html` tinyint(1) NOT NULL,
   PRIMARY KEY (`id_metodo`),
   KEY `id_clasificacion` (`id_clasificacion`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=320 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=321 ;
 
 -- --------------------------------------------------------
 
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `proyecto` (
   `nombre` varchar(100) NOT NULL COMMENT 'nombre del proyecto',
   `descripcion` varchar(260) NOT NULL COMMENT 'descricpion del proyecto',
   PRIMARY KEY (`id_proyecto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Tabla de proyectos' AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Tabla de proyectos' AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
@@ -127,38 +127,4 @@ CREATE TABLE IF NOT EXISTS `respuesta` (
   `tipo` varchar(30) NOT NULL,
   PRIMARY KEY (`id_respuesta`),
   KEY `id_metodo` (`id_metodo`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=888 ;
-
---
--- Filtros para las tablas descargadas (dump)
---
-
---
--- Filtros para la tabla `argumento`
---
-ALTER TABLE `argumento`
-  ADD CONSTRAINT `argumento_ibfk_1` FOREIGN KEY (`id_metodo`) REFERENCES `metodo` (`id_metodo`);
-
---
--- Filtros para la tabla `clasificacion`
---
-ALTER TABLE `clasificacion`
-  ADD CONSTRAINT `clasificacion_ibfk_1` FOREIGN KEY (`id_proyecto`) REFERENCES `proyecto` (`id_proyecto`);
-
---
--- Filtros para la tabla `httptesting_paquete_de_pruebas`
---
-ALTER TABLE `httptesting_paquete_de_pruebas`
-  ADD CONSTRAINT `httptesting_paquete_de_pruebas_ibfk_1` FOREIGN KEY (`id_proyecto`) REFERENCES `proyecto` (`id_proyecto`);
-
---
--- Filtros para la tabla `metodo`
---
-ALTER TABLE `metodo`
-  ADD CONSTRAINT `metodo_ibfk_1` FOREIGN KEY (`id_clasificacion`) REFERENCES `clasificacion` (`id_clasificacion`);
-
---
--- Filtros para la tabla `respuesta`
---
-ALTER TABLE `respuesta`
-  ADD CONSTRAINT `respuesta_ibfk_1` FOREIGN KEY (`id_metodo`) REFERENCES `metodo` (`id_metodo`);
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=889 ;
