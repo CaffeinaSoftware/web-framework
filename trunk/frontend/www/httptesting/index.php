@@ -5,6 +5,8 @@
 	if(!isset($_GET["url"])){
 		
 	}
+        
+        $t = null;
 	
 ?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
@@ -17,6 +19,11 @@
 	
 	<script type="text/javascript" charset="utf-8">
 	
+        function ProjectChange(val)
+      {
+          window.location = "index.php?project="+val;
+      }
+        
 		$.fn.selectRange = function(start, end) {
 		    return this.each(function() {
 		        if (this.setSelectionRange) {
@@ -135,6 +142,18 @@
 				html += '</div>';
 				$.facebox(html);				
 			},
+                        
+                        nuevo_paquete_show : function(){
+				html = '<div id="agregar_paquete" >';
+				html += '	<h3>Agregar paquete de pruebas</h3>';
+				html += '	<input type="text" id="new_paquete_name" placeholder="Nombre">';
+				html += '	<textarea id="new_paquete_descripcion" placeholder="Descripcion"></textarea>';
+                                html += '       <textarea id="new_paquete_pruebas" placeholder="Pruebas"></textarea>';
+                                html += '       <input type="checkbox" id="new_paquete_locked" value="0"> Locked';
+				html += '	<input type="button" value="Agregar" onClick="httptesting.nuevo_paquete()" >';
+				html += '</div>';
+				$.facebox(html);				
+			},
 			
 			swap_url : function(new_url_id){
 				//Test params
@@ -156,9 +175,44 @@
 				}
 
 				this.ajax({
-					metodo : "nuevaRuta",
-					nombre : nombre,
-					ruta   : url
+					metodo  : "nuevaRuta",
+					nombre  : nombre,
+					ruta    : url,
+                                        proyecto: <?php if(isset($_GET["project"]) && is_numeric($_GET["project"])) echo $_GET["project"]; else echo '""';?>
+				}, callback, true);
+			},
+                        
+                        nuevo_paquete : function(){
+				var nombre  = $("#new_paquete_name").val(),
+                                    descripcion 	= $("#new_paquete_descripcion").val(),
+                                    pruebas = $("#new_paquete_pruebas").val(),
+                                    locked = ($("#new_paquete_locked").attr("checked") != "undefined" && $("#new_paquete_locked").attr("checked") == "checked");
+					 
+                                        
+				var callback = function(a){
+                                    
+                                        try{
+			    		r = $.parseJSON(a);
+					}catch( e){
+						console.error(e);
+						alert("Error: Json no se pudo parsear");
+						return;
+					}
+					
+					if(r.status == "ok"){
+						window.location.reload();						
+					}else{
+						alert(r.reason);
+					}
+				}
+
+				this.ajax({
+					metodo          : "nuevoPaquete",
+					nombre          : nombre,
+					descripcion     : descripcion,
+                                        pruebas         : pruebas,
+                                        locked          : locked,
+                                        proyecto: <?php if(isset($_GET["project"]) && is_numeric($_GET["project"])) echo $_GET["project"]; else echo '""';?>
 				}, callback, true);
 			},
 	
@@ -223,7 +277,7 @@
 					nombre 		: nombre,
 					descripcion	: descripcion,
 					pruebas 	: pruebas,
-					id_paquete_de_pruebas : <?php echo $t["id_paquete_de_pruebas"]; ?>
+					id_paquete_de_pruebas : <?php echo is_null($t["id_paquete_de_pruebas"]) ? "-1": $t["id_paquete_de_pruebas"];?>
 				}, callback, true);
 			}
 			
@@ -243,6 +297,30 @@
 				</a>
 				<a class="l" href="index.php">UnitTester</a>
 				<a class="l" href="../apigen/">ApiGen</a>
+                                <a class="l">Proyecto: 
+                            
+                                    <select name="project" id="project" onChange = "ProjectChange(this.value)" >
+                                        <option value = "null"> ------------ </option>
+                                        <?php
+
+                                        $query = "select id_proyecto,nombre from proyecto";
+                                        $res = mysql_query($query);
+                                        while($row = mysql_fetch_assoc($res))
+                                        {
+                                            if(isset($_GET["project"]) && $_GET["project"] == $row["id_proyecto"])
+                                            {
+                                                echo "<option value = ".$row["id_proyecto"]." selected>".$row["nombre"]."</option>";
+                                            }
+                                            else
+                                            {
+                                                echo "<option value = ".$row["id_proyecto"].">".$row["nombre"]."</option>";
+                                            }
+                                        }
+
+                                        ?>
+                                    </select>
+
+                                    </a>
 				<div class="clear">
 				</div>
 			</div>
@@ -251,7 +329,19 @@
 			<div class="content">
 				<div id="bodyMenu" class="bodyMenu">
 					<?php
-						$s = mysql_query("select * from httptesting_paquete_de_pruebas");
+                                        
+                                            if(isset($_GET["project"]) && is_numeric($_GET["project"]))
+                                            {
+                                                
+                                                echo
+                                                '
+                                                    <div id="form_nueva_categoria">
+                                                        <a onClick="httptesting.nuevo_paquete_show()">Nuevo paquete de pruebas</a>
+                                                        
+                                                    </div>
+                                                ';
+                                                
+						$s = mysql_query("select * from httptesting_paquete_de_pruebas where id_proyecto = ".$_GET["project"]);
 						while( ($row = mysql_fetch_assoc($s))  != null){
 							if(isset($_GET["test"]) && $_GET["test"] == $row["id_paquete_de_pruebas"]){
 								$style = "background: gray; ";							
@@ -264,10 +354,11 @@
 							if(isset( $_GET["url"] )){ 
 								$hop .= "url=" . $_GET["url"]; 
 							} 
-							echo "<a href='".$hop."'><h3 style='margin-bottom:0px'>" . $row["nombre"] . "</h3></a>"; 
+							echo "<a href='".$hop."project=".$_GET["project"]."'><h3 style='margin-bottom:0px'>" . $row["nombre"] . "</h3></a>"; 
 							echo "<p>" . $row["descripcion"] . "</p>"; 
 							echo "</div>"; 
-						} 
+						}
+                                            }
 						?>
 			</div>
 			<div id="bodyText" class="bodyText">
@@ -279,6 +370,13 @@
 						</p>
 					</div>
 				</div>
+                            
+                            <?php
+                            if(isset($_GET["project"]) && is_numeric($_GET["project"]))
+                            {
+                                
+                            
+                            ?>
 				<span id="selector">
 				URL de pruebas
 				<select name="cSelect" onChange="httptesting.swap_url(this.value)">
@@ -287,7 +385,7 @@
 					 * Obtener las urls
 					 * 
 					 * */
-					$res = mysql_query("select * from httptesting_ruta");
+					$res = mysql_query("select * from httptesting_ruta where id_proyecto = ".$_GET["project"]);
 					while( ($row = mysql_fetch_assoc($res)) != null ){
 						if(isset($_GET["url"]) && $_GET["url"] == $row["id_ruta"]){
 							echo "<option selected value='". $row["id_ruta"] ."'>" . $row["nombre"] . " | " . $row["ruta"] . "</option>"; 
@@ -310,6 +408,7 @@
 
 				
 				</span>
+                            <?php } ?>
 				<hr />
 				
 				<div id="response"></div>

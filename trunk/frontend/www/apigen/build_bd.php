@@ -123,6 +123,13 @@
                         </select>
 			
                         </a>
+                        
+                        <a class="l">
+                            <form method="POST" action="negocios_proyecto.php">
+                                <input type="text" size="10" name="nombre_proyecto"></input>
+                                <input type="submit" value="Nuevo Proyecto"></input>
+                            </form>
+                        </a>
 	
 			<div class="clear">
 			</div>

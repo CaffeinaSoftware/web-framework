@@ -8,7 +8,7 @@
   
 	function doQuery($sql){
 		if(!mysql_query($sql) ){
-			die(json_encode(array("status" => "error", "reason" => mysql_error() )));
+			die(json_encode(array("status" => "error", "reason" => "Error num: ".  mysql_errno().": ".mysql_error() )));
 		}
 		
 		die(json_encode(array("status" => "ok")));
@@ -37,12 +37,12 @@
 	    break;
 			
 		case "nuevoPaquete" :
-			$sql = "Insert into httptesting_paquete_de_pruebas(pruebas,nombre,descripcion,locked) values('".$_POST["pruebas"]."','".$_POST["nombre"]."','".$_POST["descripcion"]."',".$_POST["locked"].")";
+			$sql = "Insert into httptesting_paquete_de_pruebas(pruebas,nombre,descripcion,locked,id_proyecto) values('".$_POST["pruebas"]."','".$_POST["nombre"]."','".$_POST["descripcion"]."',".$_POST["locked"].",".$_POST["proyecto"].")";
 			doQuery($sql);
 		break;
 			
 		case "nuevaRuta" :
-			$sql = "Insert into httptesting_ruta(nombre,ruta) values('".$_POST["nombre"]."','".$_POST["ruta"]."')";
+			$sql = "Insert into httptesting_ruta(nombre,ruta,id_proyecto) values('".$_POST["nombre"]."','".$_POST["ruta"]."',".$_POST["proyecto"].")";
 			doQuery($sql);			
 		break;
 			

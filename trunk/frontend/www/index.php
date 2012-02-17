@@ -15,7 +15,7 @@
 	<div class="menu">
 		<div class="content">
 
-			<a class="logo" href="/"><i class="img sp_990tmg sx_a67319"><u>Facebook Developers</u></i></a>
+			<a class="logo" href="/"><i class="img sp_990tmg sx_a67319"><u>Caffeina WebFramework</u></i></a>
 			<a class="l" href="/docs/">Documentation</a>
 			<a class="l" href="/support/">Support</a>
 			<a class="l" href="/blog/">Blog</a>
