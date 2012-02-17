@@ -76,7 +76,7 @@
                         $proyecto = null;
                         if(isset($_GET["project"]) && is_numeric($_GET["project"]))
                         {
-                            $proyecto = mysql_fetch_assoc(mysql_query(" Select * from proyecto where id_proyecto =".$_GET["project"]));
+                            $proyecto = mysql_fetch_assoc(mysql_query(" Select * from mantis_project_table where id =".$_GET["project"]));
                         }
                         
 			
@@ -102,7 +102,7 @@
                             <option value = "null"> ------------ </option>
                             <?php
                             
-                            $query = "select id_proyecto,nombre from proyecto";
+                            $query = "select id as id_proyecto,name as nombre from mantis_project_table";
                             $res = mysql_query($query);
                             while($row = mysql_fetch_assoc($res))
                             {
@@ -121,12 +121,6 @@
 			
                         </a>
                         
-                        <a class="l">
-                            <form method="POST" action="negocios_proyecto.php">
-                                <input type="text"></input>
-                                <input type="submit" value="Nuevo Proyecto"></input>
-                            </form>
-                        </a>
 	
 			<div class="clear">
 			</div>

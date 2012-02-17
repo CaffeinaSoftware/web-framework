@@ -76,7 +76,7 @@
                         $proyecto = null;
                         if(isset($_GET["project"]) && is_numeric($_GET["project"]))
                         {
-                            $proyecto = mysql_fetch_assoc(mysql_query(" Select * from proyecto where id_proyecto =".$_GET["project"]));
+                            $proyecto = mysql_fetch_assoc(mysql_query(" Select * from mantis_project_table where id =".$_GET["project"]));
                         }
                         
 			if(isset($_GET["m"])){
@@ -96,8 +96,15 @@
                             ?>
                     
 			
+                        <?php
                         
-                        <a class="l" href="build.php<?php if(isset($_GET["project"])) echo '?project='.$_GET["project"] ?>">Generar</a>
+                        if(isset($_GET["project"])&&  is_numeric($_GET["project"]))
+                        {
+                            ?>
+                        <a class="l" href="build.php<?php echo '?project='.$_GET["project"] ?>">Generar</a>
+                        <?php
+                        }
+                        ?>
 			
 			<a class="l" href="../httptesting/">Tester</a>
                         
@@ -107,7 +114,7 @@
                             <option value = "null"> ------------ </option>
                             <?php
                             
-                            $query = "select id_proyecto,nombre from proyecto";
+                            $query = "select id as id_proyecto,name as nombre from mantis_project_table";
                             $res = mysql_query($query);
                             while($row = mysql_fetch_assoc($res))
                             {
@@ -126,12 +133,6 @@
 			
                         </a>
                         
-                        <a class="l">
-                            <form method="POST" action="negocios_proyecto.php">
-                                <input type="text" size="10" name="nombre_proyecto"></input>
-                                <input type="submit" value="Nuevo Proyecto"></input>
-                            </form>
-                        </a>
 			
 			
 			<div class="clear">
@@ -239,8 +240,8 @@
                                                     <?php
                                                     if(!is_null($proyecto))
                                                     {
-							echo '<a href=".?project='.$_GET["project"].'">'.$proyecto["nombre"].'</a><br> ';
-                                                        echo $proyecto["descripcion"];
+							echo '<a href=".?project='.$_GET["project"].'">'.$proyecto["name"].'</a><br> ';
+                                                        echo $proyecto["description"];
                                                     }
                                                             
 							if(isset($_GET["cat"])){

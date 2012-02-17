@@ -303,7 +303,7 @@
                                         <option value = "null"> ------------ </option>
                                         <?php
 
-                                        $query = "select id_proyecto,nombre from proyecto";
+                                        $query = "select id as id_proyecto,name as nombre from mantis_project_table";
                                         $res = mysql_query($query);
                                         while($row = mysql_fetch_assoc($res))
                                         {
