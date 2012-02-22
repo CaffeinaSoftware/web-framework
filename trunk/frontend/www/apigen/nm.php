@@ -9,7 +9,7 @@
 <title>Web Framework</title>
 <script>
 
-    var new_category_form_visible = false;
+       var new_category_form_visible = false;
     
     function showNewCategoryForm()
     {
@@ -44,16 +44,15 @@
             }
     }
     
-      function Borrar(id){
+      function Borrar(id)
+	  {
 		 var selection = confirm("Esta seguro de querer borrar el método con todos sus argumentos y repsuestas?");
 		 
-		 if(selection){
-			window.location="../api_creation/delete_method.php?m="+id<?php if(isset($_GET["cat"])) echo '+"&cat='.$_GET["cat"].'"'; if(isset($_GET["project"])) echo '+"&project='.$_GET["project"].'"'?>;
-		}
-			
+		 if(selection)
+			window.location="delete_method.php?m="+id<?php if(isset($_GET["cat"])) echo '+"&cat='.$_GET["cat"].'"'; if(isset($_GET["project"])) echo '+"&project='.$_GET["project"].'"'?>;
 	  }
-          
-          function ProjectChange(val)
+      
+      function ProjectChange(val)
       {
           window.location = "index.php?project="+val;
       }
@@ -72,18 +71,17 @@
 			<a class="logo" href="../">
 				<img class="img" src="https://s-static.ak.facebook.com/rsrc.php/v1/yW/r/N2f0JA5UPFU.png" alt="Facebook Developers" width="166" height="17"/>
 			</a>
-
+			
 			<?php
-                        
                         $proyecto = null;
                         if(isset($_GET["project"]) && is_numeric($_GET["project"]))
                         {
                             $proyecto = mysql_fetch_assoc(mysql_query(" Select * from mantis_project_table where id =".$_GET["project"]));
                         }
                         
-
 			
-			if(isset($_GET["project"]) && is_numeric($_GET["project"]))
+
+			if(isset($_GET["project"])&&  is_numeric($_GET["project"]))
                         {
                             echo '<a class="l" href="nm.php?project='.$_GET["project"];
                                 if(isset($_GET["cat"])) 
@@ -91,21 +89,13 @@
                             echo '">Nuevo metodo</a> ';
                         }
                             ?>
-
-			<!--
-			<a class="l" href="/support/">Support</a>
-			<a class="l" href="/blog/">Blog</a>
-			<a class="l" href="">Apps</a>
-			-->
-			<?php
+                    
+			
                         
-                        if(isset($_GET["project"])&&  is_numeric($_GET["project"]))
-                        {
-                            ?>
-                        <a class="l" href="build.php<?php echo '?project='.$_GET["project"] ?>">Generar</a>
-                        <?php
-                        }
-                        ?>
+                        <a class="l" href="build.php<?php if(isset($_GET["project"])) echo '?project='.$_GET["project"] ?>">Generar</a>
+			
+			<a class="l" href="../httptesting/">Tester</a>
+                        
                         <a class="l">Proyecto: 
                             
                         <select name="project" id="project" onChange = "ProjectChange(this.value)" >
@@ -140,31 +130,23 @@
 		<div class="content">
 			<div id="bodyMenu" class="bodyMenu">
 				<div class="toplevelnav">
-                                   <?php if(isset($_GET["project"]) && is_numeric($_GET["project"]))
-                                    {
-                                    ?>
-					<div id="form_nueva_categoria">
+                                    <div id="form_nueva_categoria">
                                             <a onClick="showNewCategoryForm()">Nueva categoria</a>
                                             <form id="nueva_categoria" method="POST" action="negocios_clasificacion.php">
                                                 
                                             </form>
                                         </div>
-                                    <?php } ?>
 					<ul>
 
 						<?php
-                                                
-                                                if(isset($_GET["project"]) && is_numeric($_GET["project"]) )
-                                                            {
-                                                                    $query = mysql_query("select * from clasificacion where id_proyecto=".$_GET["project"]." order by nombre ;");
-                                                                
+								$query = mysql_query("select * from clasificacion where id_proyecto=".$_GET["project"]." order by nombre;");
 								
 								while( ($row = mysql_fetch_assoc( $query )) != null )
 								{
 									if(isset($_GET["cat"]) && ($_GET["cat"] == $row["id_clasificacion"]) ){
 										?>
 										<li class="active withsubsections">
-										<a class="selected" href="index.php?cat=<?php echo $row["id_clasificacion"]; ?>&project=<?php echo $_GET["project"]?>">
+										<a class="selected" href="index.php?cat=<?php echo ''.$row["id_clasificacion"].'&project='.$_GET["project"]; ?>">
 										<div class="navSectionTitle">
 											<?php echo $row["nombre"]; ?>
 										</div>
@@ -179,7 +161,7 @@
 												
 												$n = str_replace("api/", "", $m["nombre"] );
 												$n = substr(  $n , strpos( $n , "/" ) +1 );
-												echo '<li><a href="?&cat='.$row["id_clasificacion"].'&m='.$m["id_metodo"].'&project='.$_GET["project"].'">' . $n .  '</a></li>';
+												echo '<li><a href="index.php?&cat='.$row["id_clasificacion"].'&m='.$m["id_metodo"].'&project='.$_GET["project"].'">' . $n .  '</a></li>';
 										}
 										?>
 										</ul>
@@ -190,7 +172,7 @@
 
 										?>
 										<li>
-										<a href="index.php?cat=<?php echo $row["id_clasificacion"]; ?>&project=<?php echo $_GET["project"] ?>">
+										<a href="index.php?cat=<?php echo ''.$row["id_clasificacion"].'&project='.$_GET["project"]; ?>">
 											<div class="navSectionTitle">
 											<?php echo $row["nombre"]; ?>
 											</div>
@@ -200,7 +182,6 @@
 									}
 
 								}
-                                                            }
 						?>
 
 						
@@ -215,23 +196,19 @@
 				<div class="header">
 					<div class="content">
 
-						<h1>Generar base de datos</h1>
+						<h1>Editar metodo</h1>
 						
 						
 						<div class="breadcrumbs">
-							<a href="index.php?project=<?php echo $_GET["project"] ?>">Regresar</a> 
-							
+							<a href="apigen.php?project=<?php $_GET["project"] ?>">Regresar</a> 
 						</div>
 							
 
 					</div>
 				</div>
 
-				<p>
-					<a href="dl.php?what=api_pos&out_name=api_pos">Descargar Base de Datos</a>
-				</p>
 
-					<?php require_once( "write_db.php" ); ?>
+					<?php require_once( "new_method.php" ); ?>
 
 				<hr/>
 

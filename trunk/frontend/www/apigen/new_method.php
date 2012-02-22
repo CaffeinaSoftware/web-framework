@@ -159,16 +159,16 @@ require_once("../../server/bootstrap.php");
 <body>
 <?php if(isset($_GET["mensaje"])) echo $_GET["mensaje"];?>
 <form id="form_insercion" method="POST" action="negocios.php">
-	<table border=0>
-		<tr style="width:50%">
+	<table border=0 width="100%">
+		<!-- <tr >
 			<td valign=top>
 				<!-- --------------------------------------------------------------------
 						EDITOR
 				     -------------------------------------------------------------------- -->
-				     <table border=0 width=100%>
+				<!--     <table border=0 width=100%> -->
 				     	<tr>
 				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">General</h3></td>
-				     	</tr>
+				     	</tr> 
 						<tr>
 				     		<td>Clasificacion</td>
 				     		<td>
@@ -249,7 +249,7 @@ require_once("../../server/bootstrap.php");
 				     	
 				     	<tr>
 				     		
-				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Argumentos <a onClick='addParam()'>[+]</a></h3></td>
+				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Argumentos <a onClick='addParam()' style="color: white;" >[+]</a></h3></td>
 				     	</tr>
 						<tr>
 				     		<td colspan="2">
@@ -259,7 +259,7 @@ require_once("../../server/bootstrap.php");
 				     	</tr>				     	
 				     	<tr>
 				     		
-				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Respuesta <a onClick='addResponse()'>[+]</a></h3></td>
+				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Respuesta <a onClick='addResponse()' style="color: white;" >[+]</a></h3></td>
 				     	</tr>
 				     	<tr>
 							<td colspan="2">
@@ -282,14 +282,16 @@ require_once("../../server/bootstrap.php");
 				     		<td colspan="2"><textarea style="width:100%" name="ejemplo_respuesta" onKeyUp="m.salida = this.value; m.render()"></textarea></td>
 				     	</tr>
 				     	
-
+<!--
 				     </table>	
 
 			</td>
+                        
 			<td width="50%" valign=top>
 				<!-- --------------------------------------------------------------------
 						PREVIEW
 				     -------------------------------------------------------------------- -->
+                                                <!--
 				<div id="render_preview">
 
 <table cellpadding="0" cellspacing="0" class="c0">
@@ -355,7 +357,7 @@ require_once("../../server/bootstrap.php");
 	<tbody id="preview_arg_table">
 
 		<!-- -------------------- -->
-
+<!--
 	</tbody>
 </table>
 <h4 class="c15"><a name="h.vzpf48a1ugdo"></a><span>Respuesta</span></h4>
@@ -406,7 +408,9 @@ require_once("../../server/bootstrap.php");
 
 
 			</td>
+
 		</tr>
+-->
 
 	</table>	
 	<input type=submit value="Insertar">

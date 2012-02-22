@@ -88,7 +88,7 @@
 
 			if(isset($_GET["project"])&&  is_numeric($_GET["project"]))
                         {
-                            echo '<a class="l" href="new_method.php?project='.$_GET["project"];
+                            echo '<a class="l" href="nm.php?project='.$_GET["project"];
                                 if(isset($_GET["cat"])) 
                                     echo "&cat=".$_GET["cat"]; 
                             echo '">Nuevo metodo</a> ';
