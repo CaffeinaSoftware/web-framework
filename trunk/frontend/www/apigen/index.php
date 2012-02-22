@@ -2,10 +2,10 @@
 
 	require_once("../../server/bootstrap.php");
         
-        if(!isset($_SERVER["http_user"]))
-        {
-            $_SERVER["http_user"] = "andres";
-        }
+//        if(!isset($_SERVER["http_user"]))
+//        {
+//            $_SERVER["http_user"] = "andres";
+//        }
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" >
