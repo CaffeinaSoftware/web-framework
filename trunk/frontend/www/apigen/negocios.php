@@ -81,7 +81,7 @@ ob_start();
                                     {
                                             $mensaje="Insercion exitosa!! :D";
                                             
-                                            $descripcion = "El usuario ".$_SERVER["PHP_AUTH_USER"]." agrego el metodo ".$_POST["nombre_metodo"]." en la clasificacion";
+                                            $descripcion = "Agrego el metodo ".$_POST["nombre_metodo"]." en la clasificacion";
                                             
                                             $sql = "Select nombre from clasificacion where id_clasificacion = ".$_POST["clasificacion_metodo"];
                                                         

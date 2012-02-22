@@ -40,7 +40,7 @@ ob_start();
                    {
                        $mensaje = "Actualizacion exitosa!! :D";
                        
-                       $descripcion = "El usuario '".$_SERVER["http_user"]."' elimino el metodo ".$nombre_metodo." en la clasificacion ";
+                       $descripcion = "elimino el metodo ".$nombre_metodo." en la clasificacion ";
 
                         $sql = "Select nombre from clasificacion where id_clasificacion = ".$_GET["cat"];
 
@@ -54,7 +54,7 @@ ob_start();
 
                         $descripcion .= ''.$row[0];
 
-                        $sql = "Insert into registro(id_proyecto,id_clasificacion,id_metodo,usuario,fecha,operacion,descripcion) values (".$_GET["project"].",".$_GET["cat"].",".$_GET["m"].",'".$_SERVER["http_user"]."','".  date("Y-m-d H:i:s")."','borrar','".$descripcion."')";
+                        $sql = "Insert into registro(id_proyecto,id_clasificacion,id_metodo,usuario,fecha,operacion,descripcion) values (".$_GET["project"].",".$_GET["cat"].",".$_GET["m"].",'".$_SERVER["PHP_AUTH_USER"]."','".  date("Y-m-d H:i:s")."','borrar','".$descripcion."')";
 
                         $Consulta_ID = mysql_query($sql);
                         

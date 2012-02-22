@@ -67,9 +67,9 @@ ob_start();
 						}
 						if($mensaje=="")
 						{
-							$mensaje="Actualizacion exitosa!! :D";
+							$mensaje="Actualizacion exitosa!! Gracias " . $_SERVER["PHP_AUTH_USER"] . "!";
                                                         
-                                                        $descripcion = "El usuario '".$_SERVER["PHP_AUTH_USER"]."' edito el metodo ".$_POST["nombre_metodo"]." en la clasificacion ";
+                                                        $descripcion = "Edito el metodo ".$_POST["nombre_metodo"]." en la clasificacion ";
                                                         
                                                         $sql = "Select nombre from clasificacion where id_clasificacion = ".$_POST["clasificacion_metodo"];
                                                         
@@ -93,5 +93,5 @@ ob_start();
 			}
 			
 		header("Location: index.php?mensaje=".$mensaje."&m=".$id_metodo."&cat=".$_POST["clasificacion_metodo"]."&project=".$_POST["id_proyecto"]);
-ob_end_flush();
-?>
+		ob_end_flush();
+
