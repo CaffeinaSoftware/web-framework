@@ -196,7 +196,7 @@
 				<div class="header">
 					<div class="content">
 
-						<h1>Editar metodo</h1>
+						<h1>Nuevo metodo</h1>
 						
 						
 						<div class="breadcrumbs">

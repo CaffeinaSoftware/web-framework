@@ -80,6 +80,24 @@ ob_start();
                                     if($mensaje=="")
                                     {
                                             $mensaje="Insercion exitosa!! :D";
+                                            
+                                            $descripcion = "El usuario ".$_SERVER["http_user"]." agrego el metodo ".$_POST["nombre_metodo"]." en la clasificacion";
+                                            
+                                            $sql = "Select nombre from clasificacion where id_clasificacion = ".$_POST["clasificacion_metodo"];
+                                                        
+                                            $row = mysql_fetch_array(mysql_query($sql));
+
+                                            $descripcion .= ''.$row[0]." del proyecto ";
+
+                                            $sql = "Select name from mantis_project_table where id = ".$_POST["id_proyecto"];
+
+                                            $row = mysql_fetch_array(mysql_query($sql));
+
+                                            $descripcion .= ''.$row[0];
+                                            
+                                            $sql = "Insert into registro(id_proyecto,id_clasificacion,id_metodo,usuario,fecha,operacion,descripcion) values(".$_POST["id_proyecto"].",".$_POST["clasificacion_metodo"].",".$id_metodo[0].",'".$_SERVER["http_user"]."','".  date("Y-m-d H:i:s",time())."','agregar','".$descripcion."')";
+                                            
+                                            $Consulta_ID = mysql_query($sql);
                                     }
                             }
                         }

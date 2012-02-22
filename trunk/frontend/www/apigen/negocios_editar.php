@@ -1,6 +1,7 @@
 <?php
 ob_start();
 			require_once("../../server/bootstrap.php");
+                        
 			$combo=isset($_POST["sesion_valida"]);
 			if(!$combo)
 			$combo=0;
@@ -67,11 +68,30 @@ ob_start();
 						if($mensaje=="")
 						{
 							$mensaje="Actualizacion exitosa!! :D";
+                                                        
+                                                        $descripcion = "El usuario '".$_SERVER["http_user"]."' edito el metodo ".$_POST["nombre_metodo"]." en la clasificacion ";
+                                                        
+                                                        $sql = "Select nombre from clasificacion where id_clasificacion = ".$_POST["clasificacion_metodo"];
+                                                        
+                                                        $row = mysql_fetch_array(mysql_query($sql));
+                                                        
+                                                        $descripcion .= ''.$row[0]." del proyecto ";
+                                                        
+                                                        $sql = "Select name from mantis_project_table where id = ".$_POST["id_proyecto"];
+                                                        
+                                                        $row = mysql_fetch_array(mysql_query($sql));
+                                                        
+                                                        $descripcion .= ''.$row[0];
+                                                        
+                                                        $sql = "Insert into registro(id_proyecto,id_clasificacion,id_metodo,usuario,fecha,operacion,descripcion) values (".$_POST["id_proyecto"].",".$_POST["clasificacion_metodo"].",".$_POST["id_metodo"].",'".$_SERVER["http_user"]."','".  date("Y-m-d H:i:s")."','editar','".$descripcion."')";
+                                                        
+                                                        $Consulta_ID = mysql_query($sql);
+                                                        
 						}
 					}
 				}
 			}
-			echo preg_replace('\'','`', $_POST["descripcion_metodo"] );
+			
 		header("Location: index.php?mensaje=".$mensaje."&m=".$id_metodo."&cat=".$_POST["clasificacion_metodo"]."&project=".$_POST["id_proyecto"]);
 ob_end_flush();
 ?>
