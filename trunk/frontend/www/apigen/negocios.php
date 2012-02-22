@@ -81,7 +81,7 @@ ob_start();
                                     {
                                             $mensaje="Insercion exitosa!! :D";
                                             
-                                            $descripcion = "El usuario ".$_SERVER["http_user"]." agrego el metodo ".$_POST["nombre_metodo"]." en la clasificacion";
+                                            $descripcion = "El usuario ".$_SERVER["PHP_AUTH_USER"]." agrego el metodo ".$_POST["nombre_metodo"]." en la clasificacion";
                                             
                                             $sql = "Select nombre from clasificacion where id_clasificacion = ".$_POST["clasificacion_metodo"];
                                                         
@@ -95,7 +95,7 @@ ob_start();
 
                                             $descripcion .= ''.$row[0];
                                             
-                                            $sql = "Insert into registro(id_proyecto,id_clasificacion,id_metodo,usuario,fecha,operacion,descripcion) values(".$_POST["id_proyecto"].",".$_POST["clasificacion_metodo"].",".$id_metodo[0].",'".$_SERVER["http_user"]."','".  date("Y-m-d H:i:s",time())."','agregar','".$descripcion."')";
+                                            $sql = "Insert into registro(id_proyecto,id_clasificacion,id_metodo,usuario,fecha,operacion,descripcion) values(".$_POST["id_proyecto"].",".$_POST["clasificacion_metodo"].",".$id_metodo[0].",'".$_SERVER["PHP_AUTH_USER"]."','".  date("Y-m-d H:i:s",time())."','agregar','".$descripcion."')";
                                             
                                             $Consulta_ID = mysql_query($sql);
                                     }
