@@ -287,13 +287,13 @@
 	
 	$info_metodo="select * from metodo where id_metodo=".$mid;
 	$r=mysql_query($info_metodo) or die(mysql_error());
-	$info_metodo=mysql_fetch_row($r) or die(mysql_error());
+	$info_metodo=mysql_fetch_assoc($r) or die(mysql_error());
 	
 	$query_argumentos="select * from argumento where id_metodo=".$mid;
 	$r=mysql_query($query_argumentos) or die(mysql_error());
 	$i=0;
 	$argumentos=-1;
-	while($row=mysql_fetch_row($r))
+	while($row=mysql_fetch_assoc($r))
 	{
 		if($argumentos==-1)
 		   unset($argumentos);
@@ -304,7 +304,7 @@
 	$query_respuestas="select * from respuesta where id_metodo=".$mid;
 	$r=mysql_query($query_respuestas) or die(mysql_error());
 	$i=0;
-	while($row=mysql_fetch_row($r))
+	while($row=mysql_fetch_assoc($r))
 	{
 	   if($respuestas==-1)
 		   unset($respuestas);
@@ -330,19 +330,19 @@
 				     		<td>
 								<select name="clasificacion_metodo" style="width:100%" >
 									<?php
-										$sql="select * from clasificacion";
+										$sql="select * from clasificacion where id_proyecto = ".$_GET["project"];
 										$result=mysql_query($sql);
-										while($row=mysql_fetch_row($result))
+										while($row=mysql_fetch_assoc($result))
 										{
-											if($row[0]==(int)$info_metodo[1])
+											if($row["id_clasificacion"]==(int)$info_metodo["id_clasificacion"])
 												echo 
 											'
-												<option value="'.$row[0].'" selected>'.$row[1].'</option>
+												<option value="'.$row["id_clasificacion"].'" selected>'.$row["nombre"].'</option>
 											';
 											else
 											echo 
 											'
-												<option value="'.$row[0].'">'.$row[1].'</option>
+												<option value="'.$row["id_clasificacion"].'">'.$row["nombre"].'</option>
 											';
 										}
 										
@@ -353,13 +353,13 @@
 				     	<tr>
 				     		<td>Nombre</td>
 				     		<td>
-								<input type="text" name="nombre_metodo" id="n_metodo" style="width:100%" value="<?php echo $info_metodo[2];?>" onKeyUp="m.nombre = this.value; m.render()">
+								<input type="text" name="nombre_metodo" id="n_metodo" style="width:100%" value="<?php echo $info_metodo["nombre"];?>" onKeyUp="m.nombre = this.value; m.render()">
 				     		</td>
 				     	</tr>
 						<tr>
 				     		<td>Subtitulo</td>
 				     		<td>
-								<input type="text" name="subtitulo" id="sub_metodo" style="width:100%" value="<?php echo $info_metodo[9];?>" onKeyUp="m.subtitulo = this.value; m.render()">
+								<input type="text" name="subtitulo" id="sub_metodo" style="width:100%" value="<?php echo $info_metodo["subtitulo"];?>" onKeyUp="m.subtitulo = this.value; m.render()">
 				     		</td>
 				     	</tr>
 				     	<tr>
@@ -371,7 +371,7 @@
 									id="desc_metodo" 
 									style="width:100%" 
 									onKeyUp="m.desc = this.value; m.render()"><?php 
-										echo str_replace("<br>","\n", $info_metodo[8])
+										echo str_replace("<br>","\n", $info_metodo["descripcion"])
 									?></textarea>
 				     		</td>
 				     	</tr>				     	
@@ -380,15 +380,15 @@
 				     		<td>
 				     		<select name="tipo_metodo" id="http_metodo" onChange="m.http = this.value; m.render()">
 							<?php
-							    if($info_metodo[3]=="GET")
+							    if($info_metodo["tipo"]=="GET")
 								echo '<option value="GET" selected>GET</option> ';
 								else
 								echo '<option value="GET">GET</option> ';
-								if($info_metodo[3]=="POST")
+								if($info_metodo["tipo"]=="POST")
 								echo '<option value="POST" selected>POST</option> ';
 								else
 								echo '<option value="POST">POST</option> ';
-								if($info_metodo[3]=="POST/GET")
+								if($info_metodo["tipo"]=="POST/GET")
 								echo '<option value="POST/GET" selected>POST/GET</option> ';
 								else
 								echo '<option value="POST/GET">POST/GET</option> ';
@@ -398,18 +398,18 @@
 				     	</tr>
 						<tr>
 							<td>Regresa HTML</td>
-							<td><input type="checkbox" name="regresa_html" value="false" <?php if($info_metodo[10]) echo "checked"?> id="html_metodo" onChange="m.html = !m.html; m.render()"></td>
+							<td><input type="checkbox" name="regresa_html" value="false" <?php if($info_metodo["regresa_html"]) echo "checked"?> id="html_metodo" onChange="m.html = !m.html; m.render()"></td>
 						</tr>
 				     	<tr>
 				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Autenticacion</h3></td>
 				     	</tr>	
 				     	
 				     	<tr><td >Sesion Valida</td>		
-				     	<td ><input type="checkbox" name="sesion_valida" value="true" <?php if($info_metodo[4]) echo "checked"?> id="auth_session_metodo" onChange="m.auth.sesion = !m.auth.sesion; m.render()"> </td>
+				     	<td ><input type="checkbox" name="sesion_valida" value="true" <?php if($info_metodo["sesion_valida"]) echo "checked"?> id="auth_session_metodo" onChange="m.auth.sesion = !m.auth.sesion; m.render()"> </td>
 				     	</tr>
 				     	
 				     	<tr><td >Grupo</td>		
-				     	<td ><input type="text" name="grupo" value="<?php echo $info_metodo[5];?>" id="auth_grupo_metodo" onKeyUp="m.auth.grupo = this.value; m.render()"></td>
+				     	<td ><input type="text" name="grupo" value="<?php echo $info_metodo["grupo"];?>" id="auth_grupo_metodo" onKeyUp="m.auth.grupo = this.value; m.render()"></td>
 				     	</tr>
 				     	
 				     	<tr><td >Permiso</td>		
@@ -449,7 +449,7 @@
 								style="width:100%;<?php
 								
 									try{
-										$a = json_decode($info_metodo[6]);
+										$a = json_decode($info_metodo["ejemplo_peticion"]);
 									}catch(Exception $e){
 										echo  "box-shadow: 0 0 5px 2px #f00;  -webkit-box-shadow: 0 0 5px 2px #f00;  -moz-box-shadow: 0 0 5px 2px #f00;";										
 									}
@@ -461,7 +461,7 @@
 								?>" 
 								name="ejemplo_peticion" 
 								id="entrada_metodo" 
-								onKeyUp="m.entrada = this.value; m.render();"><?php echo $info_metodo[6];?></textarea>
+								onKeyUp="m.entrada = this.value; m.render();"><?php echo $info_metodo["ejemplo_peticion"];?></textarea>
 							</td>
 				     	</tr>
 				     	<tr>
@@ -475,7 +475,7 @@
 								 style="width:100%; <?php
 
 									try{
-										$a = json_decode($info_metodo[7]);
+										$a = json_decode($info_metodo["ejemplo_respuesta"]);
 									}catch(Exception $e){
 										echo  "box-shadow: 0 0 5px 2px #f00;  -webkit-box-shadow: 0 0 5px 2px #f00;  -moz-box-shadow: 0 0 5px 2px #f00;";										
 									}
@@ -487,7 +487,7 @@
 								?>"
 								 name="ejemplo_respuesta"
 								 id="salida_metodo"
-								 onKeyUp="m.salida = this.value; m.render()"><?php echo $info_metodo[7];?></textarea></td>
+								 onKeyUp="m.salida = this.value; m.render()"><?php echo $info_metodo["ejemplo_respuesta"];?></textarea></td>
 				     	</tr>
 				     	
 
@@ -523,20 +523,20 @@
 		for($i=0;$i<count($argumentos);$i++)
 		{
 			echo "addParamEdit('"
-			. $argumentos[$i][2] 
+			. $argumentos[$i]["nombre"] 
 			. "','"
-			.$argumentos[$i][5]
+			.$argumentos[$i]["tipo"]
 			."',"
-			.htmlspecialchars(str_replace("\n","<br>",$argumentos[$i][4]))
+			.htmlspecialchars(str_replace("\n","<br>",$argumentos[$i]["ahuevo"]))
 			.",'"
-			. preg_replace('/[^(\x20-\x7F)]*/','', $argumentos[$i][3] )
+			. preg_replace('/[^(\x20-\x7F)]*/','', $argumentos[$i]["descripcion"] )
 			."','"
-			.$argumentos[$i][6]."');\n";
+			.$argumentos[$i]["defaults"]."');\n";
 		}
 		if($respuestas!=-1)
 		for($i=0;$i<count($respuestas);$i++)
 		{
-			echo "addResponseEdit('".$respuestas[$i][2]."','".$respuestas[$i][4]."',\"". htmlentities(preg_replace('/[^(\x20-\x7F)]*/','',str_replace("\t","",str_replace("\n","\n",$respuestas[$i][3]))))."\");\n"; 
+			echo "addResponseEdit('".$respuestas[$i]["nombre"]."','".$respuestas[$i]["tipo"]."',\"". htmlentities(preg_replace('/[^(\x20-\x7F)]*/','',str_replace("\t","",str_replace("\n","\n",$respuestas[$i]["descripcion"]))))."\");\n"; 
 		}
 	?>
 		m.render();
