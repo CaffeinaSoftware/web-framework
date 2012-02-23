@@ -79,7 +79,7 @@ ob_start();
                                     }
                                     if($mensaje=="")
                                     {
-                                            $mensaje="Insercion exitosa!! :D";
+                                            $mensaje="Insercion exitosa!! Gracias ". $_SERVER["PHP_AUTH_USER"] . "!";
                                             
                                             $descripcion = "Agrego el metodo ".$_POST["nombre_metodo"]." en la clasificacion";
                                             

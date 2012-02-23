@@ -474,7 +474,7 @@
 	//ok al terminar enzipar todo en builds
 	Zip('tmp/out', 'tmp/builds/full_api.zip');
         
-        $descripcion = "El usuario ".$_SERVER["http_user"]." genero el proyecto ";
+        $descripcion = "El usuario ".$_SERVER["PHP_AUTH_USER"]." genero el proyecto ";
         
         $sql = "Select name from mantis_project_table where id = ".$_GET["project"];
 
@@ -482,7 +482,7 @@
 
         $descripcion .= ''.$row[0];
 
-        $sql = "Insert into registro(id_proyecto,usuario,fecha,operacion,descripcion) values (".$_GET["project"].",'".$_SERVER["http_user"]."','".  date("Y-m-d H:i:s")."','generar','".$descripcion."')";
+        $sql = "Insert into registro(id_proyecto,usuario,fecha,operacion,descripcion) values (".$_GET["project"].",'".$_SERVER["PHP_AUTH_USER"]."','".  date("Y-m-d H:i:s")."','generar','".$descripcion."')";
 
         $Consulta_ID = mysql_query($sql);
 

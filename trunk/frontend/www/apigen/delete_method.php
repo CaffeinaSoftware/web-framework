@@ -38,7 +38,7 @@ ob_start();
                    
                    else
                    {
-                       $mensaje = "Actualizacion exitosa!! :D";
+                       $mensaje = "Actualizacion exitosa!! Gracias ". $_SERVER["PHP_AUTH_USER"] . "!";
                        
                        $descripcion = "elimino el metodo ".$nombre_metodo." en la clasificacion ";
 

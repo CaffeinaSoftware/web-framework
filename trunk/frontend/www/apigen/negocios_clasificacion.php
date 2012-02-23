@@ -23,7 +23,7 @@ ob_start();
         }
         else
         {
-                $mensaje="Clasificacion creada exitosamente";
+                $mensaje="Clasificacion creada exitosamente! Gracias ". $_SERVER["PHP_AUTH_USER"] . "!";
                 $id_clasificacion= mysql_fetch_row($Consulta_ID);
                 
                 $descripcion = "El usuario ".$_SERVER["PHP_AUTH_USER"]." agrego la clasificacion ".$_POST["nombre_clasificacion"]." en el proyecto ";
