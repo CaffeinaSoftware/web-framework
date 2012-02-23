@@ -21,10 +21,22 @@
 	function write_db_file( $base ){
                 $texto = "";
                
-               $tablas=mysql_query("show tables from $base;"); 
+               //$tablas=mysql_query("show tables from $base;"); 
+               $tablas = array
+               (
+                   array( "mantis_project_table" ),
+                   array( "clasificacion" ),
+                   array( "metodo" ),
+                   array( "argumento" ),
+                   array( "registro" ),
+                   array( "respuesta" ),
+                   array( "httptesting_paquete_de_pruebas" ),
+                   array( "httptesting_ruta" ),
+               );
                $texto.="create database if not exists $base;\n"; 
                $texto.="use $base;\n"; 
-               while($tabla=mysql_fetch_array($tablas)) 
+               //while($tabla=mysql_fetch_array($tablas)) 
+               foreach($tablas as $tabla)
                { 
                   $mitabla=$tabla[0]; 
                   $creates=mysql_query("show create table $base.$mitabla;"); 
@@ -89,17 +101,17 @@
 	create_structure("tmp/builds/");
 
 
-	$_api_file = fopen("tmp/out/server/private/api_pos.sql", 'w') or die("can't open file");
+	$_api_file = fopen("tmp/out/server/private/api_pos_caffeina-labs.sql", 'w') or die("can't open file");
 	
 	
-        fwrite($_api_file, write_db_file(  "api_pos" ) );
+        fwrite($_api_file, write_db_file(  "caffeina-labs" ) );
 
 	fclose($_api_file);
         
-        echo write_db_file("api_pos");
+        echo write_db_file("caffeina-labs");
 	
 	//ok al terminar enzipar todo en builds
-	Zip('tmp/out', 'tmp/builds/api_pos.zip');
+	Zip('tmp/out', 'tmp/builds/api_pos_caffeina-labs.zip');
 
 
 
