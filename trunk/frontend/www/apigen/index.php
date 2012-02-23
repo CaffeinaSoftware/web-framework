@@ -344,7 +344,7 @@
 						
 
 
-						$argsq = mysql_query("select * from argumento where id_metodo = ". $metodo["id_metodo"] ." order by ahuevo desc,id_argumento asc;") or die(mysql_error());
+						$argsq = mysql_query("select * from argumento where id_metodo = ". $metodo["id_metodo"] ." order by ahuevo desc,nombre desc;") or die(mysql_error());
 
 
 						?>
@@ -474,7 +474,17 @@
 					<div class="mbm">
 						
 					</div>
-					<abbr title="Monday, September 5, 2011 at 8:28pm" data-date="Mon, 05 Sep 2011 18:28:49 -0700" class="timestamp">Ultima modifiacion</abbr>
+					<abbr title="Monday, September 5, 2011 at 8:28pm" data-date="Mon, 05 Sep 2011 18:28:49 -0700" class="timestamp">
+                                            Ultima modificacion 
+                                        <?php 
+                                            if(isset($_GET["m"]))
+                                            {
+                                                $registro = mysql_fetch_assoc(mysql_query("Select * from registro where id_metodo = ".$_GET["m"]));
+                                                $time = strtotime($registro["fecha"]);
+                                                echo " ".date("l",$time).", ".date("F",$time)." ".date("j",$time).", ".date("Y",$time)." at ".date("H:i:s",$time).". <br> Por ".$registro["usuario"];
+                                            }
+                                        ?>
+                                        </abbr>
 				</div>
 
 			</div>
