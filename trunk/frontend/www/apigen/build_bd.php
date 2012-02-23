@@ -228,7 +228,7 @@
 				</div>
 
 				<p>
-					<a href="dl.php?what=api_pos_caffeina-labs&out_name=api_pos_caffeina-labs">Descargar Base de Datos</a>
+					<a href="dl.php?what=bd/api_pos_caffeina-labs&out_name=api_pos_caffeina-labs">Descargar Base de Datos</a>
 				</p>
 
 					<?php require_once( "write_db.php" ); ?>

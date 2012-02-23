@@ -216,7 +216,7 @@
 				</div>
 
 				<p>
-					<a href="dl.php?what=full_api&out_name=full_api">Descargar Todo</a>
+					<a href="dl.php?what=api/full_api&out_name=full_api">Descargar Todo</a>
 				</p>
 
 					<?php require_once( "write_api.php" ); ?>

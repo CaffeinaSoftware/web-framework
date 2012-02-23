@@ -417,18 +417,18 @@
 					 #    #   #   #    # #   #    #   
 					  ####    #   #    # #    #   #  	
 ################################################################################
- 	if(is_dir("tmp/out")){
- 		delete_directory( "tmp/out" );
+ 	if(is_dir("tmp/out/server/")){
+ 		delete_directory( "tmp/out/server/" );
  	}
 
- 	if(is_dir("tmp/builds")){
- 		delete_directory( "tmp/builds" );
+ 	if(is_dir("tmp/builds/api/")){
+ 		delete_directory("tmp/builds/api/");
  	}
 
 	create_structure("tmp/out/server/api/");
 	create_structure("tmp/out/server/controller/");
 	create_structure("tmp/out/server/controller/interfaces/");
-	create_structure("tmp/builds/");
+	create_structure("tmp/builds/api/");
 
 
 	$res = mysql_query("select m.* from metodo m,clasificacion c where c.id_proyecto = ".$_GET["project"]." and m.id_clasificacion = c.id_clasificacion order by id_clasificacion") or die(mysql_error());
@@ -472,7 +472,7 @@
 
 
 	//ok al terminar enzipar todo en builds
-	Zip('tmp/out', 'tmp/builds/full_api.zip');
+	Zip('tmp/out/server/', 'tmp/builds/api/full_api.zip');
         
         $descripcion = "El usuario ".$_SERVER["PHP_AUTH_USER"]." genero el proyecto ";
         

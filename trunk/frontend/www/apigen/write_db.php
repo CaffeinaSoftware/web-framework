@@ -89,29 +89,27 @@
 					 #    #   #   #    # #   #    #   
 					  ####    #   #    # #    #   #  	
 ################################################################################
- 	if(is_dir("tmp/out")){
- 		delete_directory( "tmp/out" );
+ 	if(!is_dir("tmp/out/private/")){
+ 		create_structure("tmp/out/private/");
  	}
 
- 	if(is_dir("tmp/builds")){
- 		delete_directory( "tmp/builds" );
+ 	if(!is_dir("tmp/builds/bd/")){
+ 		create_structure("tmp/builds/bd/");
  	}
 
-	create_structure("tmp/out/server/private/");
-	create_structure("tmp/builds/");
 
 
-	$_api_file = fopen("tmp/out/server/private/api_pos_caffeina-labs.sql", 'w') or die("can't open file");
+	$_api_file = fopen("tmp/out/private/api_pos_caffeina-labs.sql", 'w') or die("can't open file");
 	
 	
-        fwrite($_api_file, write_db_file(  "caffeina-labs" ) );
+        fwrite($_api_file, write_db_file(  "api_pos" ) );
 
 	fclose($_api_file);
         
-        echo write_db_file("caffeina-labs");
+        echo write_db_file("api_pos");
 	
 	//ok al terminar enzipar todo en builds
-	Zip('tmp/out', 'tmp/builds/api_pos_caffeina-labs.zip');
+	Zip('tmp/out/private/api_pos_caffeina-labs.sql', 'tmp/builds/bd/api_pos_caffeina-labs.zip');
 
 
 
