@@ -102,11 +102,11 @@
 	$_api_file = fopen("tmp/out/private/api_pos_caffeina-labs.sql", 'w') or die("can't open file");
 	
 	
-        fwrite($_api_file, write_db_file(  "api_pos" ) );
+        fwrite($_api_file, write_db_file(  "caffeina-labs" ) );
 
 	fclose($_api_file);
         
-        echo write_db_file("api_pos");
+        echo write_db_file("caffeina-labs");
 	
 	//ok al terminar enzipar todo en builds
 	Zip('tmp/out/private/api_pos_caffeina-labs.sql', 'tmp/builds/bd/api_pos_caffeina-labs.zip');
