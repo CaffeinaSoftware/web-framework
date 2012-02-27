@@ -64,7 +64,7 @@ html body{background:#e7e7e7}
 .dialog_body .code input,.dialog_body .code textarea{width:600px;font:12px monospace}
 .LDialog_DeveloperPluginCode .pop_container,.LDialog_DeveloperPluginCode .pop_container_advanced{width:630px}
 .LDialog_DeveloperPluginCode label{margin:5px;font-size: 12px}
-.devsitePage .body > .content{background:#fff;border:1px solid #d9d9d9;border-top:0;-webkit-box-shadow:#ddd 0 1px 1px;padding:75px 20px 20px}
+.devsitePage .body > .content{background:#fff;border:1px solid #d9d9d9;border-top:0;-webkit-box-shadow:#ddd 0 1px 1px;padding:15px 20px 20px}
 .devsitePage .nav > .content{background:#fff url(https://s-static.ak.facebook.com/rsrc.php/v1/yz/r/coK3kMStN_j.gif) repeat-y}
 .devsitePage .body ol,.devsitePage .body ul{list-style-type:disc;padding-left:3em}
 .devsitePage .body .uiSelector ul,.devsitePage .body ul.uiList{list-style-type:none;margin:0;padding-left:0}
@@ -171,7 +171,7 @@ html body{background:#e7e7e7}
 .devsitePage .menu .uiTypeaheadView{z-index:1}
 .devsitePage .menu .uiTypeaheadView li{color:#3b5998}
 .devsitePage .menu .inputtext{border:0;padding:5px 4px}
-.devsitePage .menu{position:fixed;width:100%;z-index:100}
+/*.devsitePage .menu{position:fixed;width:100%;z-index:100}*/
 .devsitePage #navsubsectionpages{margin-top:20px}
 .devsitePage #navsubsectionpages h5{color:#777;font-size: 11px;margin:25px 0 10px 10px}
 .devsitePage #navsubsectionpages ul{margin-left:10px}
@@ -718,3 +718,79 @@ ul #navAccountInfo a:hover,ul #navAccountInfo a:focus,ul #navAccountInfo a:activ
 .uiTypeaheadView .search .friendlist .photo{background-color:transparent}
 
 #bootloader_4GrDC { height: 42px; }
+
+#top-bar {
+background-color: rgba( 0, 0, 0, 0.6 );
+height: 80px;
+display: block;
+}
+
+#header-content {
+width: 940px;
+margin: 0 auto;
+position: relative;
+display: block;
+}
+
+#top-bar p{
+    margin: 0;
+    display: block;
+-webkit-margin-before: 1em;
+-webkit-margin-after: 1em;
+-webkit-margin-start: 0px;
+-webkit-margin-end: 0px;
+}
+
+#top-bar p.logo a {
+display: block;
+background-image: url(http://static.caffeina.mx/logos.png);
+background-repeat: no-repeat;
+background-position: 0 0px;
+height: 76px;
+width: 199px;
+text-indent: -10000px;
+padding-top: 15px;
+}
+
+ul.nav {
+list-style-type: none;
+margin: 0;
+padding: 0;
+position: absolute;
+top: 24px;
+right: 0;
+font-family: 'ff-din-web-1', 'ff-din-web-2', "Helvetica Neue", Arial, Helvetica, sans-serif;
+
+display: block;
+-webkit-margin-before: 1em;
+-webkit-margin-after: 1em;
+-webkit-margin-start: 0px;
+-webkit-margin-end: 0px;
+-webkit-padding-start: 40px;
+
+}
+
+ul.nav li {
+display: inline;
+text-align: -webkit-match-parent;
+}
+
+ul.nav li a {
+color: white;
+text-decoration: none;
+display: block;
+float: left;
+margin-left: 12px;
+text-transform: uppercase;
+font-size: 13px;
+color: white;
+padding: 4px 10px;
+text-shadow: 1px 1px 1px black;
+font-weight: 700;
+-webkit-transition-property: background-color, color;
+-webkit-transition-duration: 0.2s, 0.2s;
+-moz-border-radius: 15px;
+-webkit-border-radius: 15px;
+border-radius: 15px;
+cursor: auto;
+}

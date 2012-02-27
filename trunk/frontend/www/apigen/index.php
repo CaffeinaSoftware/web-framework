@@ -71,6 +71,18 @@
 <div id="FB_HiddenContainer" style="position:absolute; top:-10000px; width:0px; height:0px;">
 </div>
 <div class="devsitePage">
+    <div id="top-bar">
+            <div id="header-content">
+                <p class="logo">
+                    <a href="">caffeina</a>
+                </p>
+                <ul class="nav">
+                    <li><a href="https://labs.caffeina.mx/oficina/">Home</a></li>
+                    <li><a href="https://labs.caffeina.mx/oficina/mantis">Bugs</a></li>
+                    <li class="last"><a href="https://labs.caffeina.mx/oficina/websvn/">WebSVN</a></li>
+                </ul>
+            </div><!-- header-content -->
+        </div><!-- top-bar -->
 	<div class="menu">
 		<div class="content">
 			<a class="logo" href="../index.php">
@@ -144,6 +156,7 @@
 			</div>
 		</div>
 	</div>
+    
 	<div class="body nav">
 		<div class="content">
 			<div id="bodyMenu" class="bodyMenu">
@@ -509,6 +522,7 @@
 	<input type="hidden" autocomplete="off" id="post_form_id" name="post_form_id" value="d8f38124ed9e31ef3947198c6d26bff1"/>
 	<div id="fb-root">
 	</div>
+        
 	
 </div>
 

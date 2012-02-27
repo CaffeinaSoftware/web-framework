@@ -66,6 +66,18 @@
 <div id="FB_HiddenContainer" style="position:absolute; top:-10000px; width:0px; height:0px;">
 </div>
 <div class="devsitePage">
+    <div id="top-bar">
+            <div id="header-content">
+                <p class="logo">
+                    <a href="">caffeina</a>
+                </p>
+                <ul class="nav">
+                    <li><a href="https://labs.caffeina.mx/oficina/">Home</a></li>
+                    <li><a href="https://labs.caffeina.mx/oficina/mantis">Bugs</a></li>
+                    <li class="last"><a href="https://labs.caffeina.mx/oficina/websvn/">WebSVN</a></li>
+                </ul>
+            </div><!-- header-content -->
+        </div><!-- top-bar -->
 	<div class="menu">
 		<div class="content">
 			<a class="logo" href="../">

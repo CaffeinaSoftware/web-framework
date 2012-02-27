@@ -5,6 +5,7 @@
 <link type="text/css" rel="stylesheet" href="media/UScOtw9XDgs.css"/>
 <link type="text/css" rel="stylesheet" href="media/DXKB648UQdW.css"/>
 <link type="text/css" rel="stylesheet" href="media/5SI8Yrveq93.css"/>
+<link type="text/css" rel="stylesheet" href="media/f.css"/>
 
 </head>
 <body class="safari4 mac Locale_en_US">
@@ -12,7 +13,19 @@
 <div id="FB_HiddenContainer" style="position:absolute; top:-10000px; width:0px; height:0px;"></div>
 
 <div class="devsitePage">
-	<div class="menu">
+    <div id="top-bar">
+            <div id="header-content">
+                <p class="logo">
+                    <a href="">caffeina</a>
+                </p>
+                <ul class="nav">
+                    <li><a href="https://labs.caffeina.mx/oficina/">Home</a></li>
+                    <li><a href="https://labs.caffeina.mx/oficina/mantis">Bugs</a></li>
+                    <li class="last"><a href="https://labs.caffeina.mx/oficina/websvn/">WebSVN</a></li>
+                </ul>
+            </div><!-- header-content -->
+        </div><!-- top-bar -->
+<!--	<div class="menu">
 		<div class="content">
 
 			<a class="logo" href="/"><i class="img sp_990tmg sx_a67319"><u>Caffeina WebFramework</u></i></a>
@@ -24,16 +37,16 @@
 			<div class="clear">
 			</div>
 		</div>
-	</div>
+	</div>-->
 	<div class="body" id="devsiteHomeBody">
 		<div class="content">
 			<div class="clearfix wikiPanel">
 				
 				
-				<div class="header">
+<!--				<div class="header">
 					<div class="content">
 					</div>
-				</div>
+				</div>-->
 				
 				<div style="background-color:#E2E8F6;height:350px;">
 					<div style="float:left;padding-top:60px;width:700px;margin-left:125px;">

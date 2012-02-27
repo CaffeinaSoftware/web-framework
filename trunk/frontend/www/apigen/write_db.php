@@ -33,17 +33,21 @@
                    array( "httptesting_paquete_de_pruebas" ),
                    array( "httptesting_ruta" ),
                );
-               $texto.="create database if not exists $base;\n"; 
-               $texto.="use $base;\n"; 
+               $texto.="create database if not exists `$base`;\n"; 
+               $texto.="use `$base`;\n"; 
                //while($tabla=mysql_fetch_array($tablas)) 
                foreach($tablas as $tabla)
                { 
                   $mitabla=$tabla[0]; 
-                  $creates=mysql_query("show create table $base.$mitabla;"); 
+                  $creates=mysql_query("show create table `$base`.`$mitabla`;"); 
+                  if(!$creates)
+                  {
+                      $texto .= mysql_error();
+                  }
                   while($create=mysql_fetch_array($creates)) 
                   { 
                      $texto.=$create[1].";\n"; 
-                     $datos=mysql_query("select * from $base.$mitabla;"); 
+                     $datos=mysql_query("select * from `$base`.`$mitabla`;"); 
                      $campos=mysql_num_fields($datos); 
                      $regs=mysql_num_rows($datos); 
                      for($i=0;$i<$regs;$i++) 
