@@ -75,6 +75,7 @@
                 <ul class="nav">
                     <li><a href="https://labs.caffeina.mx/oficina/">Home</a></li>
                     <li><a href="https://labs.caffeina.mx/oficina/mantis">Bugs</a></li>
+                    <li><a href="https://webframework.labs.caffeina.mx/">Web Framework</a></li>
                     <li class="last"><a href="https://labs.caffeina.mx/oficina/websvn/">WebSVN</a></li>
                 </ul>
             </div><!-- header-content -->
