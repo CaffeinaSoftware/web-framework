@@ -11,7 +11,104 @@
 	<script type="text/javascript" src="http://api.caffeina.mx/jquery/jquery-1.4.2.min.js"></script>
 	<title></title>
 	<script type="text/javascript">
-		var param_count = -1;
+		
+                function validarCampos()
+                {
+                    if($.trim($("#n_metodo").val())=="")
+                    {
+                        alert("Falta el nombre del metodo");
+                        return;
+                    }
+                    else if($.trim($("#n_metodo").val()).search(/['"]+/)>=0)
+                    {
+                        alert("El nombre contiene comillas simples o dobles, use en su lugar ` ");
+                        return;
+                    }
+                    if($.trim($("#sub_metodo").val())=="")
+                    {
+                        alert("Falta el subtitulo");
+                        return;
+                    }
+                    else if($.trim($("#sub_metodo").val()).search(/['"]+/)>=0)
+                    {
+                        alert("El subtitulo contiene comillas simples o dobles, use en su lugar ` ");
+                        return;
+                    }
+                    if($.trim($("#desc_metodo").val())=="")
+                    {
+                        alert("Falta la descripcion del metodo");
+                        return;
+                    }
+                    else if($.trim($("#desc_metodo").val()).search(/['"]+/)>=0)
+                    {
+                        alert("La descripcion contiene comillas simples o dobles, use en su lugar ` ");
+                        return;
+                    }
+                    if($.trim($("#auth_grupo_metodo").val())=="")
+                    {
+                        alert("Falta el grupo del metodo");
+                        return;
+                    }
+                    else if($.trim($("#auth_grupo_metodo").val()).search(/\D+/)>=0)
+                    {
+                        alert("El grupo solo puede ser un numero");
+                        return;
+                    }
+                    for(var i = 0; i<= param_count; i++)
+                        {
+                            if($.trim($("#args_nombre_"+i).val())=="")
+                            {
+                                alert("Falta el nombre del argumento "+(i+1));
+                                return;
+                            }
+                            else if($.trim($("#args_nombre_"+i).val()).search(/['"]+/)>=0)
+                            {
+                                alert("El nombre del argumento "+ (i+1) +" contiene comillas simples o dobles, use en su lugar ` ");
+                                return;
+                            }
+                            if($.trim($("#args_desc_"+i).val()).search(/'+/)>=0)
+                            {
+                                alert("La descripcion del argumento "+ (i+1) +" contiene comillas simples, use en su lugar ` ");
+                                return;
+                            }
+                            if($.trim($("#args_default_"+i).val()).search(/'+/)>=0)
+                            {
+                                alert("El valor default del argumento "+ (i+1) +" contiene comillas simples, use en su lugar ` ");
+                                return;
+                            }
+                        }
+                    for(var i = 0; i<= response_count; i++)
+                        {
+                            if($.trim($("#response_nombre_"+i).val())=="")
+                            {
+                                alert("Falta el nombre de la respuesta "+(i+1));
+                                return;
+                            }
+                            else if($.trim($("#response_nombre_"+i).val()).search(/['"]+/)>=0)
+                            {
+                                alert("El nombre de la respuesta "+ (i+1) +" contiene comillas simples o dobles, use en su lugar ` ");
+                                return;
+                            }
+                            if($.trim($("#response_desc_"+i).val()).search(/'+/)>=0)
+                            {
+                                alert("La descripcion de la respuesta "+ (i+1) +" contiene comillas simples, use en su lugar ` ");
+                                return;
+                            }
+                        }
+                    if($.trim($("#ejemplo_peticion").val()).search(/'+/)>=0)
+                    {
+                        alert("El ejemplo de la peticion contiene comillas simples, use en su lugar ` ");
+                        return;
+                    }
+                    if($.trim($("#ejemplo_respuesta").val()).search(/'+/)>=0)
+                    {
+                        alert("El ejemplo de la respuesta contiene comillas simples, use en su lugar ` ");
+                        return;
+                    }
+                    $("#form_insercion").submit()
+                }
+                
+                var param_count = -1;
 
 		function addParam(){
 			param_count ++;
@@ -498,7 +595,7 @@
 		</tr>
 
 	</table>	
-	<input type=submit value="Editar">
+	<input type="button" value="Editar" onClick="validarCampos();">
 	<input type="hidden" name="numero_argumentos" id="numero_argumentos" value=0>
 	<input type="hidden" name="numero_respuestas" id="numero_respuestas" value=0>
 	<input type="hidden" name="id_metodo" id="id_metodo" value=<?php echo $mid;?>>

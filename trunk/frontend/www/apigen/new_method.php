@@ -7,8 +7,105 @@ require_once("../../server/bootstrap.php");
 	<script type="text/javascript" src="http://api.caffeina.mx/jquery/jquery-1.4.2.min.js"></script>
 	<title></title>
 	<script type="text/javascript">
+                
+                function validarCampos()
+                {
+                    if($.trim($("#nombre_metodo").val())=="")
+                    {
+                        alert("Falta el nombre del metodo");
+                        return;
+                    }
+                    else if($.trim($("#nombre_metodo").val()).search(/['"]+/)>=0)
+                    {
+                        alert("El nombre contiene comillas simples o dobles, use en su lugar ` ");
+                        return;
+                    }
+                    if($.trim($("#subtitulo").val())=="")
+                    {
+                        alert("Falta el subtitulo");
+                        return;
+                    }
+                    else if($.trim($("#subtitulo").val()).search(/['"]+/)>=0)
+                    {
+                        alert("El subtitulo contiene comillas simples o dobles, use en su lugar ` ");
+                        return;
+                    }
+                    if($.trim($("#descripcion_metodo").val())=="")
+                    {
+                        alert("Falta la descripcion del metodo");
+                        return;
+                    }
+                    else if($.trim($("#descripcion_metodo").val()).search(/['"]+/)>=0)
+                    {
+                        alert("La descripcion contiene comillas simples o dobles, use en su lugar ` ");
+                        return;
+                    }
+                    if($.trim($("#grupo").val())=="")
+                    {
+                        alert("Falta el grupo del metodo");
+                        return;
+                    }
+                    else if($.trim($("#grupo").val()).search(/\D+/)>=0)
+                    {
+                        alert("El grupo solo puede ser un numero");
+                        return;
+                    }
+                    for(var i = 0; i<= param_count; i++)
+                        {
+                            if($.trim($("#args_nombre_"+i).val())=="")
+                            {
+                                alert("Falta el nombre del argumento "+(i+1));
+                                return;
+                            }
+                            else if($.trim($("#args_nombre_"+i).val()).search(/['"]+/)>=0)
+                            {
+                                alert("El nombre del argumento "+ (i+1) +" contiene comillas simples o dobles, use en su lugar ` ");
+                                return;
+                            }
+                            if($.trim($("#args_desc_"+i).val()).search(/'+/)>=0)
+                            {
+                                alert("La descripcion del argumento "+ (i+1) +" contiene comillas simples, use en su lugar ` ");
+                                return;
+                            }
+                            if($.trim($("#args_default_"+i).val()).search(/'+/)>=0)
+                            {
+                                alert("El valor default del argumento "+ (i+1) +" contiene comillas simples, use en su lugar ` ");
+                                return;
+                            }
+                        }
+                    for(var i = 0; i<= response_count; i++)
+                        {
+                            if($.trim($("#response_nombre_"+i).val())=="")
+                            {
+                                alert("Falta el nombre de la respuesta "+(i+1));
+                                return;
+                            }
+                            else if($.trim($("#response_nombre_"+i).val()).search(/['"]+/)>=0)
+                            {
+                                alert("El nombre de la respuesta "+ (i+1) +" contiene comillas simples o dobles, use en su lugar ` ");
+                                return;
+                            }
+                            if($.trim($("#response_desc_"+i).val()).search(/'+/)>=0)
+                            {
+                                alert("La descripcion de la respuesta "+ (i+1) +" contiene comillas simples, use en su lugar ` ");
+                                return;
+                            }
+                        }
+                    if($.trim($("#ejemplo_peticion").val()).search(/'+/)>=0)
+                    {
+                        alert("El ejemplo de la peticion contiene comillas simples, use en su lugar ` ");
+                        return;
+                    }
+                    if($.trim($("#ejemplo_respuesta").val()).search(/'+/)>=0)
+                    {
+                        alert("El ejemplo de la respuesta contiene comillas simples, use en su lugar ` ");
+                        return;
+                    }
+                    $("#form_insercion").submit()
+                }
+                
 		var param_count = -1;
-
+                
 		function addParam(){
 			param_count ++;
 			document.getElementById("numero_argumentos").value=param_count+1;
@@ -201,19 +298,19 @@ require_once("../../server/bootstrap.php");
 				     	<tr>
 				     		<td>Nombre</td>
 				     		<td>
-								<input type="text" name="nombre_metodo" style="width:100%" onKeyUp="m.nombre = this.value; m.render()" >
+								<input type="text" name="nombre_metodo" id="nombre_metodo" style="width:100%" onKeyUp="m.nombre = this.value; m.render()" >
 				     		</td>
 				     	</tr>
 						<tr>
 				     		<td>Subtitulo</td>
 				     		<td>
-								<input type="text" name="subtitulo" style="width:100%" onKeyUp="m.subtitulo = this.value; m.render()" >
+								<input type="text" name="subtitulo" id="subtitulo" style="width:100%" onKeyUp="m.subtitulo = this.value; m.render()" >
 				     		</td>
 				     	</tr>
 				     	<tr>
 				     		<td>Descripcion</td>
 				     		<td>
-								<textarea name="descripcion_metodo" style="width:100%" onKeyUp="m.desc = this.value; m.render()"></textarea>
+								<textarea name="descripcion_metodo" id="descripcion_metodo" style="width:100%" onKeyUp="m.desc = this.value; m.render()"></textarea>
 				     		</td>
 				     	</tr>				     	
 				     	<tr>
@@ -239,7 +336,7 @@ require_once("../../server/bootstrap.php");
 				     	</tr>
 				     	
 				     	<tr><td >Grupo</td>		
-				     	<td ><input type="text" name="grupo" onKeyUp="m.auth.grupo = this.value; m.render()"></td>
+				     	<td ><input type="text" name="grupo" id="grupo" onKeyUp="m.auth.grupo = this.value; m.render()"></td>
 				     	</tr>
 				     	
 				     	<tr><td >Permiso</td>		
@@ -272,14 +369,14 @@ require_once("../../server/bootstrap.php");
 				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Ejemplo Peticion</h3></td>
 				     	</tr>
 				     	<tr>
-				     		<td colspan="2"><textarea style="width:100%" name="ejemplo_peticion" onKeyUp="m.entrada = this.value; m.render()"></textarea></td>
+				     		<td colspan="2"><textarea style="width:100%" name="ejemplo_peticion" id="ejemplo_peticion" onKeyUp="m.entrada = this.value; m.render()"></textarea></td>
 				     	</tr>
 				     	<tr>
 				     		<td colspan="2" style="background-color:#0B5394; padding: 5px;"><h3 style="color: white;">Ejemplo Respuesta</h3></td>
 				     	</tr>
 				     	<tr>
 
-				     		<td colspan="2"><textarea style="width:100%" name="ejemplo_respuesta" onKeyUp="m.salida = this.value; m.render()"></textarea></td>
+				     		<td colspan="2"><textarea style="width:100%" name="ejemplo_respuesta" id="ejemplo_respuesta" onKeyUp="m.salida = this.value; m.render()"></textarea></td>
 				     	</tr>
 				     	
 <!--
@@ -413,7 +510,7 @@ require_once("../../server/bootstrap.php");
 -->
 
 	</table>	
-	<input type=submit value="Insertar">
+	<input type="button" value="Insertar" onClick="validarCampos();">
 	<input type="hidden" name="numero_argumentos" id="numero_argumentos" value=0>
 	<input type="hidden" name="numero_respuestas" id="numero_respuestas" value=0>
         <input type="hidden" name="id_proyecto" id="id_proyecto" value="<?php echo $_GET["project"] ?>"></input>
