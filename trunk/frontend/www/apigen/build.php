@@ -11,6 +11,63 @@
 
     var new_category_form_visible = false;
     
+    var edit_category_form_visible = false;
+    
+    function showEditCategoryForm(nombre,descripcion,id)
+    {
+        if(!edit_category_form_visible)
+        {
+            
+            edit_category_form_visible = true;
+            
+            var html = '';
+            html += '<div id="ec">'
+            html += '<label> Nombre </label>';
+            html += '<input type="text" name="nombre_clasificacion" id="nombre_clasificacion_edit" value="'+nombre+'">';
+            html += '<label> Descripcion </label>';
+            html += '<textarea name="descripcion_clasificacion" id="descripcion_clasificacion_edit">'+descripcion+'</textarea>';
+            html += '<input type="hidden" name="id_proyecto" value="<?php if(isset($_GET["project"]) && is_numeric($_GET["project"])) echo $_GET["project"]; ?>">';
+            html += '<input type="hidden" name="id_clasificacion" value='+id+'>';
+            html += '<input type="button" onClick="validarCamposCategoriaEditar()" value="Enviar">';
+            html += '<a onClick="hideEditCategoryForm()">Hide</a>';
+            html += '</div>';
+
+            $("#editar_categoria").append(html);
+            
+        }
+    }
+    
+    function validarCamposCategoriaEditar()
+    {
+            if($.trim($("#nombre_clasificacion_edit").val())=="")
+            {
+                alert("Falta el nombre de la clasificacion");
+                return;
+            }
+            if($.trim($("#nombre_clasificacion_edit").val()).search(/['"]+/)>=0)
+            {
+                alert("El nombre de la clasificacion tiene comillas simples o dobles, use en su lugar `");
+                return;
+            }
+            if($.trim($("#descripcion_clasificacion_edit").val()).search(/['"]+/)>=0)
+            {
+                alert("La descripcion de la clasificacion tiene comillas simples o dobles, use en su lugar `");
+                return;
+            }
+            $("#editar_categoria").submit();
+    }
+    
+    function hideEditCategoryForm()
+    {
+        if(edit_category_form_visible)
+            {
+                edit_category_form_visible = false;
+                
+                $("#ec").remove();
+            }
+    }
+    
+    
     function showNewCategoryForm()
     {
         if(!new_category_form_visible)
@@ -25,13 +82,33 @@
             html += '<label> Descripcion </label>';
             html += '<textarea name="descripcion_clasificacion" id="descripcion_clasificacion"></textarea>';
             html += '<input type="hidden" name="id_proyecto" value="<?php if(isset($_GET["project"]) && is_numeric($_GET["project"])) echo $_GET["project"]; ?>">';
-            html += '<input type="submit">';
+            html += '<input type="button" onClick="validarCamposCategoria()" value="Enviar">';
             html += '<a onClick="hideNewCategoryForm()">Hide</a>';
             html += '</div>';
 
             $("#nueva_categoria").append(html);
             
         }
+    }
+    
+    function validarCamposCategoria()
+    {
+            if($.trim($("#nombre_clasificacion").val())=="")
+            {
+                alert("Falta el nombre de la clasificacion");
+                return;
+            }
+            if($.trim($("#nombre_clasificacion").val()).search(/['"]+/)>=0)
+            {
+                alert("El nombre de la clasificacion tiene comillas simples o dobles, use en su lugar `");
+                return;
+            }
+            if($.trim($("#descripcion_clasificacion").val()).search(/['"]+/)>=0)
+            {
+                alert("La descripcion de la clasificacion tiene comillas simples o dobles, use en su lugar `");
+                return;
+            }
+            $("#nueva_categoria").submit();
     }
     
     function hideNewCategoryForm()
@@ -57,6 +134,14 @@
       {
           window.location = "index.php?project="+val;
       }
+       
+      function Borrar_categoria()
+	  {
+		 var selection = confirm("Esta seguro de querer borrar la categoria con todos su metodos?");
+		 
+		 if(selection)
+			window.location="delete_cat.php?"<?php if(isset($_GET["cat"])) echo '+"&cat='.$_GET["cat"].'"'; if(isset($_GET["project"])) echo '+"&project='.$_GET["project"].'"'?>;
+	  }
 </script>
 
 <link type="text/css" rel="stylesheet" href="../media/f.css"/>
@@ -171,6 +256,16 @@
 											<?php echo $row["nombre"]; ?>
 										</div>
 										</a>
+                                                                                <div id="form_editar_categoria">
+                                                                                    <a onClick="showEditCategoryForm(<?php echo "'".$row["nombre"]."','".$row["descripcion"]."',".$row["id_clasificacion"]?>)">Editar categoria</a>
+                                                                                    
+                                                                                    <form id="editar_categoria" method="POST" action="negocios_clasificacion_editar.php">
+
+                                                                                    </form>
+                                                                                </div>
+                                                                                    <div id="borrar_categoria">
+                                                                                        <a onClick="Borrar_categoria();">Borrar categoria</a>
+                                                                                    </div>
 										<ul class="subsections">
 											
 										<?php
