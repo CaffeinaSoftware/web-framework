@@ -146,11 +146,21 @@
                         nuevo_paquete_show : function(){
 				html = '<div id="agregar_paquete" >';
 				html += '	<h3>Agregar paquete de pruebas</h3>';
-				html += '	<input type="text" id="new_paquete_name" placeholder="Nombre">';
-				html += '	<textarea id="new_paquete_descripcion" placeholder="Descripcion"></textarea>';
-                                html += '       <textarea id="new_paquete_pruebas" placeholder="Pruebas"></textarea>';
-                                html += '       <input type="checkbox" id="new_paquete_locked" value="0"> Locked';
-				html += '	<input type="button" value="Agregar" onClick="httptesting.nuevo_paquete()" >';
+                                html += '       <table width="100%">';
+                                html += '       <tr>';
+				html += '	<td colspan="2"><input type="text" id="new_paquete_name" placeholder="Nombre"></td>';
+                                html += '       </tr>';
+                                html += '       <tr>';
+				html += '	<td colspan="2"><textarea id="new_paquete_descripcion" placeholder="Descripcion" style="width:70%; height: 50px"></textarea></td>';
+                                html += '       </tr>';
+                                html += '       <tr>';
+                                html += '       <td colspan="2"><textarea id="new_paquete_pruebas" placeholder="Pruebas" style="width:100%; height: 100px"></textarea></td>';
+                                html += '       </tr>';
+                                html += '       <tr>';
+                                html += '       <td><input type="checkbox" id="new_paquete_locked" value="0"> Locked</td>';
+				html += '	<td><input type="button" value="Agregar" onClick="httptesting.nuevo_paquete()"></td>';
+                                html += '       </tr>';
+                                html += '       </table>';
 				html += '</div>';
 				$.facebox(html);				
 			},
@@ -290,6 +300,19 @@
 </head>
 <body class="mac Locale_en_US">
 	<div class="devsitePage">
+            <div id="top-bar">
+                <div id="header-content">
+                    <p class="logo">
+                        <a href="">caffeina</a>
+                    </p>
+                    <ul class="nav">
+                        <li><a href="https://labs.caffeina.mx/oficina/">Home</a></li>
+                        <li><a href="https://labs.caffeina.mx/oficina/mantis">Bugs</a></li>
+                        <li><a href="https://webframework.labs.caffeina.mx/">Web Framework</a></li>
+                        <li class="last"><a href="https://labs.caffeina.mx/oficina/websvn/">WebSVN</a></li>
+                    </ul>
+                </div><!-- header-content -->
+            </div><!-- top-bar -->
 		<div class="menu">
 			<div class="content">
 				<a class="logo" href="../index.php">
