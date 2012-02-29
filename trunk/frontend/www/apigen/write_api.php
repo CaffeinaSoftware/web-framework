@@ -108,7 +108,43 @@
 					$out .= "\t\t\tisset($"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] ) ? json_decode($"."_".$metodo["tipo"]."['".$row_param["nombre"]."']) : null,\n";					
 					
 				}else{
-					$out .= "\t\t\tisset($"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] ) ? $"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] : null,\n";
+					/* */
+					if($row_param["ahuevo"] == "0") {
+
+						/* ES OPCIONAL */
+						$foo = false;
+
+						if(strlen($row_param["defaults"]) == 0){
+							$foo = true;
+							$_params = " \"\""; 
+						}
+
+						if($row_param["defaults"] === "null"){
+							$foo = true;
+							$_params = " null"; 	
+						}
+
+						if($row_param["defaults"] === "\"\""){
+							$foo = true;						
+							$_params = " \"\""; 	
+						}
+
+
+
+						if(!$foo){
+							if( ($row_param["tipo"] == "bool") || ($row_param["tipo"] == "int")){
+								$_params = " " . $row_param["defaults"] . " "; 	
+
+							}else{
+								$_params = " \"" . $row_param["defaults"] . "\""; 
+
+							}
+						}
+						$out .= "\t\t\tisset($"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] ) ? $"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] : ". $_params .",\n";	
+					}else{
+						$out .= "\t\t\tisset($"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] ) ? $"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] : null,\n";	
+					}
+					
 					
 				}
 
