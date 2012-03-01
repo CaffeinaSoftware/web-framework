@@ -59,6 +59,8 @@ ob_start();
                                     $id_metodo= mysql_fetch_row($Consulta_ID);
                                     for($i = 0; $i < $_POST["numero_argumentos"]; $i++)
                                     {
+                                        if(isset($_POST["nombre_argumento_".$i]))
+                                        {
                                             $sql="Insert into argumento(id_metodo,nombre,descripcion,ahuevo,tipo,defaults) values(".$id_metodo[0].",'".$_POST["nombre_argumento_".$i]."','".$_POST["descripcion_argumento_".$i]."','".$_POST["ahuevo_".$i]."','".$_POST["tipo_argumento_".$i]."','".$_POST["default_".$i]."')";
                                             $Consulta_ID = mysql_query($sql);
                                             if (!$Consulta_ID){
@@ -66,9 +68,12 @@ ob_start();
                                             $mensaje.= mysql_error()."<br>";
                                             break;
                                             }
+                                        }
                                     }
                                     for($i = 0; $i < $_POST["numero_respuestas"]; $i++)
                                     {
+                                        if(isset($_POST["nombre_respuesta_".$i]))
+                                        {
                                             $sql="Insert into respuesta(id_metodo,nombre,descripcion,tipo) values(".$id_metodo[0].",'".$_POST["nombre_respuesta_".$i]."','".$_POST["descripcion_respuesta_".$i]."','".$_POST["tipo_respuesta_".$i]."')";
                                             $Consulta_ID = mysql_query($sql);
                                             if (!$Consulta_ID){
@@ -76,6 +81,7 @@ ob_start();
                                             $mensaje.= mysql_error();
                                             break;
                                             }
+                                        }
                                     }
                                     if($mensaje=="")
                                     {

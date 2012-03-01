@@ -37,33 +37,39 @@ ob_start();
 						$id_metodo= $_POST["id_metodo"];
 						for($i = 0; $i < $_POST["numero_argumentos"]; $i++)
 						{
-							$combo=isset($_POST["borrar_argumento_".$i]);
-							if(!$combo)
-								$combo=0;
-							if($combo)
-								continue;
-							$sql="Insert into argumento(id_metodo,nombre,descripcion,ahuevo,tipo,defaults) values(".$id_metodo.",'".$_POST["nombre_argumento_".$i]."','".$_POST["descripcion_argumento_".$i]."','".$_POST["ahuevo_".$i]."','".$_POST["tipo_argumento_".$i]."','".$_POST["default_".$i]."')";
-							$Consulta_ID = mysql_query($sql);
-							if (!$Consulta_ID){
-							$mensaje.= $sql."<br>";
-							$mensaje.= mysql_error()."<br>";
-							break;
-							}
+//							$combo=isset($_POST["borrar_argumento_".$i]);
+//							if(!$combo)
+//								$combo=0;
+//							if($combo)
+//								continue;
+                                                    if(isset($_POST["nombre_argumento_".$i]))
+                                                    {
+                                                        $sql="Insert into argumento(id_metodo,nombre,descripcion,ahuevo,tipo,defaults) values(".$id_metodo.",'".$_POST["nombre_argumento_".$i]."','".$_POST["descripcion_argumento_".$i]."','".$_POST["ahuevo_".$i]."','".$_POST["tipo_argumento_".$i]."','".$_POST["default_".$i]."')";
+                                                        $Consulta_ID = mysql_query($sql);
+                                                        if (!$Consulta_ID){
+                                                        $mensaje.= $sql."<br>";
+                                                        $mensaje.= mysql_error()."<br>";
+                                                        break;
+                                                        }
+                                                    }
 						}
 						for($i = 0; $i < $_POST["numero_respuestas"]; $i++)
 						{
-							$combo=isset($_POST["borrar_respuesta_".$i]);
-							if(!$combo)
-								$combo=0;
-							if($combo)
-								continue;
-							$sql="Insert into respuesta(id_metodo,nombre,descripcion,tipo) values(".$id_metodo.",'".$_POST["nombre_respuesta_".$i]."','".$_POST["descripcion_respuesta_".$i]."','".$_POST["tipo_respuesta_".$i]."')";
-							$Consulta_ID = mysql_query($sql);
-							if (!$Consulta_ID){
-							$mensaje.= $sql."<br>";
-							$mensaje.= mysql_error();
-							break;
-							}
+//							$combo=isset($_POST["borrar_respuesta_".$i]);
+//							if(!$combo)
+//								$combo=0;
+//							if($combo)
+//								continue;
+                                                    if(isset($_POST["nombre_respuesta_".$i]))
+                                                    {
+                                                            $sql="Insert into respuesta(id_metodo,nombre,descripcion,tipo) values(".$id_metodo.",'".$_POST["nombre_respuesta_".$i]."','".$_POST["descripcion_respuesta_".$i]."','".$_POST["tipo_respuesta_".$i]."')";
+                                                            $Consulta_ID = mysql_query($sql);
+                                                            if (!$Consulta_ID){
+                                                            $mensaje.= $sql."<br>";
+                                                            $mensaje.= mysql_error();
+                                                            break;
+                                                            }
+                                                    }
 						}
 						if($mensaje=="")
 						{
