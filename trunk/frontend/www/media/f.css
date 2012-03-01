@@ -744,7 +744,7 @@ display: block;
 
 #top-bar p.logo a {
 display: block;
-background-image: url(http://static.caffeina.mx/logos.png);
+background-image: url('http://static.caffeina.mx/logos.png');
 background-repeat: no-repeat;
 background-position: 0 0px;
 height: 76px;
