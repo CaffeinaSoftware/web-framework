@@ -511,6 +511,7 @@ require_once("../../server/bootstrap.php");
 
 	</table>	
 	<input type="button" value="Insertar" onClick="validarCampos();">
+        <input type="button" value="Cancelar" onClick="history.go(-1)">
 	<input type="hidden" name="numero_argumentos" id="numero_argumentos" value=0>
 	<input type="hidden" name="numero_respuestas" id="numero_respuestas" value=0>
         <input type="hidden" name="id_proyecto" id="id_proyecto" value="<?php echo $_GET["project"] ?>"></input>
