@@ -167,8 +167,8 @@
         </div><!-- top-bar -->
 	<div class="menu">
 		<div class="content">
-			<a class="logo" href="../">
-				<img class="img" src="https://s-static.ak.facebook.com/rsrc.php/v1/yW/r/N2f0JA5UPFU.png" alt="Facebook Developers" width="166" height="17"/>
+			<a class="logo" href="../index.php">
+				<img class="img" src="../media/cwhite.png" alt="Facebook Developers" width="166" height="17"/>
 			</a>
 
 			<?php
