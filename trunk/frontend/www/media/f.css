@@ -720,7 +720,8 @@ ul #navAccountInfo a:hover,ul #navAccountInfo a:focus,ul #navAccountInfo a:activ
 #bootloader_4GrDC { height: 42px; }
 
 #top-bar {
-background-color: rgba( 0, 0, 0, 0.6 );
+background-image: url('./fondo_top_bar.png');
+background-repeat: repeat-x;
 height: 80px;
 display: block;
 }
