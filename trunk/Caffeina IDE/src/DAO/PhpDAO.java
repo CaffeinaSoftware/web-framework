@@ -634,7 +634,7 @@ public class PhpDAO{
 			for(Field f : fields)
 			{
 				pw.println("		if( ! is_null( $"+tabla+"->get"+toCamelCase(f.title)+"() ) ){");
-				pw.println("			$sql .= \" "+ f.title +" = ? AND\";");
+				pw.println("			$sql .= \" `"+ f.title +"` = ? AND\";");
 				pw.println("			array_push( $val, $"+tabla+"->get"+toCamelCase(f.title)+"() );");
 				pw.println("		}");
 				pw.println();
@@ -711,11 +711,11 @@ public class PhpDAO{
 			for(Field f : fields){
 				if( f.isPrimary ) 
 				{
-					pk += " " + f.title + " = ? AND";
+					pk += " `" + f.title + "` = ? AND";
 					pkargs += "$"+tabla+"->get" + toCamelCase(f.title)+"(),";
 				}else{
 					args += "$"+tabla+"->get"+ toCamelCase(f.title) + "(), \n			";
-					sql += f.title+" = ?, ";
+					sql += "`"+f.title+"` = ?, ";
 				}
 			}
 			
@@ -778,7 +778,7 @@ public class PhpDAO{
 				}
 
 				args += "$"+tabla+"->get"+ toCamelCase(f.title) + "(), \n			";
-				sqlnames += f.title+", ";
+				sqlnames += "`"+f.title+"`, ";
 				sql +=  "?, ";	
 
 			}
@@ -855,11 +855,11 @@ public class PhpDAO{
 				{
 
 					pw.println("		if( ( !is_null (($a = $"+tabla+"A->get"+toCamelCase(f.title)+"()) ) ) & ( ! is_null ( ($b = $"+tabla+"B->get"+toCamelCase(f.title)+"()) ) ) ){");
-					pw.println("				$sql .= \" "+ f.title +" >= ? AND "+ f.title +" <= ? AND\";");
+					pw.println("				$sql .= \" `"+ f.title +"` >= ? AND `"+ f.title +"` <= ? AND\";");
 					pw.println("				array_push( $val, min($a,$b)); ");
 					pw.println("				array_push( $val, max($a,$b)); ");
 					pw.println("		}elseif( !is_null ( $a ) || !is_null ( $b ) ){");
-					pw.println("			$sql .= \" "+ f.title +" = ? AND\"; ");
+					pw.println("			$sql .= \" `"+ f.title +"` = ? AND\"; ");
 					pw.println("			$a = is_null ( $a ) ? $b : $a;");
 					pw.println("			array_push( $val, $a);");
 					pw.println("			");						
