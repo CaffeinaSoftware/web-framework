@@ -473,6 +473,19 @@
 	
 	fwrite( $_api_file, "<?php \n\n");
 	
+	fwrite('require_once("ApiHandler.php");\n
+	require_once("ApiHttpErrors.php");\n
+	require_once("ApiLoader.php");\n
+	require_once("ApiOutputFormatter.php");\n
+	require_once("CustomValidator.php");\n
+	require_once("DateRangeValidator.php");\n
+	require_once("DateValidator.php");\n
+	require_once("EnumValidator.php");\n
+	require_once("HtmlValidator.php");\n
+	require_once("NumericRangeValidator.php");\n
+	require_once("NumericValidator.php");\n
+	require_once("StringValidator.php");\n
+	require_once("Validator.php");\n\n');
 	
 	while(($row = mysql_fetch_assoc($res)) != null ){
 

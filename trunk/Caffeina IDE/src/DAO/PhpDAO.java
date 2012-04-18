@@ -501,7 +501,7 @@ public class PhpDAO{
 			pw.println("	  *	Obtener {@link "+toCamelCase(tabla)+"} por llave primaria. ");
 			pw.println("	  *	");
 			pw.println("	  * Este metodo cargara un objeto {@link "+toCamelCase(tabla)+"} de la base de datos ");
-		    pw.println("	  * usando sus llaves primarias. ");
+                        pw.println("      * usando sus llaves primarias. ");
 			pw.println("	  *	");
 			pw.println("	  *	@static");
 			pw.println("	  * @return @link "+toCamelCase(tabla)+" Un objeto del tipo {@link "+toCamelCase(tabla)+"}. NULL si no hay tal registro.");
