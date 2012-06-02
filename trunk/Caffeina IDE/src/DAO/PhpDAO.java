@@ -8,7 +8,7 @@ public class PhpDAO{
 
     private BufferedReader      br;
     private ArrayList<String>   includes;
-    private String              author = "Anonymous";
+    private String              author = "someone@caffeina.mx";
 
     //solo puede ser necesario un String con absolutepath
     private File                path;
@@ -169,8 +169,15 @@ public class PhpDAO{
 			pw.println("	{ ");
 			pw.println("		if(isset($data))");
 			pw.println("		{");
+                        
+                        pw.println("                    if(is_string($data))");
+                        pw.println("                        $data = self::object_to_array(json_decode($data));\n\n");
 		}
 		
+                
+                                
+			
+                
 		for(Field f : fields){
 			pw.println("			if( isset($data['" + f.title + "']) ){");
 			pw.println("				$this->"+f.title+" = $data['"+ f.title +"'];");
@@ -186,34 +193,34 @@ public class PhpDAO{
 
 
 
-			//toString
-			{
-				pw.println( "	/**");
-				pw.println( "	  * Obtener una representacion en String" );
-				pw.println( "	  * " );
-				pw.println( "	  * Este metodo permite tratar a un objeto "+toCamelCase(tabla)+ " en forma de cadena." );
-				pw.println( "	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.");
-				pw.println( "	  * @return String ");
-				pw.println( "	  */");
-				pw.println("	public function __toString( )");
-				pw.println("	{ ");
+                //toString
+                {
+                        pw.println( "	/**");
+                        pw.println( "	  * Obtener una representacion en String" );
+                        pw.println( "	  * " );
+                        pw.println( "	  * Este metodo permite tratar a un objeto "+toCamelCase(tabla)+ " en forma de cadena." );
+                        pw.println( "	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.");
+                        pw.println( "	  * @return String ");
+                        pw.println( "	  */");
+                        pw.println("	public function __toString( )");
+                        pw.println("	{ ");
 
-				pw.println( "		$vec = array( " );
+                        pw.println( "		$vec = array( " );
 
-				int x = 0;
-					for( Field f : fields)
-					{
+                        int x = 0;
+                                for( Field f : fields)
+                                {
 
-						if(x++ < (fields.size()-1))
-							pw.println( "			\""+ f.title+ "\" => $this->" + f.title +  "," );
-						else
-							pw.println( "			\"" +f.title +"\" => $this->" + f.title  );
-					}
-				pw.println( "		); " );					
-				pw.println( "	return json_encode($vec); " );					
-				pw.println("	}");
-				pw.println("	");
-			}
+                                        if(x++ < (fields.size()-1))
+                                                pw.println( "			\""+ f.title+ "\" => $this->" + f.title +  "," );
+                                        else
+                                                pw.println( "			\"" +f.title +"\" => $this->" + f.title  );
+                                }
+                        pw.println( "		); " );					
+                        pw.println( "	return json_encode($vec); " );					
+                        pw.println("	}");
+                        pw.println("	");
+                }
 
 
 
@@ -484,18 +491,24 @@ public class PhpDAO{
 
 			String pks = "";
 			String sql = "";
-			
+                        String nulls = "";
+                        String pks_redis = "";
+                        
 			for(Field f : fields){
 				
 				if(!f.isPrimary) continue;
 				
-				pks +=  " $"+f.title+",";
-				sql +=  f.title +" = ? AND ";
+				pks +=          " $"+f.title+",";
+                                pks_redis +=    " . $" + f.title+".\"-\"";
+				sql +=          f.title +" = ? AND ";
+                                nulls +=        " is_null( $"+ f.title +" ) ||" ;
 			}
 
 			pks = pks.substring( 0, pks.length() -1 );			
 			sql = sql.substring( 0, sql.length() -4 );
-
+                        nulls = nulls.substring( 0, nulls.length() -2 ) ;
+                        pks_redis = pks_redis.substring( 0, pks_redis.length() - 4 ) ;
+                        
 
 			pw.println("	/**");
 			pw.println("	  *	Obtener {@link "+toCamelCase(tabla)+"} por llave primaria. ");
@@ -510,19 +523,24 @@ public class PhpDAO{
 			pw.println("	public static final function getByPK( " + pks + " )");
 			pw.println("	{");
 			
-			//pw.println("		if(self::recordExists( "+ pks +")){");
-			//pw.println("			return self::getRecord("+ pks +" );");
-			//pw.println("		}");
+                        pw.println("		if( "+ nulls +" ){ return NULL; }");
+                        
+	
+                        pw.println("            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( \"" + toCamelCase(tabla)+"-\"" + pks_redis + " ))){");
+                        pw.println("                Logger::log(\"REDIS !\");");
+                        pw.println("                return new " + toCamelCase(tabla) + "($obj);");
+                        pw.println("            }");
 			
 			pw.println("		$sql = \"SELECT * FROM "+tabla+" WHERE ("+ sql + ") LIMIT 1;\";");
 			pw.println("		$params = array( "+ pks +" );");
 			pw.println("		global $conn;");
 			pw.println("		$rs = $conn->GetRow($sql, $params);");
-			pw.println("		if(count($rs)==0)return NULL;");
+			pw.println("		if(count($rs)==0) return NULL;");
 			
-			pw.println("			$foo = new " + toCamelCase(tabla) + "( $rs );");
-			//pw.println("			self::pushRecord( $foo, " + pks + " );");
-			pw.println("			return $foo;");
+			pw.println("		$foo = new " + toCamelCase(tabla) + "( $rs );");
+			pw.println("		if(!is_null(self::$redisConection)) self::$redisConection->set(  \"" + toCamelCase(tabla)+"-\"" + pks_redis + ", $foo );");
+                        
+			pw.println("		return $foo;");
 
 			pw.println("	}");
 			pw.println();
@@ -573,15 +591,16 @@ public class PhpDAO{
 			pw.println("			$bar = new "+ toCamelCase( tabla ) +"($foo);");
 			pw.println("    		array_push( $allData, $bar);");
 			
-			String foo = "";
-			
-			for(String pk : pksArray){
-				pw.println("			//" + pk);
-				foo += "$foo[\"" +pk + "\"],";
+
+                        String pks_redis = "";
+			for(Field f : fields){
+				if(!f.isPrimary) continue;
+                                pks_redis +=    " . $bar->get" + toCamelCase(f.title) +"().\"-\"";
 			}
+                        pks_redis = pks_redis.substring( 0, pks_redis.length() - 4 ) ;
+                        pw.println("                if(!is_null(self::$redisConection)) self::$redisConection->set(  \"" + toCamelCase(tabla)+"-\"" + pks_redis + ", $bar );");
 			
 			
-			//pw.println("    		self::pushRecord( $bar, " + foo.substring(0, foo.length() -1  ) + " );");
 			pw.println("		}");
 			pw.println("		return $allData;");
 			pw.println("	}");
@@ -668,7 +687,14 @@ public class PhpDAO{
 
 			//pw.println("    		self::pushRecord( $bar, " + foo.substring(0, foo.length() -1  ) + " );");
 
-			
+			String pks_redis = "";
+			for(Field f : fields){
+				if(!f.isPrimary) continue;
+                                pks_redis +=    " . $bar->get" + toCamelCase(f.title) +"().\"-\"";
+			}
+                        pks_redis = pks_redis.substring( 0, pks_redis.length() - 4 ) ;
+                        pw.println("                    if(!is_null(self::$redisConection)) self::$redisConection->set(  \"" + toCamelCase(tabla)+"-\"" + pks_redis + ", $bar );");
+                        
 			pw.println("		}");
 			pw.println("		return $ar;");			
 	
@@ -802,89 +828,102 @@ public class PhpDAO{
 		}
 		
 		
-	
-			/*	
-				metodo byrange
-			*/
 
-			{
-				pw.println("	/**");
-				pw.println("	  *	Buscar por rango.");
-				pw.println("	  *	");
-				pw.println("	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link "+toCamelCase(tabla)+"} de la base de datos siempre y cuando ");
-				pw.println("	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link "+toCamelCase(tabla)+"}.");
-				pw.println("	  * ");
-				pw.println("	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .");
-				pw.println("	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.");
-				pw.println("	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.");
-				pw.println("	  *	");
+                /*	
+                        metodo byrange
+                */
 
-				pw.println("	  * <code>");
-				pw.println("	  *  /**");
-				pw.println("	  *   * Ejemplo de uso - buscar todos los clientes que tengan limite de credito ");
-				pw.println("	  *   * mayor a 2000 y menor a 5000. Y que tengan un descuento del 50%.");
-				pw.println("	  *   {@*} ");
+                {
+                        pw.println("	/**");
+                        pw.println("	  *	Buscar por rango.");
+                        pw.println("	  *	");
+                        pw.println("	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link "+toCamelCase(tabla)+"} de la base de datos siempre y cuando ");
+                        pw.println("	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link "+toCamelCase(tabla)+"}.");
+                        pw.println("	  * ");
+                        pw.println("	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .");
+                        pw.println("	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.");
+                        pw.println("	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.");
+                        pw.println("	  *	");
 
-				pw.println("	  *	  $cr1 = new Cliente();");
-				pw.println("	  *	  $cr1->setLimiteCredito(\"2000\");");
-				pw.println("	  *	  $cr1->setDescuento(\"50\");");
-				pw.println("	  *	  ");
-				pw.println("	  *	  $cr2 = new Cliente();");
-				pw.println("	  *	  $cr2->setLimiteCredito(\"5000\");");					
-				pw.println("	  *	  $resultados = ClienteDAO::byRange($cr1, $cr2);");
-				pw.println("	  *	  ");
-				pw.println("	  *	  foreach($resultados as $c ){");
-				pw.println("	  *	  	echo $c->getNombre() . \"<br>\";");
-				pw.println("	  *	  }");
+                        pw.println("	  * <code>");
+                        pw.println("	  *  /**");
+                        pw.println("	  *   * Ejemplo de uso - buscar todos los clientes que tengan limite de credito ");
+                        pw.println("	  *   * mayor a 2000 y menor a 5000. Y que tengan un descuento del 50%.");
+                        pw.println("	  *   {@*} ");
 
-				pw.println("	  * </code>");
-				pw.println("	  *	@static");
-				pw.println("	  * @param "+toCamelCase(tabla)+" [$"+tabla+"] El objeto de tipo " + toCamelCase(tabla));
-				pw.println("	  * @param "+toCamelCase(tabla)+" [$"+tabla+"] El objeto de tipo " + toCamelCase(tabla));
-                                pw.println("	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.");
-                                pw.println("	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'");
-				pw.println("	  **/");
+                        pw.println("	  *	  $cr1 = new Cliente();");
+                        pw.println("	  *	  $cr1->setLimiteCredito(\"2000\");");
+                        pw.println("	  *	  $cr1->setDescuento(\"50\");");
+                        pw.println("	  *	  ");
+                        pw.println("	  *	  $cr2 = new Cliente();");
+                        pw.println("	  *	  $cr2->setLimiteCredito(\"5000\");");					
+                        pw.println("	  *	  $resultados = ClienteDAO::byRange($cr1, $cr2);");
+                        pw.println("	  *	  ");
+                        pw.println("	  *	  foreach($resultados as $c ){");
+                        pw.println("	  *	  	echo $c->getNombre() . \"<br>\";");
+                        pw.println("	  *	  }");
 
-				pw.println("	public static final function byRange( $"+tabla+"A , $"+tabla+"B , $orderBy = null, $orden = 'ASC')");
-				pw.println("	{");
+                        pw.println("	  * </code>");
+                        pw.println("	  *	@static");
+                        pw.println("	  * @param "+toCamelCase(tabla)+" [$"+tabla+"] El objeto de tipo " + toCamelCase(tabla));
+                        pw.println("	  * @param "+toCamelCase(tabla)+" [$"+tabla+"] El objeto de tipo " + toCamelCase(tabla));
+                        pw.println("	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.");
+                        pw.println("	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'");
+                        pw.println("	  **/");
 
-				pw.println("		$sql = \"SELECT * from "+tabla+" WHERE (\"; ");
-				pw.println("		$val = array();");
+                        pw.println("	public static final function byRange( $"+tabla+"A , $"+tabla+"B , $orderBy = null, $orden = 'ASC')");
+                        pw.println("	{");
 
-				for(Field f : fields)
-				{
+                        pw.println("		$sql = \"SELECT * from "+tabla+" WHERE (\"; ");
+                        pw.println("		$val = array();");
 
-					pw.println("		if( ( !is_null (($a = $"+tabla+"A->get"+toCamelCase(f.title)+"()) ) ) & ( ! is_null ( ($b = $"+tabla+"B->get"+toCamelCase(f.title)+"()) ) ) ){");
-					pw.println("				$sql .= \" `"+ f.title +"` >= ? AND `"+ f.title +"` <= ? AND\";");
-					pw.println("				array_push( $val, min($a,$b)); ");
-					pw.println("				array_push( $val, max($a,$b)); ");
-					pw.println("		}elseif( !is_null ( $a ) || !is_null ( $b ) ){");
-					pw.println("			$sql .= \" `"+ f.title +"` = ? AND\"; ");
-					pw.println("			$a = is_null ( $a ) ? $b : $a;");
-					pw.println("			array_push( $val, $a);");
-					pw.println("			");						
-					pw.println("		}");
-					pw.println();
-				}
+                        for(Field f : fields)
+                        {
 
-				pw.println("		$sql = substr($sql, 0, -3) . \" )\";" );
-  	    		pw.println("		if( !is_null ( $orderBy ) ){");
-	    		pw.println("		    $sql .= \" order by \" . $orderBy . \" \" . $orden ;");
-	    		pw.println("		");
-    			pw.println("		}");
-				pw.println("		global $conn;");
-				pw.println("		$rs = $conn->Execute($sql, $val);");
+                                pw.println("		if( ( !is_null (($a = $"+tabla+"A->get"+toCamelCase(f.title)+"()) ) ) & ( ! is_null ( ($b = $"+tabla+"B->get"+toCamelCase(f.title)+"()) ) ) ){");
+                                pw.println("				$sql .= \" `"+ f.title +"` >= ? AND `"+ f.title +"` <= ? AND\";");
+                                pw.println("				array_push( $val, min($a,$b)); ");
+                                pw.println("				array_push( $val, max($a,$b)); ");
+                                pw.println("		}elseif( !is_null ( $a ) || !is_null ( $b ) ){");
+                                pw.println("			$sql .= \" `"+ f.title +"` = ? AND\"; ");
+                                pw.println("			$a = is_null ( $a ) ? $b : $a;");
+                                pw.println("			array_push( $val, $a);");
+                                pw.println("			");						
+                                pw.println("		}");
+                                pw.println();
+                        }
 
-		
-				pw.println("		$ar = array();");
-				pw.println("		foreach ($rs as $foo) {");
-				pw.println("    		array_push( $ar, new "+ toCamelCase( tabla ) +"($foo));");
-				pw.println("		}");
-				pw.println("		return $ar;");			
+                        pw.println("		$sql = substr($sql, 0, -3) . \" )\";" );
+                        pw.println("		if( !is_null ( $orderBy ) ){");
+                        pw.println("		    $sql .= \" order by \" . $orderBy . \" \" . $orden ;");
+                        pw.println("		");
+                        pw.println("		}");
+                        pw.println("		global $conn;");
+                        pw.println("		$rs = $conn->Execute($sql, $val);");
 
-				pw.println("	}");
-				pw.println();
-				pw.println();		
+
+                        pw.println("		$ar = array();");
+                        pw.println("		foreach ($rs as $foo) {");
+                        pw.println("    		array_push( $ar, $bar = new "+ toCamelCase( tabla ) +"($foo));");
+
+
+                        String pks_redis = "";
+                        for(Field f : fields){
+                            if(!f.isPrimary) continue;
+                            pks_redis +=    " . $bar->get" + toCamelCase(f.title) +"().\"-\"";
+                        }
+                        pks_redis = pks_redis.substring( 0, pks_redis.length() - 4 ) ;
+                        pw.println("                    if(!is_null(self::$redisConection)) self::$redisConection->set(  \"" + toCamelCase(tabla)+"-\"" + pks_redis + ", $bar );");
+
+
+
+
+                        pw.println("		}");
+                        pw.println("		return $ar;");			
+
+                        pw.println("	}");
+                        pw.println();
+                        pw.println();		
 
 
 			//termina -------
@@ -936,13 +975,14 @@ public class PhpDAO{
 				}
 
 				if(pkargs.length() == 0){
-
+                                        
+                                    
 				}else{
 					pkargs = pkargs.substring(0, pkargs.length() -2 ) ;
 					pk = pk.substring(0, pk.length() - 4 ) ;
 					
 					pw.println("		if( is_null( self::getByPK("+ pkargs +") ) ) throw new Exception('Campo no encontrado.');");
-										//DELETE FROM `pos`.`cliente` WHERE `cliente`.`id_cliente` = 54 LIMIT 1
+					
 					pw.println("		$sql = \"DELETE FROM "+tabla+" WHERE " +pk+ ";\";" );
 
 					pw.println("		$params = array( "+ pkargs +" );");
@@ -1025,7 +1065,7 @@ public class PhpDAO{
             pw.println("<?php");
 
             pw.println("		/** Table Data Access Object.");
-            pw.println("       *	 ");
+            pw.println("                  * ");
             pw.println("		  * Esta clase abstracta comprende metodos comunes para todas las clases DAO que mapean una tabla");
             pw.println("		  * @author "+author);
             pw.println("		  * @access private");
@@ -1036,9 +1076,37 @@ public class PhpDAO{
             pw.println("		{");
             pw.println("");
 
+            
+            
+            
+            
+            
             pw.println("		protected static $isTrans = false;");
             pw.println("		protected static $transCount = 0;");
             pw.println("		");
+            
+            
+            
+
+            pw.println("                protected static $redisConection = null;");
+
+
+            pw.println("                public static function predis($dbname, $host){");
+
+            pw.println("                    if(!is_null(self::$redisConection)){");
+            pw.println("                        return;");
+            pw.println("                    }");
+
+            pw.println("                    Predis\\Autoloader::register();");
+
+            pw.println("                    self::$redisConection = new Predis\\Client(array(");
+            pw.println("                        'host'     => $host, ");
+            pw.println("                        'database' => $dbname");
+            pw.println("                    ));");
+            pw.println("                }");
+            
+            
+            
             pw.println("		public static function transBegin (){");
             pw.println("			");
             pw.println("			self::$transCount ++;");
@@ -1142,7 +1210,25 @@ public class PhpDAO{
             pw.println("			function asArray(){");
             pw.println("				return get_object_vars($this);");
             pw.println("			}");
-            pw.println("");
+            pw.println(""); 
+            
+            
+            
+            
+            pw.println("            protected static function object_to_array($mixed) {");
+            pw.println("		    if(is_object($mixed)) $mixed = (array) $mixed;");
+            pw.println("		    if(is_array($mixed)) {");
+            pw.println("		        $new = array();");
+            pw.println("		        foreach($mixed as $key => $val) {");
+            pw.println("		            $key = preg_replace(\"/^\\\\0(.*)\\\\0/\",\"\",$key);");
+            pw.println("		            $new[$key] = object_to_array($val);");
+            pw.println("		        }");
+            pw.println("		    } ");
+            pw.println("		    else $new = $mixed;");
+            pw.println("		    return $new; ");
+            pw.println("		}");
+            
+            
             pw.println("		}");
 
             pw.flush();
