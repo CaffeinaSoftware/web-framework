@@ -1,20 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-package DAO;
-
+package mx.caffeina.webframework.orm.core;
 
 import java.io.*;
 import java.util.ArrayList;
 
 /**
  *
- * @author alanboy
+ * @author Alan Gonzalez <alanboy@alanboy.net>
  */
 public class JsDAO {
-    	static BufferedReader br, sqlFile;
+	static BufferedReader br, sqlFile;
 	static PrintWriter pw;
 	static ArrayList<String> includes;
 
@@ -30,7 +24,7 @@ public class JsDAO {
             return true;
 
         }catch(IOException ioe){
-            LogData.epLog.setText("Cant read file\nError:\t" + ioe);
+            System.out.println("Cant read file\nError:\t" + ioe);
             return false;
 
         }
@@ -42,7 +36,7 @@ public class JsDAO {
 		try{
 			br.close();
 		}catch(IOException ioe){
-			LogData.epLog.setText( "Cant close File:\n" + ioe );
+			System.out.println( "Cant close File:\n" + ioe );
 			//System.out.println( ioe );
 			System.exit(1);
 		}
@@ -73,7 +67,7 @@ public class JsDAO {
 	 * */
     static void parseTable(String t_name) throws IOException
 	{
-		LogData.epLog.append( "\nparseando tabla: " + t_name );
+		System.out.println( "\nparseando tabla: " + t_name );
 
 		String tline ;
 
@@ -134,7 +128,7 @@ public class JsDAO {
 		}
 
 		if(no_pks == 0){
-			LogData.epLog.setText("ERROR: "+t_name+" no contiene llave primaria, saltando tabla.");
+			System.out.println("ERROR: "+t_name+" no contiene llave primaria, saltando tabla.");
 
 
 			return ;
@@ -934,7 +928,7 @@ public class JsDAO {
 	 void parseContent() throws IOException
 	{
 
-		LogData.epLog.setText("Starting...");
+		System.out.println("Starting...");
 
                 //crear directorios
                 //File f = new File("dao");
@@ -976,7 +970,7 @@ public class JsDAO {
 				if(line.trim().startsWith("/*") && line.trim().endsWith("*/;")) continue;
 
 				if(line.trim().indexOf("enum") != -1) {
-					LogData.epLog.append("EPA ! Enums no son soportados por Sqlite !*");
+					System.out.println("EPA ! Enums no son soportados por Sqlite !*");
 					//`escala` enum('kilogramo','pieza','litro','unidad') COLLATE utf8_unicode_ci NOT NULL,
                                         line = line.trim().substring(0, line.trim().lastIndexOf("`")+1);
                                         line += " varchar(32),";
@@ -1088,8 +1082,8 @@ public class JsDAO {
 
 		pw.close();
 
-		LogData.epLog.append("Parsed tables: " + table_count);
-		LogData.epLog.append("Parsed views: " + views_count);
+		System.out.println("Parsed tables: " + table_count);
+		System.out.println("Parsed views: " + views_count);
 	}
 
 
@@ -1106,13 +1100,13 @@ public class JsDAO {
             includes = new ArrayList<String>();
 
             if(!(sql.isFile() && sql.getName().endsWith(".sql")) ) {
-                LogData.epLog.setText("No sql file specified...");
+                System.out.println("No sql file specified...");
                 return false;
             }
             if(dir.isDirectory()) {
                 path = dir;
             } else {
-                LogData.epLog.setText("No path specified...");
+                System.out.println("No path specified...");
                 return false;
             }
 
@@ -1122,7 +1116,7 @@ public class JsDAO {
                 parseContent();
             }catch( IOException ioe ){
                 //System.out.println(ioe);
-                LogData.epLog.setText("Error al parsear...\n"+ioe);
+                System.out.println("Error al parsear...\n"+ioe);
             }
 
             //writeIncludes();

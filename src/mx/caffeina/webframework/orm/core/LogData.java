@@ -1,11 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+package mx.caffeina.webframework.orm.core;
 
-package DAO;
-
-//import javax.swing.JEditorPane;
+import java.io.*;
+import java.util.ArrayList;
 import javax.swing.JTextArea;
 
 /**

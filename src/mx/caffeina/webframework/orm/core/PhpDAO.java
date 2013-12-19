@@ -1,4 +1,12 @@
-package DAO;
+package mx.caffeina.webframework.orm.core;
+
+import java.io.*;
+import java.util.ArrayList;
+
+/**
+ *
+ * @author Alan Gonzalez <alanboy@alanboy.net>
+ */
 
 import java.io.*;
 import java.util.ArrayList;
@@ -21,7 +29,7 @@ public class PhpDAO{
             return true;
 
         }catch(IOException ioe){
-            LogData.epLog.setText("Cant read file\nError:\t" + ioe);
+            System.out.println("Cant read file\nError:\t" + ioe);
             return false;
 
         }
@@ -35,7 +43,7 @@ public class PhpDAO{
             br.close();
             return true;
         }catch(IOException ioe){
-            LogData.epLog.setText("Cant close File\nError:\t" + ioe);
+            System.out.println("Cant close File\nError:\t" + ioe);
             return false;
         }
 
@@ -66,7 +74,7 @@ public class PhpDAO{
      * */
     private void parseTable(String t_name) throws IOException
     {
-        LogData.epLog.append( "\n\nparseando tabla: " + t_name );
+        System.out.println( "\n\nparseando tabla: " + t_name );
 
         String tline ;
 
@@ -115,7 +123,7 @@ public class PhpDAO{
         }
 
         if(no_pks == 0){
-            LogData.epLog.append("\n\nERROR: "+t_name+" no contiene llave primaria, saltando tabla.");
+            System.out.println("\n\nERROR: "+t_name+" no contiene llave primaria, saltando tabla.");
 //			System.out.println("ERROR: "+t_name+" no contiene llave primaria, saltando tabla.");
                 return ;
         }
@@ -1031,213 +1039,208 @@ public class PhpDAO{
 	private void parseContent() throws IOException
 	{
 
-            LogData.epLog.setText("Starting...");
+		System.out.println("Starting...");
 
-            File f = new File(path.getAbsolutePath()+"/dao");
-            f.mkdir();
+		File f = new File(path.getAbsolutePath()+"/dao");
+		f.mkdir();
 
-            f = new File(path.getAbsolutePath()+"/dao/base");
-            f.mkdir();
+		f = new File(path.getAbsolutePath()+"/dao/base");
+		f.mkdir();
 
+		String line ;
 
-            String line ;
+		int table_count = 0;
+		int views_count = 0;
 
-            int table_count = 0;
-            int views_count = 0;
+		while( (line = br.readLine()) != null )
+		{
+			if( line.indexOf("CREATE TABLE") != -1 )
+			{
+				table_count++;
+				String t_name = line.substring( line.indexOf("`") + 1, line.lastIndexOf("`") );
+				parseTable( t_name );
+			}
+		}
 
+		//escribir el archivo de la estructura de las clases
+		PrintWriter pw = new PrintWriter(new FileWriter(path.getAbsolutePath()+"/dao/Estructura.php"));
 
-            while( (line = br.readLine()) != null )
-            {
-                    if( line.indexOf("CREATE TABLE") != -1 )
-                    {
-                            table_count++;
+		pw.println("<?php");
 
-                            String t_name = line.substring( line.indexOf("`") + 1, line.lastIndexOf("`") );
-
-                            parseTable( t_name );
-                    }
-
-            }
-		
-            //escribir el archivo de la estructura de las clases
-            PrintWriter pw = new PrintWriter(new FileWriter(path.getAbsolutePath()+"/dao/Estructura.php"));
-
-            pw.println("<?php");
-
-            pw.println("		/** Table Data Access Object.");
-            pw.println("                  * ");
-            pw.println("		  * Esta clase abstracta comprende metodos comunes para todas las clases DAO que mapean una tabla");
-            pw.println("		  * @author "+author);
-            pw.println("		  * @access private");
-            pw.println("		  * @abstract");
-            pw.println("		  * @package docs");
-            pw.println("		  */");
-            pw.println("		abstract class DAO");
-            pw.println("		{");
-            pw.println("");
-
-            
-            
-            
-            
-            
-            pw.println("		protected static $isTrans = false;");
-            pw.println("		protected static $transCount = 0;");
-            pw.println("		");
-            
-            
-            
-
-            pw.println("                protected static $redisConection = null;");
+		pw.println("		/** Table Data Access Object.");
+		pw.println("                  * ");
+		pw.println("		  * Esta clase abstracta comprende metodos comunes para todas las clases DAO que mapean una tabla");
+		pw.println("		  * @author "+author);
+		pw.println("		  * @access private");
+		pw.println("		  * @abstract");
+		pw.println("		  * @package docs");
+		pw.println("		  */");
+		pw.println("		abstract class DAO");
+		pw.println("		{");
+		pw.println("");
 
 
-            pw.println("                public static function predis($dbname, $host){");
-
-            pw.println("                    if(!is_null(self::$redisConection)){");
-            pw.println("                        return;");
-            pw.println("                    }");
-
-            pw.println("                    Predis\\Autoloader::register();");
-
-            pw.println("                    self::$redisConection = new Predis\\Client(array(");
-            pw.println("                        'host'     => $host, ");
-            pw.println("                        'database' => $dbname");
-            pw.println("                    ));");
-            pw.println("                }");
-            
-            
-            
-            pw.println("		public static function transBegin (){");
-            pw.println("			");
-            pw.println("			self::$transCount ++;");
-            pw.println("			Logger::log(\"Iniciando transaccion (\".self::$transCount.\")\");");
-            pw.println("			");
-            pw.println("			if(self::$isTrans){");
-            pw.println("				//Logger::log(\"Transaccion ya ha sido iniciada antes.\");");
-            pw.println("				return;");
-            pw.println("			}");
-            pw.println("			");
-            pw.println("			global $conn;");
-            pw.println("			$conn->StartTrans();");
-            pw.println("			self::$isTrans = true;");
-            pw.println("			");
-            pw.println("		}");
-            pw.println("");
-            pw.println("		public static function transEnd (  ){");
-            pw.println("			");
-            pw.println("			if(!self::$isTrans){");
-            pw.println("				Logger::log(\"Transaccion commit pero no hay transaccion activa !!.\");");
-            pw.println("				return;");
-            pw.println("			}");
-            pw.println("			");
-            pw.println("			self::$transCount --;");
-            pw.println("			Logger::log(\"Terminando transaccion (\".self::$transCount.\")\");");
-            pw.println("			");
-            pw.println("			if(self::$transCount > 0){");
-            pw.println("				return;");
-            pw.println("			}");
-
-            pw.println("			global $conn;");
-            pw.println("			$conn->CompleteTrans();");
-            pw.println("			Logger::log(\"Transaccion commit !!\");");
-            pw.println("			self::$isTrans = false;");
-            pw.println("		}");
 
 
-            pw.println("		public static function transRollback (  ){");
-            pw.println("			if(!self::$isTrans){");
-            pw.println("				Logger::log(\"Transaccion rollback pero no hay transaccion activa !!.\");");
-            pw.println("				return;");
-            pw.println("			}");
-            pw.println("			");
-            pw.println("			self::$transCount = 0;");
-
-            pw.println("			global $conn;");
-            pw.println("			$conn->FailTrans();");
-            pw.println("			Logger::log(\"Transaccion rollback !\");");
-            pw.println("			self::$isTrans = false;");
-            pw.println("		}");
 
 
-            /*
-            pw.println("		    protected static $isTrans = false;");
-            pw.println("");
-            pw.println("            public static function transBegin (){");
-            pw.println("                        global $conn;");
-            pw.println("                $conn->StartTrans();");
-            pw.println("                self::$isTrans = true;");
-            pw.println("");
-            pw.println("            }");
-            pw.println("");
-            pw.println("            public static function transEnd (  ){");
-            pw.println("                        global $conn;");
-            pw.println("                $conn->CompleteTrans();");
-            pw.println("                self::$isTrans = false;");
-            pw.println("            }");
-            pw.println("");
-            pw.println("");
-            pw.println("            public static function transRollback (  ){");
-            pw.println("                        global $conn;");
-            pw.println("                $conn->FailTrans();");
-            pw.println("                self::$isTrans = false;");
-            pw.println("            }");
-            */
+		pw.println("		protected static $isTrans = false;");
+		pw.println("		protected static $transCount = 0;");
+		pw.println("		");
 
 
-            pw.println("		}");
 
 
-            pw.println("		/** Value Object.");
-            pw.println("		  * ");
-            pw.println("		  * Esta clase abstracta comprende metodos comunes para todas los objetos VO");
-            pw.println("		  * @author "+author);
-            pw.println("		  * @access private");
-            pw.println("		  * @package docs");
-            pw.println("		  * ");
-            pw.println("		  */");
-            pw.println("		abstract class VO");
-            pw.println("		{");
-            pw.println("");
+		pw.println("                protected static $redisConection = null;");
 
 
-            pw.println("	        /**");
-            pw.println("	          *	Obtener una representacion en forma de arreglo.");
-            pw.println("	          *	");
-            pw.println("	          * Este metodo transforma todas las propiedades este objeto en un arreglo asociativo.");
-            pw.println("	          *	");
-            pw.println("	          * @returns Array Un arreglo asociativo que describe a este objeto.");
-            pw.println("	          **/");
-            pw.println("			function asArray(){");
-            pw.println("				return get_object_vars($this);");
-            pw.println("			}");
-            pw.println(""); 
-            
-            
-            
-            
-            pw.println("            protected static function object_to_array($mixed) {");
-            pw.println("		    if(is_object($mixed)) $mixed = (array) $mixed;");
-            pw.println("		    if(is_array($mixed)) {");
-            pw.println("		        $new = array();");
-            pw.println("		        foreach($mixed as $key => $val) {");
-            pw.println("		            $key = preg_replace(\"/^\\\\0(.*)\\\\0/\",\"\",$key);");
-            pw.println("		            $new[$key] = object_to_array($val);");
-            pw.println("		        }");
-            pw.println("		    } ");
-            pw.println("		    else $new = $mixed;");
-            pw.println("		    return $new; ");
-            pw.println("		}");
-            
-            
-            pw.println("		}");
+		pw.println("                public static function predis($dbname, $host){");
 
-            pw.flush();
-            pw.close();
+		pw.println("                    if(!is_null(self::$redisConection)){");
+		pw.println("                        return;");
+		pw.println("                    }");
 
-            LogData.epLog.append("\n\nParsed tables: " + table_count);
-            LogData.epLog.append("\nParsed views: " + views_count);
-//		System.out.println("Parsed tables: " + table_count);
-//		System.out.println("Parsed views: " + views_count);
+		pw.println("                    Predis\\Autoloader::register();");
+
+		pw.println("                    self::$redisConection = new Predis\\Client(array(");
+		pw.println("                        'host'     => $host, ");
+		pw.println("                        'database' => $dbname");
+		pw.println("                    ));");
+		pw.println("                }");
+
+
+
+		pw.println("		public static function transBegin (){");
+		pw.println("			");
+		pw.println("			self::$transCount ++;");
+		pw.println("			Logger::log(\"Iniciando transaccion (\".self::$transCount.\")\");");
+		pw.println("			");
+		pw.println("			if(self::$isTrans){");
+		pw.println("				//Logger::log(\"Transaccion ya ha sido iniciada antes.\");");
+		pw.println("				return;");
+		pw.println("			}");
+		pw.println("			");
+		pw.println("			global $conn;");
+		pw.println("			$conn->StartTrans();");
+		pw.println("			self::$isTrans = true;");
+		pw.println("			");
+		pw.println("		}");
+		pw.println("");
+		pw.println("		public static function transEnd (  ){");
+		pw.println("			");
+		pw.println("			if(!self::$isTrans){");
+		pw.println("				Logger::log(\"Transaccion commit pero no hay transaccion activa !!.\");");
+		pw.println("				return;");
+		pw.println("			}");
+		pw.println("			");
+		pw.println("			self::$transCount --;");
+		pw.println("			Logger::log(\"Terminando transaccion (\".self::$transCount.\")\");");
+		pw.println("			");
+		pw.println("			if(self::$transCount > 0){");
+		pw.println("				return;");
+		pw.println("			}");
+
+		pw.println("			global $conn;");
+		pw.println("			$conn->CompleteTrans();");
+		pw.println("			Logger::log(\"Transaccion commit !!\");");
+		pw.println("			self::$isTrans = false;");
+		pw.println("		}");
+
+
+		pw.println("		public static function transRollback (  ){");
+		pw.println("			if(!self::$isTrans){");
+		pw.println("				Logger::log(\"Transaccion rollback pero no hay transaccion activa !!.\");");
+		pw.println("				return;");
+		pw.println("			}");
+		pw.println("			");
+		pw.println("			self::$transCount = 0;");
+
+		pw.println("			global $conn;");
+		pw.println("			$conn->FailTrans();");
+		pw.println("			Logger::log(\"Transaccion rollback !\");");
+		pw.println("			self::$isTrans = false;");
+		pw.println("		}");
+
+
+		/*
+		   pw.println("		    protected static $isTrans = false;");
+		   pw.println("");
+		   pw.println("            public static function transBegin (){");
+		   pw.println("                        global $conn;");
+		   pw.println("                $conn->StartTrans();");
+		   pw.println("                self::$isTrans = true;");
+		   pw.println("");
+		   pw.println("            }");
+		   pw.println("");
+		   pw.println("            public static function transEnd (  ){");
+		   pw.println("                        global $conn;");
+		   pw.println("                $conn->CompleteTrans();");
+		   pw.println("                self::$isTrans = false;");
+		   pw.println("            }");
+		   pw.println("");
+		   pw.println("");
+		   pw.println("            public static function transRollback (  ){");
+		   pw.println("                        global $conn;");
+		   pw.println("                $conn->FailTrans();");
+		   pw.println("                self::$isTrans = false;");
+		   pw.println("            }");
+		   */
+
+
+		pw.println("		}");
+
+
+		pw.println("		/** Value Object.");
+		pw.println("		  * ");
+		pw.println("		  * Esta clase abstracta comprende metodos comunes para todas los objetos VO");
+		pw.println("		  * @author "+author);
+		pw.println("		  * @access private");
+		pw.println("		  * @package docs");
+		pw.println("		  * ");
+		pw.println("		  */");
+		pw.println("		abstract class VO");
+		pw.println("		{");
+		pw.println("");
+
+
+		pw.println("	        /**");
+		pw.println("	          *	Obtener una representacion en forma de arreglo.");
+		pw.println("	          *	");
+		pw.println("	          * Este metodo transforma todas las propiedades este objeto en un arreglo asociativo.");
+		pw.println("	          *	");
+		pw.println("	          * @returns Array Un arreglo asociativo que describe a este objeto.");
+		pw.println("	          **/");
+		pw.println("			function asArray(){");
+		pw.println("				return get_object_vars($this);");
+		pw.println("			}");
+		pw.println(""); 
+
+
+
+
+		pw.println("            protected static function object_to_array($mixed) {");
+		pw.println("		    if(is_object($mixed)) $mixed = (array) $mixed;");
+		pw.println("		    if(is_array($mixed)) {");
+		pw.println("		        $new = array();");
+		pw.println("		        foreach($mixed as $key => $val) {");
+		pw.println("		            $key = preg_replace(\"/^\\\\0(.*)\\\\0/\",\"\",$key);");
+		pw.println("		            $new[$key] = object_to_array($val);");
+		pw.println("		        }");
+		pw.println("		    } ");
+		pw.println("		    else $new = $mixed;");
+		pw.println("		    return $new; ");
+		pw.println("		}");
+
+
+		pw.println("		}");
+
+		pw.flush();
+		pw.close();
+
+		System.out.println("\n\nParsed tables: " + table_count);
+		System.out.println("\nParsed views: " + views_count);
+		//		System.out.println("Parsed tables: " + table_count);
+		//		System.out.println("Parsed views: " + views_count);
 	}
 	
 	
@@ -1266,7 +1269,7 @@ public class PhpDAO{
 			pw.close();
 		}catch(IOException ioe){
 //			System.out.println("Inclues"+ioe);
-			LogData.epLog.append("\n\nInclues\t"+ioe);
+			System.out.println("\n\nInclues\t"+ioe);
 		}
 	}
 
@@ -1280,13 +1283,13 @@ public class PhpDAO{
             includes = new ArrayList<String>();
 
             if(!(sql.isFile() && sql.getName().endsWith(".sql")) ) {
-                LogData.epLog.setText("No sql file specified...");
+                System.out.println("No sql file specified...");
                 return false;
             }
             if(dir.isDirectory()) {
                 path = dir;
             } else {
-                LogData.epLog.setText("No path specified...");
+                System.out.println("No path specified...");
                 return false;
             }
 
@@ -1295,7 +1298,7 @@ public class PhpDAO{
             try{
                 parseContent();
             }catch( IOException ioe ){
-                LogData.epLog.append("Error al parsear...\n"+ioe);
+                System.out.println("Error al parsear...\n"+ioe);
             }
 
             writeIncludes();
