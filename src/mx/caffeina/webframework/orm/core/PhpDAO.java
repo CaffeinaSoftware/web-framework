@@ -499,30 +499,28 @@ public class PhpDAO{
 
 			String pks = "";
 			String sql = "";
-                        String nulls = "";
-                        String pks_redis = "";
-                        
-			for(Field f : fields){
-				
+			String nulls = "";
+			String pks_redis = "";
+
+			for(Field f : fields) {
 				if(!f.isPrimary) continue;
-				
+
 				pks +=          " $"+f.title+",";
-                                pks_redis +=    " . $" + f.title+".\"-\"";
+				pks_redis +=    " . $" + f.title+".\"-\"";
 				sql +=          f.title +" = ? AND ";
-                                nulls +=        " is_null( $"+ f.title +" ) ||" ;
+				nulls +=        " is_null( $"+ f.title +" ) ||" ;
 			}
 
-			pks = pks.substring( 0, pks.length() -1 );			
+			pks = pks.substring( 0, pks.length() -1 );
 			sql = sql.substring( 0, sql.length() -4 );
-                        nulls = nulls.substring( 0, nulls.length() -2 ) ;
-                        pks_redis = pks_redis.substring( 0, pks_redis.length() - 4 ) ;
-                        
+			nulls = nulls.substring( 0, nulls.length() -2 ) ;
+			pks_redis = pks_redis.substring( 0, pks_redis.length() - 4 ) ;
 
 			pw.println("	/**");
 			pw.println("	  *	Obtener {@link "+toCamelCase(tabla)+"} por llave primaria. ");
 			pw.println("	  *	");
 			pw.println("	  * Este metodo cargara un objeto {@link "+toCamelCase(tabla)+"} de la base de datos ");
-                        pw.println("      * usando sus llaves primarias. ");
+			pw.println("	  * usando sus llaves primarias. ");
 			pw.println("	  *	");
 			pw.println("	  *	@static");
 			pw.println("	  * @return @link "+toCamelCase(tabla)+" Un objeto del tipo {@link "+toCamelCase(tabla)+"}. NULL si no hay tal registro.");
@@ -530,36 +528,23 @@ public class PhpDAO{
 
 			pw.println("	public static final function getByPK( " + pks + " )");
 			pw.println("	{");
-			
-                        pw.println("		if( "+ nulls +" ){ return NULL; }");
-                        
-	
-                        pw.println("            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( \"" + toCamelCase(tabla)+"-\"" + pks_redis + " ))){");
-                        pw.println("                Logger::log(\"REDIS !\");");
-                        pw.println("                return new " + toCamelCase(tabla) + "($obj);");
-                        pw.println("            }");
-			
+			pw.println("		if( "+ nulls +" ){ return NULL; }");
+			pw.println("            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( \"" + toCamelCase(tabla)+"-\"" + pks_redis + " ))){");
+			pw.println("                self::log(\"REDIS !\");");
+			pw.println("                return new " + toCamelCase(tabla) + "($obj);");
+			pw.println("            }");
+
 			pw.println("		$sql = \"SELECT * FROM "+tabla+" WHERE ("+ sql + ") LIMIT 1;\";");
 			pw.println("		$params = array( "+ pks +" );");
 			pw.println("		global $conn;");
 			pw.println("		$rs = $conn->GetRow($sql, $params);");
 			pw.println("		if(count($rs)==0) return NULL;");
-			
 			pw.println("		$foo = new " + toCamelCase(tabla) + "( $rs );");
 			pw.println("		if(!is_null(self::$redisConection)) self::$redisConection->set(  \"" + toCamelCase(tabla)+"-\"" + pks_redis + ", $foo );");
-                        
 			pw.println("		return $foo;");
-
 			pw.println("	}");
 			pw.println();
-			pw.println();			
 		}
-				
-				
-				
-				
-				
-		
 
 		/* ********************************************	
 		 *	getAll()
@@ -1068,7 +1053,7 @@ public class PhpDAO{
 		pw.println("<?php");
 
 		pw.println("		/** Table Data Access Object.");
-		pw.println("                  * ");
+		pw.println("		  * ");
 		pw.println("		  * Esta clase abstracta comprende metodos comunes para todas las clases DAO que mapean una tabla");
 		pw.println("		  * @author "+author);
 		pw.println("		  * @access private");
@@ -1077,46 +1062,33 @@ public class PhpDAO{
 		pw.println("		  */");
 		pw.println("		abstract class DAO");
 		pw.println("		{");
-		pw.println("");
-
-
-
-
-
 
 		pw.println("		protected static $isTrans = false;");
 		pw.println("		protected static $transCount = 0;");
-		pw.println("		");
-
-
-
-
+		pw.println("");
 		pw.println("                protected static $redisConection = null;");
-
-
 		pw.println("                public static function predis($dbname, $host){");
-
 		pw.println("                    if(!is_null(self::$redisConection)){");
 		pw.println("                        return;");
 		pw.println("                    }");
-
 		pw.println("                    Predis\\Autoloader::register();");
-
 		pw.println("                    self::$redisConection = new Predis\\Client(array(");
 		pw.println("                        'host'     => $host, ");
 		pw.println("                        'database' => $dbname");
 		pw.println("                    ));");
 		pw.println("                }");
 
-
+		pw.println("		protected static function log ($m = null) {");
+		pw.println("			// Your logging call here.");
+		pw.println("		}");
 
 		pw.println("		public static function transBegin (){");
 		pw.println("			");
 		pw.println("			self::$transCount ++;");
-		pw.println("			Logger::log(\"Iniciando transaccion (\".self::$transCount.\")\");");
+		pw.println("			self::log(\"Iniciando transaccion (\".self::$transCount.\")\");");
 		pw.println("			");
 		pw.println("			if(self::$isTrans){");
-		pw.println("				//Logger::log(\"Transaccion ya ha sido iniciada antes.\");");
+		pw.println("				//self::log(\"Transaccion ya ha sido iniciada antes.\");");
 		pw.println("				return;");
 		pw.println("			}");
 		pw.println("			");
@@ -1125,16 +1097,16 @@ public class PhpDAO{
 		pw.println("			self::$isTrans = true;");
 		pw.println("			");
 		pw.println("		}");
-		pw.println("");
+
 		pw.println("		public static function transEnd (  ){");
 		pw.println("			");
 		pw.println("			if(!self::$isTrans){");
-		pw.println("				Logger::log(\"Transaccion commit pero no hay transaccion activa !!.\");");
+		pw.println("				self::log(\"Transaccion commit pero no hay transaccion activa !!.\");");
 		pw.println("				return;");
 		pw.println("			}");
 		pw.println("			");
 		pw.println("			self::$transCount --;");
-		pw.println("			Logger::log(\"Terminando transaccion (\".self::$transCount.\")\");");
+		pw.println("			self::log(\"Terminando transaccion (\".self::$transCount.\")\");");
 		pw.println("			");
 		pw.println("			if(self::$transCount > 0){");
 		pw.println("				return;");
@@ -1142,14 +1114,14 @@ public class PhpDAO{
 
 		pw.println("			global $conn;");
 		pw.println("			$conn->CompleteTrans();");
-		pw.println("			Logger::log(\"Transaccion commit !!\");");
+		pw.println("			self::log(\"Transaccion commit !!\");");
 		pw.println("			self::$isTrans = false;");
 		pw.println("		}");
 
 
 		pw.println("		public static function transRollback (  ){");
 		pw.println("			if(!self::$isTrans){");
-		pw.println("				Logger::log(\"Transaccion rollback pero no hay transaccion activa !!.\");");
+		pw.println("				self::log(\"Transaccion rollback pero no hay transaccion activa !!.\");");
 		pw.println("				return;");
 		pw.println("			}");
 		pw.println("			");
@@ -1157,7 +1129,7 @@ public class PhpDAO{
 
 		pw.println("			global $conn;");
 		pw.println("			$conn->FailTrans();");
-		pw.println("			Logger::log(\"Transaccion rollback !\");");
+		pw.println("			self::log(\"Transaccion rollback !\");");
 		pw.println("			self::$isTrans = false;");
 		pw.println("		}");
 
