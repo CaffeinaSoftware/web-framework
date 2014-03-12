@@ -297,7 +297,7 @@ public class PhpDAO
 			pw.println("	  * @return Un entero mayor o igual a cero denotando las filas afectadas.");
 			pw.println("	  **/");
 
-			pw.println("	public static final function save( $"+tabla+" )");
+			pw.println("	public static final function save( &$"+tabla+" )");
 			pw.println("	{");
 
 			String pks = "";
@@ -360,9 +360,9 @@ public class PhpDAO
 			pw.println("	public static final function getByPK( " + pks + " )");
 			pw.println("	{");
 			pw.println("		if( "+ nulls +" ){ return NULL; }");
-			pw.println("            if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( \"" + toCamelCase(tabla)+"-\"" + pks_redis + " ))){");
-			pw.println("                return new " + toCamelCase(tabla) + "($obj);");
-			pw.println("            }");
+			//pw.println("		if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( \"" + toCamelCase(tabla)+"-\"" + pks_redis + " ))){");
+			pw.println("			return new " + toCamelCase(tabla) + "($obj);");
+			pw.println("		}");
 
 			pw.println("		$sql = \"SELECT * FROM "+tabla+" WHERE ("+ sql + ") LIMIT 1;\";");
 			pw.println("		$params = array( "+ pks +" );");
@@ -370,7 +370,7 @@ public class PhpDAO
 			pw.println("		$rs = $conn->GetRow($sql, $params);");
 			pw.println("		if(count($rs)==0) return NULL;");
 			pw.println("		$foo = new " + toCamelCase(tabla) + "( $rs );");
-			pw.println("		if(!is_null(self::$redisConection)) self::$redisConection->set(  \"" + toCamelCase(tabla)+"-\"" + pks_redis + ", $foo );");
+			//pw.println("		if(!is_null(self::$redisConection)) self::$redisConection->set(  \"" + toCamelCase(tabla)+"-\"" + pks_redis + ", $foo );");
 			pw.println("		return $foo;");
 			pw.println("	}");
 			pw.println();
@@ -420,7 +420,7 @@ public class PhpDAO
 			}
 
 			pks_redis = pks_redis.substring( 0, pks_redis.length() - 4 ) ;
-			pw.println("                if(!is_null(self::$redisConection)) self::$redisConection->set(  \"" + toCamelCase(tabla)+"-\"" + pks_redis + ", $bar );");
+			//pw.println("                if(!is_null(self::$redisConection)) self::$redisConection->set(  \"" + toCamelCase(tabla)+"-\"" + pks_redis + ", $bar );");
 
 			pw.println("		}");
 			pw.println("		return $allData;");
@@ -512,8 +512,8 @@ public class PhpDAO
 			}
 
 			pks_redis = pks_redis.substring( 0, pks_redis.length() - 4 ) ;
-			pw.println("			if(!is_null(self::$redisConection))");
-			pw.println("			 self::$redisConection->set(  \"" + toCamelCase(tabla)+"-\"" + pks_redis + ", $bar );");
+			//pw.println("			if(!is_null(self::$redisConection))");
+			//pw.println("			 self::$redisConection->set(  \"" + toCamelCase(tabla)+"-\"" + pks_redis + ", $bar );");
 
 			pw.println("		}");
 			pw.println("		return $ar;");
@@ -580,7 +580,7 @@ public class PhpDAO
 			pw.println("	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error");
 			pw.println("	  * @param "+toCamelCase(tabla)+" [$"+tabla+"] El objeto de tipo " + toCamelCase(tabla) +" a crear." );
 			pw.println("	  **/");
-			pw.println("	private static final function create( $"+tabla+" )");
+			pw.println("	private static final function create( &$"+tabla+" )");
 			pw.println("	{");
 
 			String sql = "";
@@ -688,14 +688,13 @@ public class PhpDAO
 			pw.println("		foreach ($rs as $row) {");
 			pw.println("			array_push( $ar, $bar = new "+ toCamelCase( tabla ) +"($row));");
 
-
-			String pks_redis = "";
-			for(Field f : fields){
-				if(!f.isPrimary) continue;
-				pks_redis +=    " . $bar->get" + toCamelCase(f.title) +"().\"-\"";
-			}
-			pks_redis = pks_redis.substring( 0, pks_redis.length() - 4 ) ;
-			pw.println("			if(!is_null(self::$redisConection)) self::$redisConection->set(  \"" + toCamelCase(tabla)+"-\"" + pks_redis + ", $bar );");
+			//String pks_redis = "";
+			//for(Field f : fields){
+			//	if(!f.isPrimary) continue;
+			//	pks_redis +=    " . $bar->get" + toCamelCase(f.title) +"().\"-\"";
+			//}
+			//pks_redis = pks_redis.substring( 0, pks_redis.length() - 4 ) ;
+			//pw.println("			if(!is_null(self::$redisConection)) self::$redisConection->set(  \"" + toCamelCase(tabla)+"-\"" + pks_redis + ", $bar );");
 
 			pw.println("		}");
 			pw.println("		return $ar;");
@@ -825,18 +824,18 @@ public class PhpDAO
 		pw.println("		{");
 		pw.println("			protected static $isTrans = false;");
 		pw.println("			protected static $transCount = 0;");
-		pw.println("			protected static $redisConection = null;");
+		//pw.println("			protected static $redisConection = null;");
 
-		pw.println("			public static function predis($dbname, $host){");
-		pw.println("				if(!is_null(self::$redisConection)){");
-		pw.println("					return;");
-		pw.println("				}");
-		pw.println("				Predis\\Autoloader::register();");
-		pw.println("				self::$redisConection = new Predis\\Client(array(");
-		pw.println("					'host'     => $host, ");
-		pw.println("					'database' => $dbname");
-		pw.println("				));");
-		pw.println("			}");
+		//pw.println("			public static function predis($dbname, $host){");
+		//pw.println("				if(!is_null(self::$redisConection)){");
+		//pw.println("					return;");
+		//pw.println("				}");
+		//pw.println("				Predis\\Autoloader::register();");
+		//pw.println("				self::$redisConection = new Predis\\Client(array(");
+		//pw.println("					'host'     => $host, ");
+		//pw.println("					'database' => $dbname");
+		//pw.println("				));");
+		//pw.println("			}");
 
 		pw.println("			protected static function log ($m = null) {");
 		pw.println("				// Your logging call here.");
