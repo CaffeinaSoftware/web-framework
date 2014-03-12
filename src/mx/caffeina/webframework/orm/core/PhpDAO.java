@@ -212,10 +212,16 @@ public class PhpDAO
 	{
 		String fileName = path.getAbsolutePath() + "/dao/" + tabla + ".dao.php";
 
+		File f = new File(fileName);
+		if (f.exists())
+		{
+			System.out.println("Warning: El archivo /dao/" + tabla + ".dao.php ya existe.");
+			return;
+		}
+
 		includes.add(fileName);
 
 		String className = toCamelCase( tabla );
-
 		PrintWriter pw = new PrintWriter(new FileWriter( fileName ));
 
 		pw.println("<?php");
