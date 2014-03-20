@@ -49,6 +49,26 @@ public class PhpDAO
 		return camelCase;
 	}
 
+	private static String parseToken(String line, int idx) {
+		char firstChar = line.charAt(idx);
+		int finalIdx = idx + 1;
+		if (firstChar == '\'' || firstChar == '"') {
+			while (finalIdx < line.length() && line.charAt(finalIdx) != firstChar) {
+				if (line.charAt(finalIdx) == '\\') finalIdx++;
+				finalIdx++;
+			}
+			if (finalIdx < line.length()) {
+				finalIdx++; // include the closing quote.
+			}
+		} else {
+			while (finalIdx < line.length() && line.charAt(finalIdx) != ',' &&
+					line.charAt(finalIdx) != ' ' && line.charAt(finalIdx) != ')') {
+				finalIdx++;
+			}
+		}
+		return line.substring(idx, finalIdx);
+	}
+
 	private void parseTable(String t_name) throws IOException
 	{
 		String tline ;
@@ -63,7 +83,12 @@ public class PhpDAO
 			String comentario = (tline.indexOf("COMMENT ") != -1) ? tline.substring( tline.indexOf("COMMENT ") + 9, tline.lastIndexOf("'") ) : " [Campo no documentado]";
 			boolean autoInc = (tline.indexOf("AUTO_INCREMENT") != -1) || (tline.indexOf("auto_increment") != -1);
 			String tipo = tline.trim().split(" ")[1];
-			fields.add( new Field(campo , tipo , comentario, false, autoInc) );
+			String defaultValue = null;
+			int defaultIdx = tline.indexOf("DEFAULT ");
+			if (defaultIdx != -1 && tline.indexOf("NOT NULL ") != -1) {
+				defaultValue = parseToken(tline,  defaultIdx + "DEFAULT ".length());
+			}
+			fields.add( new Field(campo , tipo , comentario, false, autoInc, defaultValue) );
 		}
 
 		//buscar llave primaria, PRIMARY KEY
@@ -184,8 +209,27 @@ public class PhpDAO
 			pw.println();
 		}
 
+		pw.println("	/**");
+		pw.println("	 * Converts date fields to timestamps");
+		pw.println("	 **/");
+		pw.println("	public function toUnixTime(array $fields = array()) {");
+		pw.println("		if (count($fields) > 0)");
+		pw.println("			parent::toUnixTime($fields);");
+		pw.println("		else");
+
+		String time_fields = "  ";
+		for (Field f : fields) {
+			if (f.type.equals("timestamp")) {
+				time_fields += "\"" + f.title + "\", ";
+			}
+		}
+
+		pw.println("			parent::toUnixTime(array(" + time_fields.substring(0, time_fields.length() - 2).trim() + "));");
+		pw.println("	}");
+
 		for( Field f : fields)
 		{
+			pw.println();
 			pw.println( "	/**");
 			pw.println( "	  * "+f.comment );
 
@@ -200,7 +244,6 @@ public class PhpDAO
 			pw.println( "	  */");
 
 			pw.println( "	public $" + f.title + ";" );
-			pw.println();
 		}
 
 		pw.println("}");
@@ -303,7 +346,7 @@ public class PhpDAO
 			pw.println("	  * @return Un entero mayor o igual a cero denotando las filas afectadas.");
 			pw.println("	  **/");
 
-			pw.println("	public static final function save( &$"+tabla+" )");
+			pw.println("	public static final function save( $"+tabla+" )");
 			pw.println("	{");
 
 			String pks = "";
@@ -367,8 +410,8 @@ public class PhpDAO
 			pw.println("	{");
 			pw.println("		if( "+ nulls +" ){ return NULL; }");
 			//pw.println("		if(!is_null( self::$redisConection ) && !is_null($obj = self::$redisConection->get( \"" + toCamelCase(tabla)+"-\"" + pks_redis + " ))){");
-			pw.println("			return new " + toCamelCase(tabla) + "($obj);");
-			pw.println("		}");
+			//pw.println("			return new " + toCamelCase(tabla) + "($obj);");
+			//pw.println("		}");
 
 			pw.println("		$sql = \"SELECT * FROM "+tabla+" WHERE ("+ sql + ") LIMIT 1;\";");
 			pw.println("		$params = array( "+ pks +" );");
@@ -406,7 +449,7 @@ public class PhpDAO
 			pw.println("		$sql = \"SELECT * from "+tabla+"\";");
 
 			pw.println("		if( ! is_null ( $orden ) )");
-			pw.println("		{ $sql .= \" ORDER BY \" . $orden . \" \" . $tipo_de_orden;	}");
+			pw.println("		{ $sql .= \" ORDER BY `\" . $orden . \"` \" . $tipo_de_orden;	}");
 
 			pw.println("		if( ! is_null ( $pagina ) )");
 			pw.println("		{");
@@ -465,7 +508,7 @@ public class PhpDAO
 
 			pw.println("	  **/");
 
-			pw.println("	public static final function search( $"+tabla+" , $orderBy = null, $orden = 'ASC')");
+			pw.println("	public static final function search( $"+tabla+" , $orderBy = null, $orden = 'ASC', $offset = 0, $rowcount = NULL, $likeColumns = NULL)");
 			pw.println("	{");
 
 			pw.println("		if (!($"+tabla+" instanceof "+toCamelCase(tabla)+")) {");
@@ -484,13 +527,25 @@ public class PhpDAO
 				pw.println("		}");
 			}
 
+			pw.println("		if (!is_null($likeColumns)) {");
+			pw.println("			foreach ($likeColumns as $column => $value) {");
+			pw.println("				$escapedValue = mysql_real_escape_string($value);");
+			pw.println("				$sql .= \"`{$column}` LIKE '%{$value}%' AND\";");
+			pw.println("			}");
+			pw.println("		}");
+
 			pw.println("		if(sizeof($val) == 0) {");
 			pw.println("			return self::getAll();");
 			pw.println("		}");
 			pw.println("		$sql = substr($sql, 0, -3) . \" )\";" );
 
 			pw.println("		if( ! is_null ( $orderBy ) ){");
-			pw.println("			$sql .= \" order by \" . $orderBy . \" \" . $orden ;");
+			pw.println("			$sql .= \" ORDER BY `\" . $orderBy . \"` \" . $orden;");
+			pw.println("		}");
+
+			pw.println("		// Add LIMIT offset, rowcount if rowcount is set");
+			pw.println("		if (!is_null($rowcount)) {");
+			pw.println("			$sql .= \" LIMIT \". $offset . \",\" . $rowcount;");
 			pw.println("		}");
 
 			pw.println("		global $conn;");
@@ -586,7 +641,7 @@ public class PhpDAO
 			pw.println("	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error");
 			pw.println("	  * @param "+toCamelCase(tabla)+" [$"+tabla+"] El objeto de tipo " + toCamelCase(tabla) +" a crear." );
 			pw.println("	  **/");
-			pw.println("	private static final function create( &$"+tabla+" )");
+			pw.println("	private static final function create( $"+tabla+" )");
 			pw.println("	{");
 
 			String sql = "";
@@ -595,13 +650,17 @@ public class PhpDAO
 			String pk_ai = " ";
 
 			for(Field f : fields) {
+				String fieldName = "$"+tabla+"->"+ f.title;
 
 				if(f.isAutoIncrement)
 				{
-					pk_ai += "		$"+tabla+"->set"+ toCamelCase(f.title) + "( $conn->Insert_ID() );\n";
+					pk_ai += "		" + fieldName + " = $conn->Insert_ID();\n";
+				} else if (f.defaultValue != null) {
+					String defaultValue = f.defaultValue.equals("CURRENT_TIMESTAMP") ? "gmdate('Y-m-d H:i:s')" : f.defaultValue;
+					pw.println("		if (is_null(" + fieldName + ")) " + fieldName + " = " + defaultValue + ";");
 				}
 
-				args += "$"+tabla+"->get"+ toCamelCase(f.title) + "(), \n			";
+				args += fieldName + ", \n			";
 				sqlnames += "`"+f.title+"`, ";
 				sql +=  "?, ";
 			}
@@ -684,7 +743,7 @@ public class PhpDAO
 
 			pw.println("		$sql = substr($sql, 0, -3) . \" )\";" );
 			pw.println("		if( !is_null ( $orderBy ) ){");
-			pw.println("		    $sql .= \" order by \" . $orderBy . \" \" . $orden ;");
+			pw.println("		    $sql .= \" order by `\" . $orderBy . \"` \" . $orden ;");
 			pw.println();
 			pw.println("		}");
 			pw.println("		global $conn;");
@@ -962,12 +1021,41 @@ public class PhpDAO
 		pw.println();
 		pw.println("				 if (strncasecmp($method, \"get\", 3)==0) {");
 		pw.println("					 return $this->$var;");
-		pw.println("				 }");
-		pw.println();
-		pw.println("				 if (strncasecmp($method, \"set\", 3)==0) {");
+		pw.println("				 } else if (strncasecmp($method, \"set\", 3)==0) {");
 		pw.println("					 $this->$var = $params[0];");
+		pw.println("				 } else {");
+		pw.println("					 throw new BadMethodCallException($method);");
 		pw.println("				 }");
 		pw.println("			}");
+
+		pw.println();
+		pw.println("		public function asFilteredArray($filters)");
+		pw.println("		{");
+		pw.println("			// Get the complete representation of the array");
+		pw.println("			$completeArray = get_object_vars($this);");
+		pw.println("			// Declare an empty array to return");
+		pw.println("			$returnArray = array();");
+		pw.println("			foreach( $filters as $filter )");
+		pw.println("			{");
+		pw.println("				// Only return properties included in $filters array");
+		pw.println("				if (isset ($completeArray[$filter]))");
+		pw.println("				{");
+		pw.println("					$returnArray[$filter] = $completeArray[$filter];");
+		pw.println("				}");
+		pw.println("				else");
+		pw.println("				{");
+		pw.println("					$returnArray[$filter] = NULL;");
+		pw.println("				}");
+		pw.println("			}");
+		pw.println("			return $returnArray;");
+		pw.println("		}");
+
+		pw.println();
+		pw.println("		protected function toUnixTime(Array $fields) {");
+		pw.println("			foreach ($fields as $f) {");
+		pw.println("				$this->$f = strtotime($this->$f);");
+		pw.println("			}");
+		pw.println("		}");
 
 		pw.println("		}");
 
@@ -993,7 +1081,7 @@ public class PhpDAO
 			pw.println("		$class = substr($class, 0, -3);");
 			pw.println("	}");
 			pw.println("	$file_name = (preg_replace('/([a-z])([A-Z])/', '$1_$2', $class));");
-			pw.println("	@include 'libs/dao/' . $file_name . '.dao.php';");
+			pw.println("	include 'libs/dao/' . $file_name . '.dao.php';");
 			pw.println("});");
 
 			// Esta es la manera antigua
@@ -1049,19 +1137,21 @@ class Field{
 	String comment;
 	boolean isPrimary;
 	boolean isAutoIncrement;
+	String defaultValue;
 
 	Field( String title )
 	{
 		this.title = title;
 	}
 
-	Field( String title, String type, String comment, boolean isPrimary, boolean isAutoIncrement )
+	Field( String title, String type, String comment, boolean isPrimary, boolean isAutoIncrement, String defaultValue )
 	{
 		this.title = title;
 		this.type = type;
 		this.comment = comment;
 		this.isPrimary = isPrimary;
 		this.isAutoIncrement = isAutoIncrement;
+		this.defaultValue = defaultValue;
 	}
 
 }
