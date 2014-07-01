@@ -1,5 +1,9 @@
 find src -name \*.java -print > file.list
 
+if [ ! -d bin ]; then
+	mkdir bin
+fi
+
 javac -d bin @file.list || exit;
 
 rm file.list

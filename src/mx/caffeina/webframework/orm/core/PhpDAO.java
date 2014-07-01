@@ -84,11 +84,21 @@ public class PhpDAO
 			boolean autoInc = (tline.indexOf("AUTO_INCREMENT") != -1) || (tline.indexOf("auto_increment") != -1);
 			String tipo = tline.trim().split(" ")[1];
 			String defaultValue = null;
-			int defaultIdx = tline.indexOf("DEFAULT ");
-			if (defaultIdx != -1 && tline.indexOf("NOT NULL ") != -1) {
-				defaultValue = parseToken(tline,  defaultIdx + "DEFAULT ".length());
+
+			// Posibles combinaciones de valures
+			// default:
+			// -DEFAULT NULL
+			// -NULL DEFAULT '0'
+			// -NOT NULL DEFAULT '0'
+			if (tline.contains("DEFAULT NULL")){
+				// No incluir nada en este caso
 			}
-			fields.add( new Field(campo , tipo , comentario, false, autoInc, defaultValue) );
+			else if (tline.contains("DEFAULT"))
+			{
+			    defaultValue = parseToken(tline, tline.indexOf("DEFAULT ") + "DEFAULT ".length());
+			}
+
+			fields.add(new Field(campo , tipo , comentario, false, autoInc, defaultValue));
 		}
 
 		//buscar llave primaria, PRIMARY KEY
@@ -660,7 +670,7 @@ public class PhpDAO
 					pw.println("		if (is_null(" + fieldName + ")) " + fieldName + " = " + defaultValue + ";");
 				}
 
-				args += fieldName + ", \n			";
+				args += fieldName + ",\n			";
 				sqlnames += "`"+f.title+"`, ";
 				sql +=  "?, ";
 			}
@@ -1073,20 +1083,22 @@ public class PhpDAO
 
 			pw.println("<?php");
 			pw.println();
-			pw.println( "require_once ('Estructura.php');");
+			pw.println( "	require_once ('Estructura.php');");
 			pw.println();
-			pw.println("spl_autoload_register(function ($class) {");
+			pw.println("	spl_autoload_register(function ($class) {");
 			pw.println("	if (substr($class, -3) == \"DAO\")");
 			pw.println("	{");
 			pw.println("		$class = substr($class, 0, -3);");
 			pw.println("	}");
 			pw.println("	$file_name = (preg_replace('/([a-z])([A-Z])/', '$1_$2', $class));");
-			pw.println("	include 'libs/dao/' . $file_name . '.dao.php';");
-			pw.println("});");
+ 
+			pw.println("");
+			pw.println("	if (file_exists(__DIR__ . '/' . $file_name . '.dao.php'))");
+			pw.println("	{");
+			pw.println("		include __DIR__ . '/' . $file_name . '.dao.php';");
+			pw.println("	}");
 
-			// Esta es la manera antigua
-			//for( String s : includes )
-			//	pw.println( "require_once ('"+ s +"');");
+			pw.println("});");
 
 			pw.close();
 		}catch(IOException ioe){
