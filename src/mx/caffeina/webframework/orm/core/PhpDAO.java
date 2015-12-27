@@ -124,19 +124,14 @@ public class PhpDAO
 			}
 		}
 
-		if(no_pks == 0){
-			System.out.println("ERROR: "+t_name+" no contiene llave primaria, saltando tabla.");
-			return ;
-		}
+		writeVO( t_name, fields, no_pks != 0 );
 
-		writeVO( t_name, fields );
+		writeDAOBase( t_name, fields, no_pks != 0 );
 
-		writeDAOBase( t_name, fields );
-
-		writeDAO( t_name, fields );
+		writeDAO( t_name, fields, no_pks != 0 );
 	}
 
-	private void writeVO( String tabla, ArrayList<Field> fields ) throws IOException
+	private void writeVO( String tabla, ArrayList<Field> fields, boolean has_pk ) throws IOException
 	{
 		String camelCaseTabla = toCamelCase( tabla );
 		String fileName = path.getAbsolutePath() + "/dao/base/" + tabla + ".vo.base.php";
@@ -246,7 +241,7 @@ public class PhpDAO
 			if(f.isPrimary)
 				pw.println( "	  * Llave Primaria");
 
-			if(f.isAutoIncrement) 
+			if(f.isAutoIncrement)
 				pw.println( "	  * Auto Incremento");
 
 			pw.println( "	  * @access public" );
@@ -260,8 +255,8 @@ public class PhpDAO
 		pw.close();
 	}
 
-	//dao normal para tabla 
-	private void writeDAO(String tabla, ArrayList<Field> fields ) throws IOException
+	//dao normal para tabla
+	private void writeDAO(String tabla, ArrayList<Field> fields, boolean has_pk ) throws IOException
 	{
 		String fileName = path.getAbsolutePath() + "/dao/" + tabla + ".dao.php";
 
@@ -300,23 +295,27 @@ public class PhpDAO
 	}
 
 	//dao base para tabla
-	private void writeDAOBase(String tabla, ArrayList<Field> fields ) throws IOException
+	private void writeDAOBase(String tabla, ArrayList<Field> fields, boolean has_pk ) throws IOException
 	{
 
 		String fileName = path.getAbsolutePath() + "/dao/base/" + tabla + ".dao.base.php";
 		String className = toCamelCase( tabla );
 
 		PrintWriter pw = new PrintWriter(new FileWriter( fileName ));
-		String pksVars = "";
+		String [] pksArray = null;
 
-		for(Field f : fields){
-			if(!f.isPrimary) 
-				continue;
-			pksVars +=  " $"+f.title+",";
+		if (has_pk)
+		{
+			String pksVars = "";
+			for(Field f : fields){
+				if(!f.isPrimary)
+					continue;
+				pksVars +=  " $"+f.title+",";
+			}
+
+			pksArray = pksVars.replace(" $", "").split(",");
+			pksVars = pksVars.substring( 0, pksVars.length() -1 );
 		}
-
-		String [] pksArray = pksVars.replace(" $", "").split(",");
-		pksVars = pksVars.substring( 0, pksVars.length() -1 );
 
 		pw.println("<?php");
 		pw.println();
@@ -345,10 +344,18 @@ public class PhpDAO
 			pw.println("	/**");
 			pw.println("	  *	Guardar registros. ");
 			pw.println("	  *	");
-			pw.println("	  *	Este metodo guarda el estado actual del objeto {@link "+toCamelCase(tabla)+"} pasado en la base de datos. La llave ");
-			pw.println("	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves");
-			pw.println("	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando");
-			pw.println("	  *	en ese objeto el ID recien creado.");
+			if (has_pk)
+			{
+				pw.println("	  *	Este metodo guarda el estado actual del objeto {@link "+toCamelCase(tabla)+"} pasado en la base de datos. La llave ");
+				pw.println("	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves");
+				pw.println("	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando");
+				pw.println("	  *	en ese objeto el ID recien creado.");
+			}
+			else
+			{
+				pw.println("	  *	Este metodo guarda el estado actual del objeto {@link "+toCamelCase(tabla)+"} pasado en la base de datos.");
+				pw.println("	  *	save() siempre creara una nueva fila.");
+			}
 			pw.println("	  *	");
 			pw.println("	  *	@static");
 			pw.println("	  * @throws Exception si la operacion fallo.");
@@ -359,24 +366,31 @@ public class PhpDAO
 			pw.println("	public static final function save( $"+tabla+" )");
 			pw.println("	{");
 
-			String pks = "";
-			String foo = "(";
+			if (has_pk)
+			{
+				String pks = "";
+				String foo = "(";
 
-			for(Field f : fields){
-				if(!f.isPrimary) continue;
-				pks +=  " $"+tabla+"->get"+ toCamelCase(f.title)+"() ,";
-				foo +=  " isset($"+tabla+"->get"+ toCamelCase(f.title)+"()) && ";
+				for(Field f : fields){
+					if(!f.isPrimary) continue;
+					pks +=  " $"+tabla+"->get"+ toCamelCase(f.title)+"() ,";
+					foo +=  " isset($"+tabla+"->get"+ toCamelCase(f.title)+"()) && ";
+				}
+
+				foo = foo.substring(0, foo.length() -3 ) + ")";
+				pks = pks.substring(0, pks.length() -1 );
+				pw.println("		if (!is_null(self::getByPK(" + pks + ")))");
+				pw.println("		{");
+				pw.println("			return " + className +"DAOBase::update( $"+ tabla +");");
+				pw.println("		} else {");
+				pw.println("			return " + className +"DAOBase::create( $"+ tabla +");");
+				pw.println("		}");
+			}
+			else
+			{
+				pw.println("		return " + className +"DAOBase::create( $"+ tabla +");");
 			}
 
-			foo = foo.substring(0, foo.length() -3 ) + ")";
-			pks = pks.substring(0, pks.length() -1 );
-
-			pw.println("		if (!is_null(self::getByPK(" + pks + ")))");
-			pw.println("		{");
-			pw.println("			return " + className +"DAOBase::update( $"+ tabla +");");
-			pw.println("		} else {");
-			pw.println("			return " + className +"DAOBase::create( $"+ tabla +");");
-			pw.println("		}");
 			pw.println("	}");
 			pw.println();
 			pw.println();
@@ -385,6 +399,7 @@ public class PhpDAO
 		/* ********************************************
 		 *	getByPK()
 		 ******************************************** */
+		if (has_pk)
 		{
 
 			String pks = "";
@@ -472,14 +487,17 @@ public class PhpDAO
 			pw.println("			$bar = new "+ toCamelCase( tabla ) +"($foo);");
 			pw.println("    		array_push( $allData, $bar);");
 
-			String pks_redis = "";
-			for(Field f : fields){
-				if(!f.isPrimary) continue;
-				pks_redis +=    " . $bar->get" + toCamelCase(f.title) +"().\"-\"";
-			}
+			if (has_pk)
+			{
+				String pks_redis = "";
+				for(Field f : fields){
+					if(!f.isPrimary) continue;
+					pks_redis +=    " . $bar->get" + toCamelCase(f.title) +"().\"-\"";
+				}
 
-			pks_redis = pks_redis.substring( 0, pks_redis.length() - 4 ) ;
-			//pw.println("                if(!is_null(self::$redisConection)) self::$redisConection->set(  \"" + toCamelCase(tabla)+"-\"" + pks_redis + ", $bar );");
+				pks_redis = pks_redis.substring( 0, pks_redis.length() - 4 ) ;
+				//pw.println("                if(!is_null(self::$redisConection)) self::$redisConection->set(  \"" + toCamelCase(tabla)+"-\"" + pks_redis + ", $bar );");
+			}
 
 			pw.println("		}");
 			pw.println("		return $allData;");
@@ -566,25 +584,28 @@ public class PhpDAO
 			pw.println("			$bar =  new "+ toCamelCase( tabla ) +"($foo);");
 			pw.println("			array_push( $ar,$bar);");
 
-			String foo = "";
-			for(String pk : pksArray)
+			if (has_pk)
 			{
-				foo += "$foo[\"" +pk + "\"],";
-			}
-
-			String pks_redis = "";
-			for(Field f : fields)
-			{
-				if(!f.isPrimary)
+				String foo = "";
+				for(String pk : pksArray)
 				{
-					continue;
+					foo += "$foo[\"" +pk + "\"],";
 				}
-				pks_redis += " . $bar->get" + toCamelCase(f.title) +"().\"-\"";
-			}
 
-			pks_redis = pks_redis.substring( 0, pks_redis.length() - 4 ) ;
-			//pw.println("			if(!is_null(self::$redisConection))");
-			//pw.println("			 self::$redisConection->set(  \"" + toCamelCase(tabla)+"-\"" + pks_redis + ", $bar );");
+				String pks_redis = "";
+				for(Field f : fields)
+				{
+					if(!f.isPrimary)
+					{
+						continue;
+					}
+					pks_redis += " . $bar->get" + toCamelCase(f.title) +"().\"-\"";
+				}
+
+				pks_redis = pks_redis.substring( 0, pks_redis.length() - 4 ) ;
+				//pw.println("			if(!is_null(self::$redisConection))");
+				//pw.println("			 self::$redisConection->set(  \"" + toCamelCase(tabla)+"-\"" + pks_redis + ", $bar );");
+			}
 
 			pw.println("		}");
 			pw.println("		return $ar;");
@@ -593,6 +614,7 @@ public class PhpDAO
 			pw.println();
 		}
 
+		if (has_pk)
 		{
 			pw.println("	/**");
 			pw.println("	  *	Actualizar registros.");
@@ -610,7 +632,7 @@ public class PhpDAO
 			String pkargs = "";
 
 			for(Field f : fields){
-				if( f.isPrimary ) 
+				if( f.isPrimary )
 				{
 					pk += " `" + f.title + "` = ? AND";
 					pkargs += "$"+tabla+"->get" + toCamelCase(f.title)+"(),";
@@ -777,6 +799,7 @@ public class PhpDAO
 			pw.println();
 		}
 
+		if (has_pk)
 		{
 			pw.println("	/**");
 			pw.println("	  *	Eliminar registros.");
@@ -1091,7 +1114,7 @@ public class PhpDAO
 			pw.println("		$class = substr($class, 0, -3);");
 			pw.println("	}");
 			pw.println("	$file_name = (preg_replace('/([a-z])([A-Z])/', '$1_$2', $class));");
- 
+
 			pw.println("");
 			pw.println("	if (file_exists(__DIR__ . '/' . $file_name . '.dao.php'))");
 			pw.println("	{");
