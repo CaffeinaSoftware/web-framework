@@ -373,8 +373,8 @@ public class PhpDAO
 
 				for(Field f : fields){
 					if(!f.isPrimary) continue;
-					pks +=  " $"+tabla+"->get"+ toCamelCase(f.title)+"() ,";
-					foo +=  " isset($"+tabla+"->get"+ toCamelCase(f.title)+"()) && ";
+					pks +=  " $"+tabla+"->"+ f.title+",";
+					foo +=  " isset($"+tabla+"->"+ f.title+") && ";
 				}
 
 				foo = foo.substring(0, foo.length() -3 ) + ")";
@@ -492,7 +492,7 @@ public class PhpDAO
 				String pks_redis = "";
 				for(Field f : fields){
 					if(!f.isPrimary) continue;
-					pks_redis +=    " . $bar->get" + toCamelCase(f.title) +"().\"-\"";
+					pks_redis +=    " . $bar->" + f.title +".\"-\"";
 				}
 
 				pks_redis = pks_redis.substring( 0, pks_redis.length() - 4 ) ;
@@ -525,7 +525,7 @@ public class PhpDAO
 			pw.println("	  *	  $resultados = ClienteDAO::search($cliente);");
 			pw.println("	  *	  ");
 			pw.println("	  *	  foreach($resultados as $c ){");
-			pw.println("	  *	  	echo $c->getNombre() . \"<br>\";");
+			pw.println("	  *	  	echo $c->nombre . \"<br>\";");
 			pw.println("	  *	  }");
 
 			pw.println("	  * </code>");
@@ -549,9 +549,9 @@ public class PhpDAO
 
 			for(Field f : fields)
 			{
-				pw.println("		if (!is_null( $"+tabla+"->get"+toCamelCase(f.title)+"())) {");
+				pw.println("		if (!is_null( $"+tabla+"->"+f.title+")) {");
 				pw.println("			$sql .= \" `"+ f.title +"` = ? AND\";");
-				pw.println("			array_push( $val, $"+tabla+"->get"+toCamelCase(f.title)+"() );");
+				pw.println("			array_push( $val, $"+tabla+"->"+f.title+" );");
 				pw.println("		}");
 			}
 
@@ -599,7 +599,7 @@ public class PhpDAO
 					{
 						continue;
 					}
-					pks_redis += " . $bar->get" + toCamelCase(f.title) +"().\"-\"";
+					pks_redis += " . $bar->" + f.title +".\"-\"";
 				}
 
 				pks_redis = pks_redis.substring( 0, pks_redis.length() - 4 ) ;
@@ -635,9 +635,9 @@ public class PhpDAO
 				if( f.isPrimary )
 				{
 					pk += " `" + f.title + "` = ? AND";
-					pkargs += "$"+tabla+"->get" + toCamelCase(f.title)+"(),";
+					pkargs += "$"+tabla+"->" + f.title + ",";
 				}else{
-					args += "$"+tabla+"->get"+ toCamelCase(f.title) + "(), \n			";
+					args += "$"+tabla+"->"+ f.title + ", \n			";
 					sql += "`"+f.title+"` = ?, ";
 				}
 			}
@@ -732,15 +732,15 @@ public class PhpDAO
 			pw.println("	  *   {@*} ");
 
 			pw.println("	  *	  $cr1 = new Cliente();");
-			pw.println("	  *	  $cr1->setLimiteCredito(\"2000\");");
-			pw.println("	  *	  $cr1->setDescuento(\"50\");");
+			pw.println("	  *	  $cr1->limite_credito = \"2000\";");
+			pw.println("	  *	  $cr1->descuento = \"50\";");
 			pw.println("	  *	  ");
 			pw.println("	  *	  $cr2 = new Cliente();");
-			pw.println("	  *	  $cr2->setLimiteCredito(\"5000\");");
+			pw.println("	  *	  $cr2->limite_credito = \"5000\";");
 			pw.println("	  *	  $resultados = ClienteDAO::byRange($cr1, $cr2);");
 			pw.println("	  *	  ");
 			pw.println("	  *	  foreach($resultados as $c ){");
-			pw.println("	  *	  	echo $c->getNombre() . \"<br>\";");
+			pw.println("	  *	  	echo $c->nombre . \"<br>\";");
 			pw.println("	  *	  }");
 
 			pw.println("	  * </code>");
@@ -760,7 +760,7 @@ public class PhpDAO
 			for(Field f : fields)
 			{
 
-				pw.println("		if( ( !is_null (($a = $"+tabla+"A->get"+toCamelCase(f.title)+"()) ) ) & ( ! is_null ( ($b = $"+tabla+"B->get"+toCamelCase(f.title)+"()) ) ) ){");
+				pw.println("		if( ( !is_null (($a = $"+tabla+"A->"+f.title+") ) ) & ( ! is_null ( ($b = $"+tabla+"B->"+f.title+") ) ) ){");
 				pw.println("				$sql .= \" `"+ f.title +"` >= ? AND `"+ f.title +"` <= ? AND\";");
 				pw.println("				array_push( $val, min($a,$b)); ");
 				pw.println("				array_push( $val, max($a,$b)); ");
@@ -788,7 +788,7 @@ public class PhpDAO
 			//String pks_redis = "";
 			//for(Field f : fields){
 			//	if(!f.isPrimary) continue;
-			//	pks_redis +=    " . $bar->get" + toCamelCase(f.title) +"().\"-\"";
+			//	pks_redis +=    " . $bar->" + f.title +".\"-\"";
 			//}
 			//pks_redis = pks_redis.substring( 0, pks_redis.length() - 4 ) ;
 			//pw.println("			if(!is_null(self::$redisConection)) self::$redisConection->set(  \"" + toCamelCase(tabla)+"-\"" + pks_redis + ", $bar );");
@@ -828,7 +828,7 @@ public class PhpDAO
 				if (f.isPrimary)
 				{
 					pk += " " + f.title + " = ? AND";
-					pkargs += "$"+tabla+"->get" + toCamelCase(f.title)+"(), ";
+					pkargs += "$"+tabla+"->" + f.title+", ";
 				}
 			}
 
