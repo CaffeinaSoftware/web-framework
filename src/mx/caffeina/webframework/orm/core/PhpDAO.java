@@ -13,6 +13,7 @@ public class PhpDAO
 	private ArrayList<String>   includes;
 	private String              author = "someone@caffeina.mx";
 	private File                path; //solo puede ser necesario un String con absolutepath
+	private boolean             omitGeneratedCall;  // No genera la función __call.
 
 	private boolean readFile(File file)
 	{
@@ -151,7 +152,14 @@ public class PhpDAO
 
 		pw.println("/** Value Object file for table "+ tabla +"." );
 		pw.println("  * ");
-		pw.println("  * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).");
+		if (omitGeneratedCall)
+		{
+			pw.println("  * VO does not have any behaviour.");
+		}
+		else
+		{
+			pw.println("  * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).");
+		}
 		pw.println("  * @access public");
 		pw.println("  * ");
 		pw.println("  */");
@@ -1047,19 +1055,22 @@ public class PhpDAO
 		pw.println("				return $new; ");
 		pw.println("			}");
 
-		pw.println();
-		pw.println("			function __call($method, $params) {");
-		pw.println("				 $var = substr($method, 3);");
-		pw.println("				 $var = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $var)); ");
-		pw.println();
-		pw.println("				 if (strncasecmp($method, \"get\", 3)==0) {");
-		pw.println("					 return $this->$var;");
-		pw.println("				 } else if (strncasecmp($method, \"set\", 3)==0) {");
-		pw.println("					 $this->$var = $params[0];");
-		pw.println("				 } else {");
-		pw.println("					 throw new BadMethodCallException($method);");
-		pw.println("				 }");
-		pw.println("			}");
+		if (!omitGeneratedCall)
+		{
+			pw.println();
+			pw.println("			function __call($method, $params) {");
+			pw.println("				 $var = substr($method, 3);");
+			pw.println("				 $var = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $var)); ");
+			pw.println();
+			pw.println("				 if (strncasecmp($method, \"get\", 3)==0) {");
+			pw.println("					 return $this->$var;");
+			pw.println("				 } else if (strncasecmp($method, \"set\", 3)==0) {");
+			pw.println("					 $this->$var = $params[0];");
+			pw.println("				 } else {");
+			pw.println("					 throw new BadMethodCallException($method);");
+			pw.println("				 }");
+			pw.println("			}");
+		}
 
 		pw.println();
 		pw.println("		public function asFilteredArray($filters)");
@@ -1162,6 +1173,11 @@ public class PhpDAO
 		closeFile();
 		return true;
 
+	}
+
+	public void setOmitGeneratedCall(boolean omitGeneratedCall)
+	{
+		this.omitGeneratedCall = omitGeneratedCall;
 	}
 }
 
