@@ -16,6 +16,9 @@ class Main {
 		in = null;
 		out = null;
 
+		// Options
+		boolean omitGeneratedCall = false;
+
 		// Header
 		header();
 
@@ -42,6 +45,9 @@ class Main {
 			}else if(args[i].startsWith("-author")) {
 				author = args[i].split("=")[1];
 
+			}else if(args[i].equals("-omit-call")) {
+				omitGeneratedCall = true;
+
 			}
 		}
 
@@ -56,6 +62,7 @@ class Main {
 
 		if (outlang.equals("php")) {
 			PhpDAO phpDao = new PhpDAO();
+			phpDao.setOmitGeneratedCall(omitGeneratedCall);
 			phpDao.playParser(in, out, author);
 		}
 
@@ -76,6 +83,7 @@ class Main {
 						+ "-in=/path/db.sql "
 						+ "-lang=php|js "
 						+ "-author=\"John Doe <john@example.com>\""
+						+ "[-omit-call]"
 						+ "[-help]"
 						+ "\n\n");
 	}
