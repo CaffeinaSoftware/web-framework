@@ -14,6 +14,7 @@ public class PhpDAO
 	private String              author = "someone@caffeina.mx";
 	private File                path; //solo puede ser necesario un String con absolutepath
 	private boolean             omitGeneratedCall;  // No genera la función __call.
+	private boolean             useUnixTimestamps;  // Usa UNIX timestamps exclusivamente para fechas.
 
 	private boolean readFile(File file)
 	{
@@ -83,7 +84,7 @@ public class PhpDAO
 			String campo = tline.substring( tline.indexOf("`") + 1, tline.lastIndexOf("`") );
 			String comentario = (tline.indexOf("COMMENT ") != -1) ? tline.substring( tline.indexOf("COMMENT ") + 9, tline.lastIndexOf("'") ) : " [Campo no documentado]";
 			boolean autoInc = (tline.indexOf("AUTO_INCREMENT") != -1) || (tline.indexOf("auto_increment") != -1);
-			String tipo = tline.trim().split(" ")[1];
+			String tipo = tline.trim().split(" ")[1].toLowerCase();
 			String defaultValue = null;
 
 			// Posibles combinaciones de valures
@@ -222,23 +223,26 @@ public class PhpDAO
 			pw.println();
 		}
 
-		pw.println("	/**");
-		pw.println("	 * Converts date fields to timestamps");
-		pw.println("	 **/");
-		pw.println("	public function toUnixTime(array $fields = array()) {");
-		pw.println("		if (count($fields) > 0)");
-		pw.println("			parent::toUnixTime($fields);");
-		pw.println("		else");
+		if( !useUnixTimestamps )
+		{
+			pw.println("	/**");
+			pw.println("	 * Converts date fields to timestamps");
+			pw.println("	 **/");
+			pw.println("	public function toUnixTime(array $fields = array()) {");
+			pw.println("		if (count($fields) > 0)");
+			pw.println("			parent::toUnixTime($fields);");
+			pw.println("		else");
 
-		String time_fields = "  ";
-		for (Field f : fields) {
-			if (f.type.equals("timestamp")) {
-				time_fields += "\"" + f.title + "\", ";
+			String time_fields = "  ";
+			for (Field f : fields) {
+				if (f.type.equals("timestamp")) {
+					time_fields += "\"" + f.title + "\", ";
+				}
 			}
-		}
 
-		pw.println("			parent::toUnixTime(array(" + time_fields.substring(0, time_fields.length() - 2).trim() + "));");
-		pw.println("	}");
+			pw.println("			parent::toUnixTime(array(" + time_fields.substring(0, time_fields.length() - 2).trim() + "));");
+			pw.println("	}");
+		}
 
 		for( Field f : fields)
 		{
@@ -349,8 +353,16 @@ public class PhpDAO
 
 		{
 			pw.println("	/**");
-			pw.println("	  *	Guardar registros.");
-			pw.println("	  *");
+			pw.println("	 * Campos de la tabla.");
+			pw.println("	 **/");
+			pw.println("	const FIELDS = '" + getFields(tabla, fields) + "';");
+			pw.println();
+		}
+
+		{
+			pw.println("	/**");
+			pw.println("	 * Guardar registros. ");
+			pw.println("	 *");
 			if (has_pk)
 			{
 				pw.println("	  *	Este metodo guarda el estado actual del objeto {@link "+toCamelCase(tabla)+"} pasado en la base de datos. La llave");
@@ -444,7 +456,7 @@ public class PhpDAO
 			//pw.println("			return new " + toCamelCase(tabla) + "($obj);");
 			//pw.println("		}");
 
-			pw.println("		$sql = \"SELECT * FROM "+tabla+" WHERE ("+ sql + ") LIMIT 1;\";");
+			pw.println("		$sql = \"SELECT " + getFields(tabla, fields) + " FROM "+tabla+" WHERE ("+ sql + ") LIMIT 1;\";");
 			pw.println("		$params = array( "+ pks +" );");
 			pw.println("		global $conn;");
 			pw.println("		$rs = $conn->GetRow($sql, $params);");
@@ -477,7 +489,7 @@ public class PhpDAO
 			pw.println("	  **/");
 			pw.println("	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )");
 			pw.println("	{");
-			pw.println("		$sql = \"SELECT * from "+tabla+"\";");
+			pw.println("		$sql = \"SELECT " + getFields(tabla, fields) + " from "+tabla+"\";");
 
 			pw.println("		if( ! is_null ( $orden ) )");
 			pw.println("		{ $sql .= \" ORDER BY `\" . $orden . \"` \" . $tipo_de_orden;	}");
@@ -549,7 +561,7 @@ public class PhpDAO
 			pw.println("		}");
 			pw.println();
 
-			pw.println("		$sql = \"SELECT * from "+tabla+" WHERE (\";");
+			pw.println("		$sql = \"SELECT " + getFields(tabla, fields) + " from "+tabla+" WHERE (\";");
 			pw.println("		$val = array();");
 
 			for(Field f : fields)
@@ -643,7 +655,12 @@ public class PhpDAO
 					pkargs += "$"+tabla+"->" + f.title + ",";
 				}else{
 					args += "$"+tabla+"->"+ f.title + ",\n			";
-					sql += "`"+f.title+"` = ?, ";
+					if( useUnixTimestamps && ( f.type.equals("timestamp") || f.type.equals("date") || f.type.equals("datetime") ) )
+					{
+						sql += "`"+f.title+"` = FROM_UNIXTIME(?), ";
+					}else{
+						sql += "`"+f.title+"` = ?, ";
+					}
 				}
 			}
 
@@ -693,14 +710,19 @@ public class PhpDAO
 					pk_ai += "" + fieldName + " = $conn->Insert_ID();\n";
 
 				} else if (f.defaultValue != null) {
-					String defaultValue = f.defaultValue.equals("CURRENT_TIMESTAMP") ? "gmdate('Y-m-d H:i:s')" : f.defaultValue;
+					String defaultValue = f.defaultValue.equals("CURRENT_TIMESTAMP") ? (useUnixTimestamps ? "time()" : "gmdate('Y-m-d H:i:s')") : f.defaultValue;
 					pw.println("		if (is_null(" + fieldName + ")) " + fieldName + " = " + defaultValue + ";");
 
 				}
 
 				args += fieldName + ",\n			";
 				sqlnames += "`"+f.title+"`, ";
-				sql +=  "?, ";
+				if( useUnixTimestamps && ( f.type.equals("timestamp") || f.type.equals("date") || f.type.equals("datetime") ) )
+				{
+					sql += "FROM_UNIXTIME(?), ";
+				}else{
+					sql += "?, ";
+				}
 			}
 
 			sqlnames = sqlnames.substring(0, sqlnames.length() -2 ) ;
@@ -1089,12 +1111,15 @@ public class PhpDAO
 		pw.println("			return $returnArray;");
 		pw.println("		}");
 
-		pw.println();
-		pw.println("		protected function toUnixTime(Array $fields) {");
-		pw.println("			foreach ($fields as $f) {");
-		pw.println("				$this->$f = strtotime($this->$f);");
-		pw.println("			}");
-		pw.println("		}");
+		if( !useUnixTimestamps )
+		{
+			pw.println();
+			pw.println("		protected function toUnixTime(Array $fields) {");
+			pw.println("			foreach ($fields as $f) {");
+			pw.println("				$this->$f = strtotime($this->$f);");
+			pw.println("			}");
+			pw.println("		}");
+		}
 
 		pw.println("		}");
 
@@ -1170,9 +1195,35 @@ public class PhpDAO
 
 	}
 
-	public void setOmitGeneratedCall(boolean omitGeneratedCall)
+	private String getFields( String tabla, ArrayList<Field> fields )
+	{
+		StringBuffer fieldList = new StringBuffer();
+		for( Field field : fields )
+		{
+			if( fieldList.length() != 0 )
+			{
+				fieldList.append(", ");
+			}
+			if( useUnixTimestamps && ( field.type.equals("timestamp") || field.type.equals("date") || field.type.equals("datetime") ) )
+			{
+				fieldList.append("UNIX_TIMESTAMP(`" + tabla + "`.`" + field.title + "`) AS `" + field.title + "`");
+			}
+			else
+			{
+				fieldList.append("`" + tabla + "`.`" + field.title + "`");
+			}
+		}
+		return fieldList.toString();
+	}
+
+	public void setOmitGeneratedCall( boolean omitGeneratedCall )
 	{
 		this.omitGeneratedCall = omitGeneratedCall;
+	}
+
+	public void setUseUnixTimestamps( boolean useUnixTimestamps )
+	{
+		this.useUnixTimestamps = useUnixTimestamps;
 	}
 }
 

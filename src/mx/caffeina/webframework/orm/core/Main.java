@@ -18,6 +18,7 @@ class Main {
 
 		// Options
 		boolean omitGeneratedCall = false;
+		boolean useUnixTimestamps = false;
 
 		// Header
 		header();
@@ -48,6 +49,9 @@ class Main {
 			}else if(args[i].equals("-omit-call")) {
 				omitGeneratedCall = true;
 
+			}else if(args[i].equals("-unix-timestamps")) {
+				useUnixTimestamps = true;
+
 			}
 		}
 
@@ -63,6 +67,7 @@ class Main {
 		if (outlang.equals("php")) {
 			PhpDAO phpDao = new PhpDAO();
 			phpDao.setOmitGeneratedCall(omitGeneratedCall);
+			phpDao.setUseUnixTimestamps(useUnixTimestamps);
 			phpDao.playParser(in, out, author);
 		}
 
