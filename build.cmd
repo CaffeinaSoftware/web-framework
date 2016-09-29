@@ -1,8 +1,10 @@
 @echo off
 
+mkdir bin
+
 dir /s/b src\*.java  > file.list
 
-javac -d bin @file.list || goto eos
+javac -source 1.7 -target 1.7  -d bin @file.list || goto eos
 
 del file.list
 
