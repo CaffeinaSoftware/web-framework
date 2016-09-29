@@ -151,7 +151,7 @@ public class PhpDAO
 		pw.println();
 
 		pw.println("/** Value Object file for table "+ tabla +"." );
-		pw.println("  * ");
+		pw.println("  *");
 		if (omitGeneratedCall)
 		{
 			pw.println("  * VO does not have any behaviour.");
@@ -161,7 +161,7 @@ public class PhpDAO
 			pw.println("  * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).");
 		}
 		pw.println("  * @access public");
-		pw.println("  * ");
+		pw.println("  *");
 		pw.println("  */");
 
 		pw.println();
@@ -171,7 +171,7 @@ public class PhpDAO
 		{
 			pw.println( "	/**");
 			pw.println( "	  * Constructor de " + toCamelCase(tabla) );
-			pw.println( "	  * " );
+			pw.println( "	  *" );
 			pw.println( "	  * Para construir un objeto de tipo "+ toCamelCase(tabla) + " debera llamarse a el constructor " );
 			pw.println( "	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo " );
 			pw.println( "	  * cuyos campos son iguales a las variables que constituyen a este objeto." );
@@ -181,7 +181,7 @@ public class PhpDAO
 			pw.println("		if (isset($data))");
 			pw.println("		{");
 			pw.println("			if (is_string($data))");
-			pw.println("				$data = self::object_to_array(json_decode($data));\n\n");
+			pw.println("				$data = self::object_to_array(json_decode($data));");
 		}
 
 		for(Field f : fields)
@@ -198,15 +198,15 @@ public class PhpDAO
 		{
 			pw.println( "	/**");
 			pw.println( "	  * Obtener una representacion en String" );
-			pw.println( "	  * " );
+			pw.println( "	  *" );
 			pw.println( "	  * Este metodo permite tratar a un objeto "+toCamelCase(tabla)+ " en forma de cadena." );
 			pw.println( "	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.");
-			pw.println( "	  * @return String ");
+			pw.println( "	  * @return String");
 			pw.println( "	  */");
 			pw.println("	public function __toString( )");
-			pw.println("	{ ");
+			pw.println("	{");
 
-			pw.println( "		$vec = array( " );
+			pw.println( "		$vec = array(" );
 
 			int x = 0;
 			for( Field f : fields)
@@ -216,8 +216,8 @@ public class PhpDAO
 				else
 					pw.println( "			\"" +f.title +"\" => $this->" + f.title  );
 			}
-			pw.println( "		); " );
-			pw.println( "	return json_encode($vec); " );
+			pw.println( "		);" );
+			pw.println( "	return json_encode($vec);" );
 			pw.println("	}");
 			pw.println();
 		}
@@ -689,12 +689,13 @@ public class PhpDAO
 			for(Field f : fields) {
 				String fieldName = "$"+tabla+"->"+ f.title;
 
-				if(f.isAutoIncrement)
-				{
-					pk_ai += "		" + fieldName + " = $conn->Insert_ID();\n";
+				if(f.isAutoIncrement) {
+					pk_ai += "" + fieldName + " = $conn->Insert_ID();\n";
+
 				} else if (f.defaultValue != null) {
 					String defaultValue = f.defaultValue.equals("CURRENT_TIMESTAMP") ? "gmdate('Y-m-d H:i:s')" : f.defaultValue;
 					pw.println("		if (is_null(" + fieldName + ")) " + fieldName + " = " + defaultValue + ";");
+
 				}
 
 				args += fieldName + ",\n			";
