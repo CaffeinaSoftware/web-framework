@@ -337,8 +337,8 @@ public class PhpDAO
 		pw.println();
 		pw.println("/** "+ toCamelCase(tabla) +" Data Access Object (DAO) Base." );
 		pw.println("  *");
-		pw.println("  * Esta clase contiene toda la manipulacion de bases de datos que se necesita para ");
-		pw.println("  * almacenar de forma permanente y recuperar instancias de objetos {@link "+toCamelCase(tabla)+" }. ");
+		pw.println("  * Esta clase contiene toda la manipulacion de bases de datos que se necesita para");
+		pw.println("  * almacenar de forma permanente y recuperar instancias de objetos {@link "+toCamelCase(tabla)+" }.");
 		pw.println("  * @access public");
 		pw.println("  * @abstract");
 		pw.println("  *");
@@ -346,7 +346,6 @@ public class PhpDAO
 
 		pw.println("abstract class " + className+ "DAOBase extends DAO" );
 		pw.println("{");
-		pw.println();
 
 		{
 			pw.println("	/**");
@@ -354,7 +353,7 @@ public class PhpDAO
 			pw.println("	  *");
 			if (has_pk)
 			{
-				pw.println("	  *	Este metodo guarda el estado actual del objeto {@link "+toCamelCase(tabla)+"} pasado en la base de datos. La llave ");
+				pw.println("	  *	Este metodo guarda el estado actual del objeto {@link "+toCamelCase(tabla)+"} pasado en la base de datos. La llave");
 				pw.println("	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves");
 				pw.println("	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando");
 				pw.println("	  *	en ese objeto el ID recien creado.");
@@ -400,7 +399,6 @@ public class PhpDAO
 			}
 
 			pw.println("	}");
-			pw.println();
 			pw.println();
 		}
 
@@ -467,7 +465,7 @@ public class PhpDAO
 			pw.println("	  *");
 			pw.println("	  * Esta funcion leera todos los contenidos de la tabla en la base de datos y construira");
 			pw.println("	  * un vector que contiene objetos de tipo {@link "+toCamelCase(tabla)+"}. Tenga en cuenta que este metodo");
-			pw.println("	  * consumen enormes cantidades de recursos si la tabla tiene muchas filas. ");
+			pw.println("	  * consumen enormes cantidades de recursos si la tabla tiene muchas filas.");
 			pw.println("	  * Este metodo solo debe usarse cuando las tablas destino tienen solo pequenas cantidades de datos o se usan sus parametros para obtener un menor numero de filas.");
 			pw.println("	  *");
 			pw.println("	  *	@static");
@@ -511,7 +509,6 @@ public class PhpDAO
 			pw.println("		return $allData;");
 			pw.println("	}");
 			pw.println();
-			pw.println();
 		}
 
 		{
@@ -519,19 +516,19 @@ public class PhpDAO
 			pw.println("	  *	Buscar registros.");
 			pw.println("	  *");
 			pw.println("	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link "+toCamelCase(tabla)+"} de la base de datos.");
-			pw.println("	  * Consiste en buscar todos los objetos que coinciden con las variables permanentes instanciadas de objeto pasado como argumento. ");
+			pw.println("	  * Consiste en buscar todos los objetos que coinciden con las variables permanentes instanciadas de objeto pasado como argumento.");
 			pw.println("	  * Aquellas variables que tienen valores NULL seran excluidos en busca de criterios.");
 			pw.println("	  *");
 
 			pw.println("	  * <code>");
 			pw.println("	  *  /**");
 			pw.println("	  *   * Ejemplo de uso - buscar todos los clientes que tengan limite de credito igual a 20000");
-			pw.println("	  *   {@*} ");
+			pw.println("	  *   {@*}");
 
 			pw.println("	  *	  $cliente = new Cliente();");
 			pw.println("	  *	  $cliente->setLimiteCredito(\"20000\");");
 			pw.println("	  *	  $resultados = ClienteDAO::search($cliente);");
-			pw.println("	  *	  ");
+			pw.println("	  *");
 			pw.println("	  *	  foreach($resultados as $c ){");
 			pw.println("	  *	  	echo $c->nombre . \"<br>\";");
 			pw.println("	  *	  }");
@@ -645,7 +642,7 @@ public class PhpDAO
 					pk += " `" + f.title + "` = ? AND";
 					pkargs += "$"+tabla+"->" + f.title + ",";
 				}else{
-					args += "$"+tabla+"->"+ f.title + ", \n			";
+					args += "$"+tabla+"->"+ f.title + ",\n			";
 					sql += "`"+f.title+"` = ?, ";
 				}
 			}
@@ -715,7 +712,7 @@ public class PhpDAO
 			pw.println("		$conn->Execute($sql, $params);");
 			pw.println("		$ar = $conn->Affected_Rows();");
 			pw.println("		if($ar == 0) return 0;");
-			pw.println(			pk_ai );
+			pw.println(pk_ai);
 			pw.println("		return $ar;");
 			pw.println("	}");
 			pw.println();
@@ -776,7 +773,6 @@ public class PhpDAO
 				pw.println("			$sql .= \" `"+ f.title +"` = ? AND\";");
 				pw.println("			$a = is_null ( $a ) ? $b : $a;");
 				pw.println("			array_push( $val, $a);");
-				pw.println("			");
 				pw.println("		}");
 				pw.println();
 			}
@@ -811,13 +807,13 @@ public class PhpDAO
 		{
 			pw.println("	/**");
 			pw.println("	  *	Eliminar registros.");
-			pw.println("	  *	");
+			pw.println("	  *");
 			pw.println("	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria");
 			pw.println("	  * en el objeto "+toCamelCase(tabla)+" suministrado. Una vez que se ha suprimido un objeto, este no");
 			pw.println("	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila");
 			pw.println("	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado.");
 			pw.println("	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.");
-			pw.println("	  *	");
+			pw.println("	  *");
 			pw.println("	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.");
 			pw.println("	  *	@return int El numero de filas afectadas.");
 			pw.println("	  * @param "+toCamelCase(tabla)+" [$"+tabla+"] El objeto de tipo " + toCamelCase(tabla)+ " a eliminar");
@@ -858,8 +854,6 @@ public class PhpDAO
 			}
 
 			pw.println("	}");
-			pw.println();
-			pw.println();
 		}
 
 		pw.println("}");
