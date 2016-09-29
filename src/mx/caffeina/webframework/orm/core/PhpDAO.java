@@ -336,12 +336,12 @@ public class PhpDAO
 		pw.println("  * ******************************************************************************* */");
 		pw.println();
 		pw.println("/** "+ toCamelCase(tabla) +" Data Access Object (DAO) Base." );
-		pw.println("  * ");
+		pw.println("  *");
 		pw.println("  * Esta clase contiene toda la manipulacion de bases de datos que se necesita para ");
 		pw.println("  * almacenar de forma permanente y recuperar instancias de objetos {@link "+toCamelCase(tabla)+" }. ");
 		pw.println("  * @access public");
 		pw.println("  * @abstract");
-		pw.println("  * ");
+		pw.println("  *");
 		pw.println("  */");
 
 		pw.println("abstract class " + className+ "DAOBase extends DAO" );
@@ -350,8 +350,8 @@ public class PhpDAO
 
 		{
 			pw.println("	/**");
-			pw.println("	  *	Guardar registros. ");
-			pw.println("	  *	");
+			pw.println("	  *	Guardar registros.");
+			pw.println("	  *");
 			if (has_pk)
 			{
 				pw.println("	  *	Este metodo guarda el estado actual del objeto {@link "+toCamelCase(tabla)+"} pasado en la base de datos. La llave ");
@@ -364,7 +364,7 @@ public class PhpDAO
 				pw.println("	  *	Este metodo guarda el estado actual del objeto {@link "+toCamelCase(tabla)+"} pasado en la base de datos.");
 				pw.println("	  *	save() siempre creara una nueva fila.");
 			}
-			pw.println("	  *	");
+			pw.println("	  *");
 			pw.println("	  *	@static");
 			pw.println("	  * @throws Exception si la operacion fallo.");
 			pw.println("	  * @param "+toCamelCase(tabla)+" [$"+tabla+"] El objeto de tipo " + toCamelCase(tabla));
@@ -430,11 +430,11 @@ public class PhpDAO
 			pks_redis = pks_redis.substring( 0, pks_redis.length() - 4 ) ;
 
 			pw.println("	/**");
-			pw.println("	  *	Obtener {@link "+toCamelCase(tabla)+"} por llave primaria. ");
-			pw.println("	  *	");
-			pw.println("	  * Este metodo cargara un objeto {@link "+toCamelCase(tabla)+"} de la base de datos ");
-			pw.println("	  * usando sus llaves primarias. ");
-			pw.println("	  *	");
+			pw.println("	  *	Obtener {@link "+toCamelCase(tabla)+"} por llave primaria.");
+			pw.println("	  *");
+			pw.println("	  * Este metodo cargara un objeto {@link "+toCamelCase(tabla)+"} de la base de datos");
+			pw.println("	  * usando sus llaves primarias.");
+			pw.println("	  *");
 			pw.println("	  *	@static");
 			pw.println("	  * @return @link "+toCamelCase(tabla)+" Un objeto del tipo {@link "+toCamelCase(tabla)+"}. NULL si no hay tal registro.");
 			pw.println("	  **/");
@@ -464,12 +464,12 @@ public class PhpDAO
 		{
 			pw.println("	/**");
 			pw.println("	  *	Obtener todas las filas.");
-			pw.println("	  *	");
+			pw.println("	  *");
 			pw.println("	  * Esta funcion leera todos los contenidos de la tabla en la base de datos y construira");
 			pw.println("	  * un vector que contiene objetos de tipo {@link "+toCamelCase(tabla)+"}. Tenga en cuenta que este metodo");
 			pw.println("	  * consumen enormes cantidades de recursos si la tabla tiene muchas filas. ");
 			pw.println("	  * Este metodo solo debe usarse cuando las tablas destino tienen solo pequenas cantidades de datos o se usan sus parametros para obtener un menor numero de filas.");
-			pw.println("	  *	");
+			pw.println("	  *");
 			pw.println("	  *	@static");
 			pw.println("	  * @param $pagina Pagina a ver.");
 			pw.println("	  * @param $columnas_por_pagina Columnas por pagina.");
@@ -486,7 +486,7 @@ public class PhpDAO
 
 			pw.println("		if( ! is_null ( $pagina ) )");
 			pw.println("		{");
-			pw.println("			$sql .= \" LIMIT \" . (( $pagina - 1 )*$columnas_por_pagina) . \",\" . $columnas_por_pagina; ");
+			pw.println("			$sql .= \" LIMIT \" . (( $pagina - 1 )*$columnas_por_pagina) . \",\" . $columnas_por_pagina;");
 			pw.println("		}");
 			pw.println("		global $conn;");
 			pw.println("		$rs = $conn->Execute($sql);");
@@ -517,11 +517,11 @@ public class PhpDAO
 		{
 			pw.println("	/**");
 			pw.println("	  *	Buscar registros.");
-			pw.println("	  *	");
-			pw.println("	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link "+toCamelCase(tabla)+"} de la base de datos. ");
+			pw.println("	  *");
+			pw.println("	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link "+toCamelCase(tabla)+"} de la base de datos.");
 			pw.println("	  * Consiste en buscar todos los objetos que coinciden con las variables permanentes instanciadas de objeto pasado como argumento. ");
 			pw.println("	  * Aquellas variables que tienen valores NULL seran excluidos en busca de criterios.");
-			pw.println("	  *	");
+			pw.println("	  *");
 
 			pw.println("	  * <code>");
 			pw.println("	  *  /**");
@@ -552,7 +552,7 @@ public class PhpDAO
 			pw.println("		}");
 			pw.println();
 
-			pw.println("		$sql = \"SELECT * from "+tabla+" WHERE (\"; ");
+			pw.println("		$sql = \"SELECT * from "+tabla+" WHERE (\";");
 			pw.println("		$val = array();");
 
 			for(Field f : fields)
@@ -658,7 +658,7 @@ public class PhpDAO
 				sql = sql.substring(0, sql.length() -2 );
 
 				pw.println("		$sql = \"UPDATE "+tabla+" SET  "+ sql + " WHERE " +pk+ ";\";" );
-				pw.println("		$params = array( \n			"+ args +"	"+ pkargs +" );");
+				pw.println("		$params = array(\n			"+ args +"	"+ pkargs +" );");
 				pw.println("		global $conn;");
 				pw.println("		$conn->Execute($sql, $params);");
 				pw.println("		return $conn->Affected_Rows();");
@@ -671,13 +671,13 @@ public class PhpDAO
 		{
 			pw.println("	/**");
 			pw.println("	  *	Crear registros.");
-			pw.println("	  *	");
-			pw.println("	  * Este metodo creara una nueva fila en la base de datos de acuerdo con los ");
+			pw.println("	  *");
+			pw.println("	  * Este metodo creara una nueva fila en la base de datos de acuerdo con los");
 			pw.println("	  * contenidos del objeto "+toCamelCase(tabla)+" suministrado. Asegurese");
-			pw.println("	  * de que los valores para todas las columnas NOT NULL se ha especificado ");
-			pw.println("	  * correctamente. Despues del comando INSERT, este metodo asignara la clave ");
+			pw.println("	  * de que los valores para todas las columnas NOT NULL se ha especificado");
+			pw.println("	  * correctamente. Despues del comando INSERT, este metodo asignara la clave");
 			pw.println("	  * primaria generada en el objeto "+toCamelCase(tabla)+" dentro de la misma transaccion.");
-			pw.println("	  *	");
+			pw.println("	  *");
 			pw.println("	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error");
 			pw.println("	  * @param "+toCamelCase(tabla)+" [$"+tabla+"] El objeto de tipo " + toCamelCase(tabla) +" a crear." );
 			pw.println("	  **/");
@@ -687,7 +687,7 @@ public class PhpDAO
 			String sql = "";
 			String args = "";
 			String sqlnames = "";
-			String pk_ai = " ";
+			String pk_ai = "";
 
 			for(Field f : fields) {
 				String fieldName = "$"+tabla+"->"+ f.title;
@@ -710,7 +710,7 @@ public class PhpDAO
 			sql = sql.substring(0, sql.length() -2 );
 
 			pw.println("		$sql = \"INSERT INTO "+tabla+" ( "+ sqlnames + " ) VALUES ( "+ sql +");\";" );
-			pw.println("		$params = array( \n			"+ args +" );");
+			pw.println("		$params = array(\n			"+ args +" );");
 			pw.println("		global $conn;");
 			pw.println("		$conn->Execute($sql, $params);");
 			pw.println("		$ar = $conn->Affected_Rows();");
@@ -724,29 +724,29 @@ public class PhpDAO
 		{
 			pw.println("	/**");
 			pw.println("	  *	Buscar por rango.");
-			pw.println("	  *	");
-			pw.println("	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link "+toCamelCase(tabla)+"} de la base de datos siempre y cuando ");
+			pw.println("	  *");
+			pw.println("	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link "+toCamelCase(tabla)+"} de la base de datos siempre y cuando");
 			pw.println("	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link "+toCamelCase(tabla)+"}.");
-			pw.println("	  * ");
+			pw.println("	  *");
 			pw.println("	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .");
 			pw.println("	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.");
 			pw.println("	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.");
-			pw.println("	  *	");
+			pw.println("	  *");
 
 			pw.println("	  * <code>");
 			pw.println("	  *  /**");
-			pw.println("	  *   * Ejemplo de uso - buscar todos los clientes que tengan limite de credito ");
+			pw.println("	  *   * Ejemplo de uso - buscar todos los clientes que tengan limite de credito");
 			pw.println("	  *   * mayor a 2000 y menor a 5000. Y que tengan un descuento del 50%.");
-			pw.println("	  *   {@*} ");
+			pw.println("	  *   {@*}");
 
 			pw.println("	  *	  $cr1 = new Cliente();");
 			pw.println("	  *	  $cr1->limite_credito = \"2000\";");
 			pw.println("	  *	  $cr1->descuento = \"50\";");
-			pw.println("	  *	  ");
+			pw.println("	  *");
 			pw.println("	  *	  $cr2 = new Cliente();");
 			pw.println("	  *	  $cr2->limite_credito = \"5000\";");
 			pw.println("	  *	  $resultados = ClienteDAO::byRange($cr1, $cr2);");
-			pw.println("	  *	  ");
+			pw.println("	  *");
 			pw.println("	  *	  foreach($resultados as $c ){");
 			pw.println("	  *	  	echo $c->nombre . \"<br>\";");
 			pw.println("	  *	  }");
@@ -762,7 +762,7 @@ public class PhpDAO
 			pw.println("	public static final function byRange( $"+tabla+"A , $"+tabla+"B , $orderBy = null, $orden = 'ASC')");
 			pw.println("	{");
 
-			pw.println("		$sql = \"SELECT * from "+tabla+" WHERE (\"; ");
+			pw.println("		$sql = \"SELECT * from "+tabla+" WHERE (\";");
 			pw.println("		$val = array();");
 
 			for(Field f : fields)
@@ -770,10 +770,10 @@ public class PhpDAO
 
 				pw.println("		if( ( !is_null (($a = $"+tabla+"A->"+f.title+") ) ) & ( ! is_null ( ($b = $"+tabla+"B->"+f.title+") ) ) ){");
 				pw.println("				$sql .= \" `"+ f.title +"` >= ? AND `"+ f.title +"` <= ? AND\";");
-				pw.println("				array_push( $val, min($a,$b)); ");
-				pw.println("				array_push( $val, max($a,$b)); ");
+				pw.println("				array_push( $val, min($a,$b));");
+				pw.println("				array_push( $val, max($a,$b));");
 				pw.println("		}elseif( !is_null ( $a ) || !is_null ( $b ) ){");
-				pw.println("			$sql .= \" `"+ f.title +"` = ? AND\"; ");
+				pw.println("			$sql .= \" `"+ f.title +"` = ? AND\";");
 				pw.println("			$a = is_null ( $a ) ? $b : $a;");
 				pw.println("			array_push( $val, $a);");
 				pw.println("			");
@@ -813,9 +813,9 @@ public class PhpDAO
 			pw.println("	  *	Eliminar registros.");
 			pw.println("	  *	");
 			pw.println("	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria");
-			pw.println("	  * en el objeto "+toCamelCase(tabla)+" suministrado. Una vez que se ha suprimido un objeto, este no ");
-			pw.println("	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila ");
-			pw.println("	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. ");
+			pw.println("	  * en el objeto "+toCamelCase(tabla)+" suministrado. Una vez que se ha suprimido un objeto, este no");
+			pw.println("	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila");
+			pw.println("	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado.");
 			pw.println("	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.");
 			pw.println("	  *	");
 			pw.println("	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.");
@@ -921,7 +921,7 @@ public class PhpDAO
 		pw.println();
 
 		pw.println("		/** Table Data Access Object.");
-		pw.println("		  * ");
+		pw.println("		  *");
 		pw.println("		  * Esta clase abstracta comprende metodos comunes para todas las clases DAO que mapean una tabla");
 		pw.println("		  * @access private");
 		pw.println("		  * @abstract");
@@ -1026,11 +1026,11 @@ public class PhpDAO
 
 
 		pw.println("		/** Value Object.");
-		pw.println("		  * ");
+		pw.println("		  *");
 		pw.println("		  * Esta clase abstracta comprende metodos comunes para todas los objetos VO");
 		pw.println("		  * @access private");
 		pw.println("		  * @package docs");
-		pw.println("		  * ");
+		pw.println("		  *");
 		pw.println("		  */");
 		pw.println("		abstract class VO");
 		pw.println("		{");
@@ -1050,9 +1050,9 @@ public class PhpDAO
 		pw.println("				        $key = preg_replace(\"/^\\\\0(.*)\\\\0/\",\"\",$key);");
 		pw.println("				        $new[$key] = object_to_array($val);");
 		pw.println("				    }");
-		pw.println("				} ");
+		pw.println("				}");
 		pw.println("				else $new = $mixed;");
-		pw.println("				return $new; ");
+		pw.println("				return $new;");
 		pw.println("			}");
 
 		if (!omitGeneratedCall)
@@ -1060,7 +1060,7 @@ public class PhpDAO
 			pw.println();
 			pw.println("			function __call($method, $params) {");
 			pw.println("				 $var = substr($method, 3);");
-			pw.println("				 $var = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $var)); ");
+			pw.println("				 $var = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $var));");
 			pw.println();
 			pw.println("				 if (strncasecmp($method, \"get\", 3)==0) {");
 			pw.println("					 return $this->$var;");
@@ -1117,7 +1117,7 @@ public class PhpDAO
 
 			pw.println("<?php");
 			pw.println();
-			pw.println( "	require_once ('Estructura.php');");
+			pw.println("	require_once ('Estructura.php');");
 			pw.println();
 			pw.println("	spl_autoload_register(function ($class) {");
 			pw.println("	if (substr($class, -3) == \"DAO\")");
