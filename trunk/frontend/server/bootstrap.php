@@ -16,10 +16,10 @@ require_once("libs/TestParser.php");
 require_once("libs/Tester.php");
 
 
-$BaseDatos 	= "api_pos";
+$BaseDatos 	= "labs";
 $Servidor 	= "localhost";
 $Usuario 	= "root";
-$Clave 		= "";
+$Clave 		= "root";
 
 $Conexion_ID = mysql_connect($Servidor, $Usuario, $Clave);
 

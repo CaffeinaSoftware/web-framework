@@ -1,16 +1,10 @@
 <?php
-
-	require_once("../../server/bootstrap.php");
-        
-//        if(!isset($_SERVER["http_user"]))
-//        {
-//            $_SERVER["http_user"] = "andres";
-//        }
+    require_once("../../server/bootstrap.php");
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" >
 <head>
-<script type="text/javascript" src="http://api.caffeina.mx/jquery/jquery-1.4.2.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
 <title>Web Framework</title>
 <script>
     
