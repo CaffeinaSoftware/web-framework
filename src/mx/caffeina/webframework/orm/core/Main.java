@@ -19,6 +19,7 @@ class Main {
 		// Options
 		boolean omitGeneratedCall = false;
 		boolean useUnixTimestamps = false;
+		boolean useSpaces = false;
 
 		// Header
 		header();
@@ -52,6 +53,9 @@ class Main {
 			}else if(args[i].equals("-unix-timestamps")) {
 				useUnixTimestamps = true;
 
+			}else if(args[i].equals("-spaces")) {
+				useSpaces = true;
+
 			}
 		}
 
@@ -68,6 +72,7 @@ class Main {
 			PhpDAO phpDao = new PhpDAO();
 			phpDao.setOmitGeneratedCall(omitGeneratedCall);
 			phpDao.setUseUnixTimestamps(useUnixTimestamps);
+			phpDao.setUseSpaces(useSpaces);
 			phpDao.playParser(in, out, author);
 		}
 
