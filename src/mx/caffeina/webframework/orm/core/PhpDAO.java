@@ -192,28 +192,6 @@ public class PhpDAO
 		pw.println("	}");
 		pw.println("");
 
-		{
-			pw.println( "	/**");
-			pw.println( "	 * Obtener una representacion en String" );
-			pw.println( "	 *" );
-			pw.println( "	 * Este metodo permite tratar a un objeto "+toCamelCase(tabla)+ " en forma de cadena." );
-			pw.println( "	 * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.");
-			pw.println( "	 * @return String");
-			pw.println( "	 */");
-			pw.println("	public function __toString() {");
-
-			pw.println( "		return json_encode([");
-
-			int x = 0;
-			for( Field f : fields)
-			{
-				pw.println( "			'"+ f.title+ "' => $this->" + f.title +  "," );
-			}
-			pw.println( "		]);" );
-			pw.println("	}");
-			pw.println();
-		}
-
 		if( !useUnixTimestamps )
 		{
 			pw.println("	/**");
@@ -522,7 +500,7 @@ public class PhpDAO
 			pw.println("	final public static function search($"+tabla+", $orderBy = null, $orden = 'ASC', $offset = 0, $rowcount = null, $likeColumns = null) {");
 
 			pw.println("		if (!($"+tabla+" instanceof "+toCamelCase(tabla)+")) {");
-			pw.println("			return self::search(new "+toCamelCase(tabla)+"($"+tabla+"));");
+			pw.println("			$" + tabla + " = new "+toCamelCase(tabla)+"($"+tabla+");");
 			pw.println("		}");
 			pw.println();
 
@@ -540,7 +518,7 @@ public class PhpDAO
 			pw.println("		if (!is_null($likeColumns)) {");
 			pw.println("			foreach ($likeColumns as $column => $value) {");
 			pw.println("				$escapedValue = mysql_real_escape_string($value);");
-			pw.println("				$clauses[] = \"`{$column}` LIKE '%{$value}%'\";");
+			pw.println("				$clauses[] = \"`{$column}` LIKE '%{$escapedValue}%'\";");
 			pw.println("			}");
 			pw.println("		}");
 
@@ -796,7 +774,7 @@ public class PhpDAO
 				pk = pk.substring(1, pk.length() - 4 ) ;
 
 				pw.println("		if (is_null(self::getByPK("+ pkargs +"))) {");
-				pw.println("			throw new Exception('Campo no encontrado.');");
+				pw.println("			throw new Exception('Registro no encontrado.');");
 				pw.println("		}");
 
 				pw.println("		$sql = 'DELETE FROM `"+tabla+"` WHERE " +pk+ ";';" );
@@ -919,6 +897,18 @@ public class PhpDAO
 
 		pw.println("	function asArray(){");
 		pw.println("		return get_object_vars($this);");
+		pw.println("	}");
+
+		pw.println();
+		pw.println( "	/**");
+		pw.println( "	 * Obtener una representacion en String" );
+		pw.println( "	 *" );
+		pw.println( "	 * Este metodo permite tratar a un objeto en forma de cadena." );
+		pw.println( "	 * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.");
+		pw.println( "	 * @return String");
+		pw.println( "	 */");
+		pw.println("	public function __toString() {");
+		pw.println( "		return json_encode($this->asArray());");
 		pw.println("	}");
 
 		if (!omitGeneratedCall)
