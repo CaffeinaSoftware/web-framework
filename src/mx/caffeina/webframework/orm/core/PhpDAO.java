@@ -451,14 +451,14 @@ public class PhpDAO
 			pw.println("	final public static function getAll($pagina = null, $columnas_por_pagina = null, $orden = null, $tipo_de_orden = 'ASC') {");
 			pw.println("		$sql = 'SELECT " + getFields(tabla, fields) + " from "+tabla+"';");
 
+			pw.println("		global $conn;");
 			pw.println("		if (!is_null($orden)) {");
-			pw.println("			$sql .= ' ORDER BY `' . mysql_real_escape_string($orden) . '` ' . mysql_real_escape_string($tipo_de_orden);");
+			pw.println("			$sql .= ' ORDER BY `' . mysqli_real_escape_string($conn->_connectionID, $orden) . '` ' . ($tipo_de_orden == 'DESC' ? 'DESC' : 'ASC');");
 			pw.println("		}");
 
 			pw.println("		if (!is_null($pagina)) {");
 			pw.println("			$sql .= ' LIMIT ' . (($pagina - 1) * $columnas_por_pagina) . ', ' . (int)$columnas_por_pagina;");
 			pw.println("		}");
-			pw.println("		global $conn;");
 			pw.println("		$rs = $conn->Execute($sql);");
 			pw.println("		$allData = [];");
 			pw.println("		foreach ($rs as $row) {");
@@ -515,9 +515,10 @@ public class PhpDAO
 				pw.println("		}");
 			}
 
+			pw.println("		global $conn;");
 			pw.println("		if (!is_null($likeColumns)) {");
 			pw.println("			foreach ($likeColumns as $column => $value) {");
-			pw.println("				$escapedValue = mysql_real_escape_string($value);");
+			pw.println("				$escapedValue = mysqli_real_escape_string($conn->_connectionID, $value);");
 			pw.println("				$clauses[] = \"`{$column}` LIKE '%{$escapedValue}%'\";");
 			pw.println("			}");
 			pw.println("		}");
@@ -529,7 +530,7 @@ public class PhpDAO
 			pw.println("		$sql .= ' WHERE (' . implode(' AND ', $clauses) . ')';" );
 
 			pw.println("		if (!is_null($orderBy)) {");
-			pw.println("			$sql .= ' ORDER BY `' . mysql_real_escape_string($orderBy) . '` ' . mysql_real_escape_string($orden);");
+			pw.println("			$sql .= ' ORDER BY `' . mysqli_real_escape_string($conn->_connectionID, $orderBy) . '` ' . ($orden == 'DESC' ? 'DESC' : 'ASC');");
 			pw.println("		}");
 
 			pw.println("		// Add LIMIT offset, rowcount if rowcount is set");
@@ -537,7 +538,6 @@ public class PhpDAO
 			pw.println("			$sql .= ' LIMIT '. (int)$offset . ', ' . (int)$rowcount;");
 			pw.println("		}");
 
-			pw.println("		global $conn;");
 			pw.println("		$rs = $conn->Execute($sql, $params);");
 
 			pw.println("		$ar = [];");
@@ -868,7 +868,7 @@ public class PhpDAO
 
 		pw.println();
 
-		pw.println("	public static function transEnd(){");
+		pw.println("	public static function transEnd() {");
 		pw.println("		self::log('Transaccion commit');");
 		pw.println("		global $conn;");
 		pw.println("		$conn->CompleteTrans();");
@@ -876,7 +876,7 @@ public class PhpDAO
 
 		pw.println();
 
-		pw.println("	public static function transRollback(){");
+		pw.println("	public static function transRollback() {");
 		pw.println("		self::log('Transaccion rollback');");
 		pw.println("		global $conn;");
 		pw.println("		$conn->FailTrans();");
@@ -895,7 +895,7 @@ public class PhpDAO
 		pw.println(" */");
 		pw.println("abstract class VO {");
 
-		pw.println("	function asArray(){");
+		pw.println("	function asArray() {");
 		pw.println("		return get_object_vars($this);");
 		pw.println("	}");
 
