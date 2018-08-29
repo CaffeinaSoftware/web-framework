@@ -150,24 +150,8 @@ require_once("../../server/bootstrap.php");
 <div id="FB_HiddenContainer" style="position:absolute; top:-10000px; width:0px; height:0px;">
 </div>
 <div class="devsitePage">
-    <div id="top-bar">
-            <div id="header-content">
-                <p class="logo">
-                    <a href="">caffeina</a>
-                </p>
-                <ul class="nav">
-                    <li><a href="https://labs.caffeina.mx/oficina/">Home</a></li>
-                    <li><a href="https://labs.caffeina.mx/oficina/mantis">Bugs</a></li>
-                    <li><a href="https://webframework.labs.caffeina.mx/">Web Framework</a></li>
-                    <li class="last"><a href="https://labs.caffeina.mx/oficina/websvn/">WebSVN</a></li>
-                </ul>
-            </div><!-- header-content -->
-        </div><!-- top-bar -->
     <div class="menu">
         <div class="content">
-            <a class="logo" href="../index.php">
-                <img class="img" src="../media/cwhite.png" alt="Facebook Developers" width="166" height="17"/>
-            </a>
 
             <?php
 
@@ -187,11 +171,6 @@ require_once("../../server/bootstrap.php");
             }
             ?>
 
-            <!--
-            <a class="l" href="/support/">Support</a>
-            <a class="l" href="/blog/">Blog</a>
-            <a class="l" href="">Apps</a>
-            -->
             <a class="l" href="build.php?project=<?php echo $_GET["project"] ?>">Generar Codigo</a>
 
                         <a class="l">Proyecto:
