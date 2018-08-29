@@ -1,6 +1,6 @@
 <pre><?php
 
-require_once("../../server/bootstrap.php");
+require_once("../server/bootstrap.php");
 require_once("utils.php");
 
 ################################################################################

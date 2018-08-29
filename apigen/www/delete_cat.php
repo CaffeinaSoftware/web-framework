@@ -1,6 +1,7 @@
 <?php
+// Deleting a category
 ob_start();
-require_once("../../server/bootstrap.php");
+require_once("../server/bootstrap.php");
 
 $sql = "Select nombre from clasificacion where id_clasificacion = ".$_GET["cat"];
 

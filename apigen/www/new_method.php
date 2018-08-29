@@ -1,137 +1,133 @@
 <?php 
-require_once("../../server/bootstrap.php");
+require_once("../server/bootstrap.php");
 ?>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="../css/final_api.css">
-    <script type="text/javascript" src="http://api.caffeina.mx/jquery/jquery-1.4.2.min.js"></script>
-    <title></title>
     <script type="text/javascript">
-                
-                function eliminarArg(id)
+        function eliminarArg(id)
+        {
+            $("#argumento_"+id).remove();
+        }
+        
+        function eliminarResp(id)
+        {
+            $("#respuesta_"+id).remove();
+        }
+        
+        function validarCampos()
+        {
+            if($.trim($("#nombre_metodo").val())=="")
+            {
+                alert("Falta el nombre del metodo");
+                return;
+            }
+            else if($.trim($("#nombre_metodo").val()).search(/['"]+/)>=0)
+            {
+                alert("El nombre contiene comillas simples o dobles, use en su lugar ` ");
+                return;
+            }
+            if($.trim($("#subtitulo").val())=="")
+            {
+                alert("Falta el subtitulo");
+                return;
+            }
+            else if($.trim($("#subtitulo").val()).search(/['"]+/)>=0)
+            {
+                alert("El subtitulo contiene comillas simples o dobles, use en su lugar ` ");
+                return;
+            }
+            if($.trim($("#descripcion_metodo").val())=="")
+            {
+                alert("Falta la descripcion del metodo");
+                return;
+            }
+            else if($.trim($("#descripcion_metodo").val()).search(/['"]+/)>=0)
+            {
+                alert("La descripcion contiene comillas simples o dobles, use en su lugar ` ");
+                return;
+            }
+            if($.trim($("#grupo").val())=="")
+            {
+                alert("Falta el grupo del metodo");
+                return;
+            }
+            else if($.trim($("#grupo").val()).search(/\D+/)>=0)
+            {
+                alert("El grupo solo puede ser un numero");
+                return;
+            }
+            for(var i = 0; i<= param_count; i++)
                 {
-                    $("#argumento_"+id).remove();
-                }
-                
-                function eliminarResp(id)
-                {
-                    $("#respuesta_"+id).remove();
-                }
-                
-                function validarCampos()
-                {
-                    if($.trim($("#nombre_metodo").val())=="")
+                    if($("#argumento_"+i).length>0)
                     {
-                        alert("Falta el nombre del metodo");
-                        return;
-                    }
-                    else if($.trim($("#nombre_metodo").val()).search(/['"]+/)>=0)
-                    {
-                        alert("El nombre contiene comillas simples o dobles, use en su lugar ` ");
-                        return;
-                    }
-                    if($.trim($("#subtitulo").val())=="")
-                    {
-                        alert("Falta el subtitulo");
-                        return;
-                    }
-                    else if($.trim($("#subtitulo").val()).search(/['"]+/)>=0)
-                    {
-                        alert("El subtitulo contiene comillas simples o dobles, use en su lugar ` ");
-                        return;
-                    }
-                    if($.trim($("#descripcion_metodo").val())=="")
-                    {
-                        alert("Falta la descripcion del metodo");
-                        return;
-                    }
-                    else if($.trim($("#descripcion_metodo").val()).search(/['"]+/)>=0)
-                    {
-                        alert("La descripcion contiene comillas simples o dobles, use en su lugar ` ");
-                        return;
-                    }
-                    if($.trim($("#grupo").val())=="")
-                    {
-                        alert("Falta el grupo del metodo");
-                        return;
-                    }
-                    else if($.trim($("#grupo").val()).search(/\D+/)>=0)
-                    {
-                        alert("El grupo solo puede ser un numero");
-                        return;
-                    }
-                    for(var i = 0; i<= param_count; i++)
+                        if($.trim($("#args_nombre_"+i).val())=="")
                         {
-                            if($("#argumento_"+i).length>0)
-                            {
-                                if($.trim($("#args_nombre_"+i).val())=="")
-                                {
-                                    alert("Falta el nombre del argumento "+(i+1));
-                                    return;
-                                }
-                                else if($.trim($("#args_nombre_"+i).val()).search(/['"]+/)>=0)
-                                {
-                                    alert("El nombre del argumento "+ (i+1) +" contiene comillas simples o dobles, use en su lugar ` ");
-                                    return;
-                                }
-                                if($.trim($("#args_desc_"+i).val()).search(/'+/)>=0)
-                                {
-                                    alert("La descripcion del argumento "+ (i+1) +" contiene comillas simples, use en su lugar ` ");
-                                    return;
-                                }
-                                if($.trim($("#args_default_"+i).val()).search(/'+/)>=0)
-                                {
-                                    alert("El valor default del argumento "+ (i+1) +" contiene comillas simples, use en su lugar ` ");
-                                    return;
-                                }
-                            }
+                            alert("Falta el nombre del argumento "+(i+1));
+                            return;
                         }
-                    for(var i = 0; i<= response_count; i++)
+                        else if($.trim($("#args_nombre_"+i).val()).search(/['"]+/)>=0)
                         {
-                            if($("#respuesta_"+i).length>0)
-                            {
-                                if($.trim($("#response_nombre_"+i).val())=="")
-                                {
-                                    alert("Falta el nombre de la respuesta "+(i+1));
-                                    return;
-                                }
-                                else if($.trim($("#response_nombre_"+i).val()).search(/['"]+/)>=0)
-                                {
-                                    alert("El nombre de la respuesta "+ (i+1) +" contiene comillas simples o dobles, use en su lugar ` ");
-                                    return;
-                                }
-                                if($.trim($("#response_desc_"+i).val()).search(/'+/)>=0)
-                                {
-                                    alert("La descripcion de la respuesta "+ (i+1) +" contiene comillas simples, use en su lugar ` ");
-                                    return;
-                                }
-                            }
+                            alert("El nombre del argumento "+ (i+1) +" contiene comillas simples o dobles, use en su lugar ` ");
+                            return;
                         }
-                    if($.trim($("#ejemplo_peticion").val()).search(/'+/)>=0)
-                    {
-                        alert("El ejemplo de la peticion contiene comillas simples, use en su lugar ` ");
-                        return;
+                        if($.trim($("#args_desc_"+i).val()).search(/'+/)>=0)
+                        {
+                            alert("La descripcion del argumento "+ (i+1) +" contiene comillas simples, use en su lugar ` ");
+                            return;
+                        }
+                        if($.trim($("#args_default_"+i).val()).search(/'+/)>=0)
+                        {
+                            alert("El valor default del argumento "+ (i+1) +" contiene comillas simples, use en su lugar ` ");
+                            return;
+                        }
                     }
-                    if($.trim($("#ejemplo_respuesta").val()).search(/'+/)>=0)
-                    {
-                        alert("El ejemplo de la respuesta contiene comillas simples, use en su lugar ` ");
-                        return;
-                    }
-                    $("#form_insercion").submit()
                 }
-                
+            for(var i = 0; i<= response_count; i++)
+                {
+                    if($("#respuesta_"+i).length>0)
+                    {
+                        if($.trim($("#response_nombre_"+i).val())=="")
+                        {
+                            alert("Falta el nombre de la respuesta "+(i+1));
+                            return;
+                        }
+                        else if($.trim($("#response_nombre_"+i).val()).search(/['"]+/)>=0)
+                        {
+                            alert("El nombre de la respuesta "+ (i+1) +" contiene comillas simples o dobles, use en su lugar ` ");
+                            return;
+                        }
+                        if($.trim($("#response_desc_"+i).val()).search(/'+/)>=0)
+                        {
+                            alert("La descripcion de la respuesta "+ (i+1) +" contiene comillas simples, use en su lugar ` ");
+                            return;
+                        }
+                    }
+                }
+            if($.trim($("#ejemplo_peticion").val()).search(/'+/)>=0)
+            {
+                alert("El ejemplo de la peticion contiene comillas simples, use en su lugar ` ");
+                return;
+            }
+            if($.trim($("#ejemplo_respuesta").val()).search(/'+/)>=0)
+            {
+                alert("El ejemplo de la respuesta contiene comillas simples, use en su lugar ` ");
+                return;
+            }
+            $("#form_insercion").submit()
+        }
+
         var param_count = -1;
-                
+
         function addParam(){
             param_count ++;
             document.getElementById("numero_argumentos").value=param_count+1;
             var html = '';
-            
+
             html +=     '<tr valign=top id="argumento_'+param_count+'">';
             html +=     '<td>';
             html +=         '<input type="text" name="nombre_argumento_'+param_count+'" placeholder="nombre" id="args_nombre_'+param_count+'" onKeyUp="m.render()">';
             html +=     '</td>';
-            
+
             html +=     '<td>';
             html +=         '<select name="tipo_argumento_'+param_count+'" id="args_tipo_'+param_count+'" onChange="m.render()">';
             html +=             '<option value="string">string</option>';

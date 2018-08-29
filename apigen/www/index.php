@@ -1,10 +1,10 @@
 <?php
-    require_once("../../server/bootstrap.php");
+    require_once("../server/bootstrap.php");
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" >
 <head>
-<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="//code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
 <title>Web Framework</title>
 <script>
 
@@ -140,7 +140,7 @@
 
 </script>
 
-<link type="text/css" rel="stylesheet" href="../media/f.css"/>
+<link type="text/css" rel="stylesheet" href="media/f.css"/>
 
 </head>
 <body class="safari4 mac Locale_en_US">
@@ -181,33 +181,30 @@
             }
             ?>
 
-                        <a class="l">Proyecto: 
+            <a class="l">Proyecto: 
 
-                        <select name="project" id="project" onChange = "ProjectChange(this.value)" >
-                            <option value = "null"> ------------ </option>
-                            <?php
+            <select name="project" id="project" onChange = "ProjectChange(this.value)" >
+                <option value = "null"> ------------ </option>
+                <?php
 
-                            $query = "select id as id_proyecto,name as nombre from mantis_project_table";
-                            $res = mysql_query($query);
-                            while($row = mysql_fetch_assoc($res))
-                            {
-                                if(isset($_GET["project"]) && $_GET["project"] == $row["id_proyecto"])
-                                {
-                                    echo "<option value = ".$row["id_proyecto"]." selected>".$row["nombre"]."</option>";
-                                }
-                                else
-                                {
-                                    echo "<option value = ".$row["id_proyecto"].">".$row["nombre"]."</option>";
-                                }
-                            }
+                $query = "select id as id_proyecto,name as nombre from mantis_project_table";
+                $res = mysql_query($query);
+                while($row = mysql_fetch_assoc($res))
+                {
+                    if(isset($_GET["project"]) && $_GET["project"] == $row["id_proyecto"])
+                    {
+                        echo "<option value = ".$row["id_proyecto"]." selected>".$row["nombre"]."</option>";
+                    }
+                    else
+                    {
+                        echo "<option value = ".$row["id_proyecto"].">".$row["nombre"]."</option>";
+                    }
+                }
 
-                            ?>
-                        </select>
+                ?>
+            </select>
 
-                        </a>
-
-
-
+            </a>
             <div class="clear">
             </div>
         </div>
@@ -387,12 +384,8 @@
 
                                 }
                             }
-                                                }
+                        }
                         ?>
-
-
-
-
                 <p>
                     <?php
                     if(isset($_GET["m"])){
@@ -550,23 +543,23 @@
                     <div class="mbm">
 
                     </div>
-                    <abbr title="Monday, September 5, 2011 at 8:28pm" data-date="Mon, 05 Sep 2011 18:28:49 -0700" class="timestamp">
-                                            Ultima modificacion 
-                                        <?php 
-                                            if(isset($_GET["m"]))
-                                            {
-                                                $registro = mysql_fetch_assoc(mysql_query("Select * from registro where id_metodo = ".$_GET["m"]." order by fecha desc"));
-                                                $time = strtotime($registro["fecha"]);
-                                                echo " ".date("l",$time).", ".date("F",$time)." ".date("j",$time).", ".date("Y",$time)." at ".date("H:i:s",$time).". <br> Por ".$registro["usuario"];
-                                            }
-                                            else if(isset($_GET["cat"]))
-                                            {
-                                                $registro = mysql_fetch_assoc(mysql_query("Select * from registro where id_clasificacion = ".$_GET["cat"]." and id_metodo is NULL order by fecha desc"));
-                                                $time = strtotime($registro["fecha"]);
-                                                echo " ".date("l",$time).", ".date("F",$time)." ".date("j",$time).", ".date("Y",$time)." at ".date("H:i:s",$time).". <br> Por ".$registro["usuario"];
-                                            }
-                                        ?>
-                                        </abbr>
+                    <abbr title="" data-date="" class="timestamp">
+                     Ultima modificacion 
+                    <?php 
+                        if(isset($_GET["m"]))
+                        {
+                            $registro = mysql_fetch_assoc(mysql_query("Select * from registro where id_metodo = ".$_GET["m"]." order by fecha desc"));
+                            $time = strtotime($registro["fecha"]);
+                            echo " ".date("l",$time).", ".date("F",$time)." ".date("j",$time).", ".date("Y",$time)." at ".date("H:i:s",$time).". <br> Por ".$registro["usuario"];
+                        }
+                        else if(isset($_GET["cat"]))
+                        {
+                            $registro = mysql_fetch_assoc(mysql_query("Select * from registro where id_clasificacion = ".$_GET["cat"]." and id_metodo is NULL order by fecha desc"));
+                            $time = strtotime($registro["fecha"]);
+                            echo " ".date("l",$time).", ".date("F",$time)." ".date("j",$time).", ".date("Y",$time)." at ".date("H:i:s",$time).". <br> Por ".$registro["usuario"];
+                        }
+                    ?>
+                    </abbr>
                 </div>
 
             </div>
@@ -591,9 +584,6 @@
     <input type="hidden" autocomplete="off" id="post_form_id" name="post_form_id" value="d8f38124ed9e31ef3947198c6d26bff1"/>
     <div id="fb-root">
     </div>
-
-
 </div>
-
 </body>
 </html>

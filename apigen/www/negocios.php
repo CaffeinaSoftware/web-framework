@@ -1,5 +1,10 @@
 <?php
+
+// Called when creating a new method
+
 ob_start();
+
+
 //                 metodo
 //  nombre              ----------  $_POST["nombre_metodo"]
 //  subtitulo           ----------  $_POST["subtitulo"]
@@ -22,7 +27,7 @@ ob_start();
 //  descripcion         ----------  $_POST["descripcion_respuesta_n"]
 //  tipo                ----------  $_POST["tipo_respuesta_n"]
 
-require_once("../../server/bootstrap.php");
+require_once("../server/bootstrap.php");
 
 if(!isset ($_POST["clasificacion_metodo"]) || !is_numeric($_POST["clasificacion_metodo"]))
 {

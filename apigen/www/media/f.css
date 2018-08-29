@@ -44,7 +44,6 @@ html body{background:#e7e7e7}
 .devsitePage .refindex .page .title{font-weight:bold}
 .devsitePage dt a.private,
 .devsitePage .refindex .page .title a.private,
-.devsitePage .bodyMenu li a.private{background:url(https://s-static.ak.facebook.com/rsrc.php/v1/y9/r/uADs2cgkzVe.png) no-repeat left center;padding-left:13px}
 .devsitePage .metanotice{background:#fff9d7;border:1px solid #e2c822;padding:1em;margin:1em}
 .devsitePage textarea{resize:none}
 .clearfix:after{clear:both;content:".";display:block;font-size:0;height:0;line-height:0;visibility:hidden}
@@ -65,7 +64,7 @@ html body{background:#e7e7e7}
 .LDialog_DeveloperPluginCode .pop_container,.LDialog_DeveloperPluginCode .pop_container_advanced{width:630px}
 .LDialog_DeveloperPluginCode label{margin:5px;font-size: 12px}
 .devsitePage .body > .content{background:#fff;border:1px solid #d9d9d9;border-top:0;-webkit-box-shadow:#ddd 0 1px 1px;padding:15px 20px 20px}
-.devsitePage .nav > .content{background:#fff url(https://s-static.ak.facebook.com/rsrc.php/v1/yz/r/coK3kMStN_j.gif) repeat-y}
+.devsitePage .nav > .content{background:#fff;}
 .devsitePage .body ol,.devsitePage .body ul{list-style-type:disc;padding-left:3em}
 .devsitePage .body .uiSelector ul,.devsitePage .body ul.uiList{list-style-type:none;margin:0;padding-left:0}
 .devsitePage .body ol{list-style-type:decimal}
@@ -101,7 +100,6 @@ html body{background:#e7e7e7}
 .devsitePage .header .breadcrumbs{margin-top:4px}
 .devsitePage div.admin{background:#eee;border:1px solid #ddd;float:right;font-size: 11px;z-index:0;padding:8px;position:relative}
 .devsitePage div.admin a{margin:0 6px}
-.devsitePage div.admin a.gatekeeper{background:url(https://s-static.ak.facebook.com/rsrc.php/v1/y9/r/uADs2cgkzVe.png) no-repeat left center;padding-left:12px;font-weight:bold}
 .devsitePage .body .titleblock{margin:20px 0}
 .devsitePage .body .titleblock h1{font-size: 24px;font-weight:normal;padding:0}
 .devsitePage .body .titleblock h3{color:#797c80;font-size: 16px;font-weight:normal;line-height:22px;margin:0 0 3px 0;padding:0}
@@ -178,8 +176,6 @@ html body{background:#e7e7e7}
 .devsitePage #navsubsectionpages li{border:0;font-size: 11px;padding:1px 0}
 .devsitePage #navsubsectionpages li a{padding:0}
 .devsitePage .bodyText{margin-left:208px}
-.devsitePage .bodyMenu li a.private.selected{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/yE/r/JQgQHls27pw.png),
-url(https://s-static.ak.facebook.com/rsrc.php/v1/y9/r/uADs2cgkzVe.png);background-position:160px center, left center;background-repeat:no-repeat, no-repeat}
 .devsitePage .bodyMenu li a.private{margin-left:5px}
 .devsitePage .bodyMenu{float:left;overflow:hidden;width:166px}
 .devsitePage .bodyMenu.fixed{position:fixed}
@@ -191,7 +187,6 @@ url(https://s-static.ak.facebook.com/rsrc.php/v1/y9/r/uADs2cgkzVe.png);backgroun
 .devsitePage .bodyMenu li a{padding:6px 6px 6px 10px}
 .devsitePage .bodyMenu h4{font-size: 16px;font-weight:normal;color:#666;padding-top:0;padding-bottom:0;margin-bottom:8px}
 .devsitePage .bodyMenu li a{display:block}
-.devsitePage .bodyMenu li a.selected{color:#333;font-weight:bold;background:url(https://s-static.ak.facebook.com/rsrc.php/v1/yE/r/JQgQHls27pw.png) no-repeat right center}
 .devsitePage .bodyMenu li ul.subsections li a.selected{background-image:none}
 .devsitePage .body.reference hr{border:0;background-color:#d2d2d2;height:1px;margin:0;margin-top:40px}
 .devsitePage .body.reference h2{font-weight:normal;color:#666;font-size: 16px;margin-bottom:16px}
@@ -202,8 +197,6 @@ url(https://s-static.ak.facebook.com/rsrc.php/v1/y9/r/uADs2cgkzVe.png);backgroun
 .devsitePage .bodyMenu .toplevelnav li:first-child{border-top:1px solid #e5e5e5}
 .devsitePage .bodyMenu .toplevelnav ul.subsections li{border:0;padding:0 0 0 25px}
 .devsitePage .bodyMenu .toplevelnav ul.subsections li a{color:#333;font-size: 12px;padding:3px 6px}
-.devsitePage .bodyMenu .toplevelnav li a:hover{background:url(https://s-static.ak.facebook.com/rsrc.php/v1/yE/r/JQgQHls27pw.png)
-no-repeat right center;color:#333;text-decoration:none}
 .devsitePage .bodyMenu .toplevelnav li ul.subsections li a:hover{background-image:none}
 .devsitePage .bodyMenu .toplevelnav ul li img.imgWrap{float:left;margin:6px 0 0 5px}
 .devsitePage .bodyMenu .toplevelnav ul li a.aWrap{display:inline-block;width:128px}
@@ -233,29 +226,6 @@ no-repeat right center;color:#333;text-decoration:none}
 .send_dialog .uiInfoTable{width:495px}
 .send_dialog .uiInfoTable .label{width:40px}
 .send_dialog .uiInfoTable textarea{width:425px}
-.fbChatBuddyListTypeaheadView{position:static}
-.fbChatBuddyListTypeaheadView ul{border:none}
-.fbChatBuddyListTypeaheadView li{padding:1px 15px 1px 10px}
-.fbChatBuddyListTypeaheadView.light li{border-width:0;padding:2px 15px 2px 10px}
-.fbChatBuddyListTypeaheadView.light li.selected{background-color:#d8dfea}
-.fbChatBuddyListTypeaheadView li img{float:left;height:22px;margin-right:5px;width:22px}
-.fbChatBuddyListTypeaheadView li .text{line-height:22px;margin-right:10px;overflow:hidden;padding:0;text-overflow:ellipsis;white-space:nowrap}
-.fbChatBuddyListTypeaheadView.light li.selected .text{color:#333 !important}
-.fbChatBuddyListTypeaheadView li i{display:block;height:14px;margin-top:-7px;position:absolute;right:10px;top:50%;width:7px}
-.fbChatBuddyListTypeaheadView li i.active{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y1/r/WUGF7ETcWHn.png);background-repeat:no-repeat;background-position:-493px -407px}
-.fbChatBuddyListTypeaheadView.dark li.selected i.active{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/yX/r/XT-G1AgJUb5.png);background-repeat:no-repeat;background-position:-493px -79px}
-.fbChatBuddyListTypeaheadView li i.idle{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y1/r/WUGF7ETcWHn.png);background-repeat:no-repeat;background-position:-493px -392px}
-.fbChatBuddyListTypeaheadView.dark li.selected i.idle{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/yX/r/XT-G1AgJUb5.png);background-repeat:no-repeat;background-position:-493px -49px}
-.fbChatBuddyListTypeaheadView li i.mobile{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y1/r/WUGF7ETcWHn.png);background-repeat:no-repeat;background-position:-386px -422px;height:12px;margin-top:-6px;width:8px}
-.fbChatBuddyListTypeaheadView .noResults{margin:5px 10px}
-#chatFriendsOnline .navigationLink span{background:url(https://s-static.ak.facebook.com/rsrc.php/v1/yW/r/AebrcwrBeG6.png) no-repeat right 3px;padding:0 12px 0 2px}
-#chatFriendsOnline .navigationLink,#chatFriendsOnline .navigationLink:hover{display:block;margin-left:7px;text-decoration:none}
-#chatFriendsOnline .fbFriendsOnlineFacepile .chatOffline{display:none}
-#chatFriendsOnline.isOffline .hideIfOffline,#chatFriendsOnline .showIfOffline{display:none}
-#chatFriendsOnline.isOffline .showIfOffline{display:block}
-#chatFriendsOnline .fbChatOfflineMessage{padding:0 5px 0 1px}
-#chatFriendsOnline .typeaheadContainer td:first-child{width:100%}
-#chatFriendsOnline .sidebarBtn{display:none;margin-left:3px}
 .sidebarCapable #chatFriendsOnline .sidebarBtn{display:inline-block}
 .sidebarMode #chatFriendsOnline,.sidebarMode #fbDockChatBuddylistNub.fbNub,.sidebarMode #fbChatErrorNub{display:none}
 .sidebarMode #pageHead,.sidebarMode #globalContainer{left:-90px;position:relative}
@@ -268,31 +238,6 @@ no-repeat right center;color:#333;text-decoration:none}
 .sidebarMode .fbTimelineScrubber{margin-right:-400px}
 .sidebarMode .fbTimelineStickyHeader{margin-right:-270px}
 .sidebarMode #fbPhotoTheater .container{margin-left:-570px}
-.fbChatSidebar .fbChatTypeahead,.fbChatSidebar .fbChatTypeahead .wrap{border:0}
-.fbChatSidebar .fbChatTypeahead .textInput{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y1/r/WUGF7ETcWHn.png);background-repeat:no-repeat;background-position:0 -430px;background-color:#f4f6f9;-webkit-box-shadow:inset 2px 0 0 -1px #e0e2e9, inset 0 1px #fff;box-sizing:border-box;-webkit-box-sizing:border-box;color:#555;height:24px;padding-left:20px;padding-right:20px}
-.fbChatSidebar .fbChatTypeahead .textInput:focus{background-color:#fff}
-.fbChatSidebar{-webkit-background-clip:padding-box;background-color:#f2f4f8;border-left:1px solid rgba(0, 0, 0, .4);-webkit-box-shadow:inset 2px 0 2px -2px #b2b9c9;display:none;position:fixed;top:0;right:0;width:179px;z-index:12}
-.sidebarMode .fbChatSidebar{display:block}
-.fbChatSidebar .fbChatSidebarBody{overflow-x:hidden;overflow-y:auto;position:relative}
-.fbChatSidebar .scrollableOrderedList{height:100%;width:100% !important}
-.fbChatSidebar .scrollableOrderedList .uiScrollableAreaTrack{top:10px}
-.fbChatSidebar .fbChatOrderedList,.fbChatSidebar .fbChatTypeaheadView{padding-top:8px}
-.fbChatSidebar .fbChatOrderedList .item a{padding-right:22px}
-.fbChatSidebar .fbChatOrderedList .item a:hover{-webkit-box-shadow:inset 2px 0 2px -2px #b2b9c9}
-.fbChatSidebar .fbChatOrderedList .item .status{right:12px}
-.fbChatSidebar .fbChatOrderedList .separator .text{background-color:#f2f4f8}
-.fbChatSidebar .fbChatSidebarMessage{background-color:#fff;border-top:1px solid #ccd0db;-webkit-box-shadow:inset 0 1px #fafafa;display:none;padding:8px}
-.fbChatSidebar.error .fbChatSidebarMessage,.fbChatSidebar.offline .fbChatSidebarMessage{display:block}
-.fbChatSidebar .fbChatSidebarMessage .img{float:left;margin-top:3px}
-.fbChatSidebar.offline .fbChatSidebarMessage .img{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/yG/r/GV1gcvcpYtq.png);background-repeat:no-repeat;background-position:-119px -136px;height:10px;width:16px}
-.fbChatSidebar.error .fbChatSidebarMessage .img{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/yG/r/GV1gcvcpYtq.png);background-repeat:no-repeat;background-position:-138px -118px;height:16px;width:16px}
-.fbChatSidebar .fbChatSidebarMessage .message{margin-left:24px}
-.fbChatSidebar .fbChatSidebarFooter{border-top:1px solid #c9d0da;bottom:0;position:absolute}
-.fbChatSidebar .fbChatSidebarFooter td:first-child{vertical-align:top;width:100%}
-.fbChatSidebar .fbChatSidebarFooter .button{border-left:1px solid #c9d0da;-webkit-box-shadow:inset 0 1px #fff;display:block;height:24px;width:26px}
-.fbChatSidebar .fbChatSidebarFooter .button:hover{background-color:#fff}
-.fbChatSidebar .fbChatSidebarFooter .button .uiTooltipWrap.right{margin-right:-10px;right:50%}
-.fbChatSidebar .fbChatSidebarFooter .toggle{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y1/r/WUGF7ETcWHn.png);background-repeat:no-repeat;background-position:0 -392px}
 .fbChatSidebarHovercard{margin:0 197px -33px 0;padding:0 !important;width:347px}
 .fbChatSidebarHovercard.HovercardBelow{margin:-33px 197px 0 0}
 .fbChatSidebarHovercard .arrow{display:none}
@@ -300,26 +245,10 @@ no-repeat right center;color:#333;text-decoration:none}
 .fbChatTypeahead.hasValue .clear,
 .fbChatTypeahead.hasValue.typeaheadLoading .throbber{display:block}
 .fbChatTypeahead.typeaheadLoading .clear{display:none}
-.fbChatTypeaheadView li{color:#333;cursor:pointer;padding:2px 20px 2px 10px;position:relative}
-.fbChatTypeaheadView li.selected{background-color:#e0e4ee}
-.fbChatTypeaheadView li img{float:left;height:28px;margin-right:5px;width:28px}
-.fbChatTypeaheadView li .text{display:block;line-height:28px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.fbChatTypeaheadView li i{display:block;height:14px;margin-top:-7px;position:absolute;right:8px;top:50%;width:7px}
-.fbChatTypeaheadView li.active i{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y1/r/WUGF7ETcWHn.png);background-repeat:no-repeat;background-position:-493px -407px}
-.fbChatTypeaheadView li.idle i{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y1/r/WUGF7ETcWHn.png);background-repeat:no-repeat;background-position:-493px -392px}
-.fbChatTypeaheadView li.mobile i{height:12px;width:8px;margin-top:-6px;right:9px;background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y1/r/WUGF7ETcWHn.png);background-repeat:no-repeat;background-position:-386px -422px}
-.fbChatTypeaheadView li.invis{opacity:.3}
-.fbChatTypeaheadView .noResults{padding:10px}
-#pagelet_eventbox input.async_saving{background:url(https://s-static.ak.facebook.com/rsrc.php/v1/yb/r/GsNJNwuI-UM.gif) 207px center no-repeat}
-#pagelet_eventbox input.with_selector.async_saving{background:url(https://s-static.ak.facebook.com/rsrc.php/v1/yb/r/GsNJNwuI-UM.gif) 183px center no-repeat}
-#pagelet_eventbox .menuButton{position:static}
-#pagelet_eventbox input.event_name{width:226px}
-#pagelet_eventbox input.with_selector{width:202px}
 .liquid #pageHead,.liquid div#globalContainer{margin:0;min-width:980px;padding-left:10px;padding-right:10px;width:auto !important}
 .sidebarMode .liquid #blueBar #pageHead{margin:0 90px}
 .liquid #minWidthOuter{zoom:1}
 body.liquid div#contentArea{display:table-cell;float:none;width:10000px !important;zoom:1}
-.liquid #contentArea:after,.liquid #contentArea::after{clear:both;content:" F a c e b o o k C S S F T W ! F a c e b o o k C S S F T W ! F a c e b o o k C S S F T W ! F a c e b o o k C S S F T W ! F a c e b o o k C S S F T W ! F a c e b o o k C S S F T W ! F a c e b o o k C S S F T W !";display:block;font-size: 25px;height:0 !important;line-height:0;visibility:hidden}
 .liquid #pageFooter{zoom:1}
 .UIUpcoming_Item{padding-bottom:4px}
 .UIUpcoming_Item .uiCloseButton{display:none}
@@ -356,13 +285,7 @@ body.liquid div#contentArea{display:table-cell;float:none;width:10000px !importa
 .fbFeedTicker .tickerStoryActive,.fbFeedTicker .tickerStoryClickable:hover{background-color:#eceff5 !important;border-bottom-color:#eceff5 !important}
 .fbFeedTicker .tickerStorySelected,.fbFeedTicker .tickerStorySelected:hover{background-color:#d8dfea !important;border-color:#a8b2ce !important}
 .fbFeedTicker .tickerStoryHidden,.fbFeedTicker .tickerStoryHidden:hover{background-color:#fff !important;border-bottom:1px solid #fff !important;border-top:1px solid #e9e9e9 !important}
-.fbFeedTicker .tickerStoryFetching.tickerStoryActive{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/yk/r/LOOn0JtHNzb.gif)}
-.fbFeedTicker .tickerStoryFetching.tickerStoryActive .UIImageBlock_Image{visibility:hidden}
-.fbFeedTicker .scrollTopPrompt{background:#e7e9ef url(https://s-static.ak.facebook.com/rsrc.php/v1/yU/r/n93MoBZD7fU.png) center 3px
-no-repeat;-webkit-box-shadow:rgba(67, 74, 90, .3) 0 1px 0;cursor:pointer;height:10px;position:absolute;width:244px;z-index:1}
 .fbFeedTicker .scrollTopPrompt:hover{background-color:#e1e2e9}
-.home_right_column .fbFeedTicker .scrollTopPrompt{background:#fbfbfb url(https://s-static.ak.facebook.com/rsrc.php/v1/yU/r/n93MoBZD7fU.png) center 3px
-no-repeat;-webkit-box-shadow:rgba(0, 0, 0, .15) 0 1px 0}
 .home_right_column .fbFeedTicker .scrollTopPrompt:hover{background-color:#f2f2f2;-webkit-box-shadow:rgba(0, 0, 0, .18) 0 1px 0}
 .fbFeedTicker .fbFeedTickerStory .attachmentLink{border-left:2px solid #ccc}
 .fbFeedTicker .attachmentPhotoOuter{width:54px;height:34px;border:1px solid #ccc;padding:2px;float:left;margin-left:3px}
@@ -467,26 +390,10 @@ input.typeahead_found{background-color:#e1e9f6}
 .tokenizer .tab_stop,.tokenizer .tokenizer_stretcher{display:block;float:left;overflow:hidden}
 .tokenizer .tab_stop{height:1px;width:1px}
 .tokenizer .tokenizer_stretcher{width:0;padding-top:7px}
-#facebook .tokenizer .tab_stop input{border:0 solid black;display:inline;position:relative;left:-500px}
 .tokenizer_input_borderless div{left:4px;margin-left:-1px;overflow:hidden;position:relative}
 .tokenizer_input_borderless div input{border:3px solid white!important;border-left:none;display:block;margin:-2px 0 -2px -2px;padding:0!important}
 .tokenizer div:-moz-first-node{padding-top:1px!important}
 .tokenizer_input{max-width:450px;overflow:hidden;padding:1px 0}
-#facebook .tokenizer_input input,.tokenizer_input_shadow{border:0 solid black;font-family:'lucida grande', tahoma, verdana, arial, sans-serif;font-size: 11px;padding:0 5px;white-space:pre}
-.tokenizer_input_shadow{display:inline;position:absolute;top:-9999999px}
-.tokenizer .tokenizer_input_shadow{height:0;display:block;left:0;overflow:hidden;position:relative;top:0}
-div.tokenizer .inline_placeholder{color:#777;display:block;float:left;padding:5px 0 0 2px}
-div.tokenizer .token{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/yK/r/mD9hhq3V835.gif);background-repeat:no-repeat;color:#000;white-space:nowrap}
-div.tokenizer .token span{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/yK/r/mD9hhq3V835.gif);background-position:top right;background-repeat:no-repeat;display:block}
-div.tokenizer .token span span{background-position:bottom right}
-div.tokenizer .token span span span{background-position:bottom left}
-div.tokenizer .token span span span span{background-image:none;padding:2px 3px 2px 5px}
-div.tokenizer.tokenizer_locked .token span span span span{padding-right:5px}
-html div.tokenizer_locked .token:hover,html div.tokenizer_locked .token:hover span{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/yK/r/mD9hhq3V835.gif)}
-div.tokenizer .token:hover,div.tokenizer .token:hover span{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/ym/r/Ze4Z6J_Shqw.gif);text-decoration:none}
-div.tokenizer .token_selected,div.tokenizer .token_selected span,div.tokenizer .token_selected:hover,div.tokenizer .token_selected:hover span{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/yY/r/4A94TeChhwl.gif);color:#fff;text-decoration:none}
-div.tokenizer .token span.x,div.tokenizer .token span.x_hover,div.tokenizer .token:hover span.x,div.tokenizer .token:hover span.x_hover{background:url(https://s-static.ak.facebook.com/rsrc.php/v1/yV/r/IJYgcESal33.png) no-repeat -842px -64px;cursor:pointer;display:inline;padding:0 6px 0 5px}
-div.tokenizer.tokenizer_locked .token span.x,div.tokenizer.tokenizer_locked .token span.x_hover{display:none}
 div.standard_tokenizer div.tokenizer{border:solid 1px #8f96bd}
 .typeahead_list .typeahead_suggestion .with_pic small{padding-left:0}
 .uiScrollableArea{height:100%;overflow:hidden;position:relative;width:100%}
@@ -524,7 +431,6 @@ select{border:1px solid #bdc7d8;font-family:"lucida grande",tahoma,verdana,arial
 .inputsubmit_disabled{background-color:#999;border-bottom:1px solid #000;border-right:1px solid #666;color:#fff}
 .inputaux{background:#f0f0f0;border-color:#e7e7e7 #666 #666 #e7e7e7;color:#000}
 .inputaux_disabled{color:#999}
-.inputsearch{background:#fff url(https://s-static.ak.facebook.com/rsrc.php/v1/yV/r/IJYgcESal33.png) no-repeat left 4px;padding-left:17px}
 body{background:#fff;font-size: 11px;font-family:"lucida grande",tahoma,verdana,arial,sans-serif;color:#333;line-height:1.28;margin:0;padding:0;text-align:left;direction:ltr;unicode-bidi:embed}
 h1,h2,h3,h4,h5,h6{font-size: 13px;color:#333;margin:0;padding:0}
 h1{font-size: 14px}
@@ -547,8 +453,6 @@ hr{background:#d9d9d9;border-width:0;color:#d9d9d9;height:1px}
 .aero{opacity:.5}
 .column{float:left}
 .center{margin-left:auto;margin-right:auto}
-#facebook .hidden_elem{display:none !important}
-#facebook .invisible_elem{visibility:hidden}
 .direction_ltr{direction:ltr}
 .direction_rtl{direction:rtl}
 .text_align_ltr{text-align:left}
@@ -585,8 +489,6 @@ img.tracking_pixel{height:1px;position:absolute;visibility:hidden;width:1px}
 #pageHead{margin:0 auto;width:980px}
 .fbx #pageHead{margin:0;width:auto}
 #pageLogo{float:left;margin-left:-6px;z-index:5}
-#pageLogo a{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y6/r/1Ifz-ufn5r2.png);background-repeat:no-repeat;background-position:-104px -235px;background-color:#3b5998;display:block;height:31px;width:103px}
-#pageLogo a:hover,#pageLogo a:focus,#pageLogo a:active{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y6/r/1Ifz-ufn5r2.png);background-repeat:no-repeat;background-position:0 -235px;background-color:#4b67a1;outline:none}
 #headNav{background-color:#627aad;border:1px solid #1d4088;border-bottom:0;height:30px;margin-left:180px}
 #pageNav li{float:left}
 #pageNav a{color:#fff;display:block;display:inline-block;font-weight:bold;height:22px;padding:8px 10px 0 10px;text-decoration:none}
@@ -596,9 +498,7 @@ img.tracking_pixel{height:1px;position:absolute;visibility:hidden;width:1px}
 #navAccount #navAccountLink{padding-right:16px;zoom:1}
 .openToggler #navAccountLink,.no_js #navAccount:hover #navAccountLink{background-color:#fff;color:#333;position:relative;z-index:2}
 .openToggler #navAccountLink:hover,.openToggler #navAccountLink:focus,.openToggler #navAccountLink:active,.no_js #navAccountLink:hover{background-color:#fff}
-#navAccountLink .accountPulldown{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y6/r/1Ifz-ufn5r2.png);background-repeat:no-repeat;background-position:-298px -102px;height:4px;left:5px;position:relative;top:-2px;width:7px}
 .openToggler #navAccountLink .dropMenuDivide,.no_js #navAccount:hover #navAccountLink .dropMenuDivide{background:#e0e0e0}
-.openToggler #navAccountLink .accountPulldown,.no_js #navAccount:hover #navAccountLink .accountPulldown{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y6/r/1Ifz-ufn5r2.png);background-repeat:no-repeat;background-position:-304px -73px}
 #navAccount ul{background:#fff;border:1px solid #333;border-bottom:2px solid #2d4486;display:none;margin-right:-1px;margin-top:-1px;min-width:200px;padding:10px 0 5px;position:absolute;right:0;top:100%;z-index:1}
 #navAccount.openToggler ul,.no_js #navAccount:hover ul{display:block}
 #navAccount ul .logoutButton{display:block}
@@ -643,49 +543,7 @@ ul #navAccountInfo a:hover,ul #navAccountInfo a:focus,ul #navAccountInfo a:activ
 .fbJewelFlyout .jewelFooter .seeMoreCount{display:none;font-weight:bold;padding:2px 0 0}
 .fbJewelFlyout .jewelUnread .seeMoreCount{display:block}
 .fbJewelFlyout .jewelFooter a:hover .seeMoreCount,.fbJewelFlyout .jewelFooter a:active .seeMoreCount,.fbJewelFlyout .jewelFooter a:focus .seeMoreCount{color:#e7e7e7}
-#fbMessagesJewel a.jewelButton{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y6/r/1Ifz-ufn5r2.png);background-repeat:no-repeat;background-position:-164px -269px}
-#fbMessagesJewel a.jewelButton:active,#fbMessagesJewel a.jewelButton:focus,#fbMessagesJewel a.jewelButton:hover{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y6/r/1Ifz-ufn5r2.png);background-repeat:no-repeat;background-position:-89px -269px}
-#fbMessagesJewel.hasNew a.jewelButton{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y6/r/1Ifz-ufn5r2.png);background-repeat:no-repeat;background-position:-114px -269px}
-#fbMessagesJewel.openToggler a.jewelButton{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y6/r/1Ifz-ufn5r2.png) !important;background-repeat:no-repeat !important;background-position:-139px -269px !important}
-#fbMessagesFlyout{left:25px}
-#fbMessagesFlyout li a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#fbMessagesFlyout .content{display:block;width:auto}
-#fbMessagesFlyout .author{color:#3b5998;font-weight:bold;padding-top:2px;white-space:normal}
-#fbMessagesFlyout .preview{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#fbMessagesFlyout .subject{color:#333}
-#fbMessagesFlyout .time{color:#9d9d9d;font-size: 9px}
-#fbMessagesFlyout a:hover .author,#fbMessagesFlyout a:hover .preview,#fbMessagesFlyout a:hover .subject,#fbMessagesFlyout a:hover .time{color:#fff}
-.noMessages #fbNotificationsJewel{margin-left:25px}
-#fbNotificationsJewel a.jewelButton{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y6/r/1Ifz-ufn5r2.png);background-repeat:no-repeat;background-position:-267px -117px}
-#fbNotificationsJewel a.jewelButton:active,#fbNotificationsJewel a.jewelButton:focus,#fbNotificationsJewel a.jewelButton:hover{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y6/r/1Ifz-ufn5r2.png);background-repeat:no-repeat;background-position:-189px -269px}
-#fbNotificationsJewel.hasNew a.jewelButton{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y6/r/1Ifz-ufn5r2.png);background-repeat:no-repeat;background-position:-267px -187px}
-#fbNotificationsJewel.openToggler a.jewelButton{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y6/r/1Ifz-ufn5r2.png) !important;background-repeat:no-repeat !important;background-position:-267px -152px !important}
-#fbNotificationsFlyout{left:50px}
-#fbNotificationsFlyout a:hover .blueName{color:#fff}
-#fbNotificationsFlyout .blueName{color:#3b5998;font-weight:bold}
-#fbNotificationsFlyout .staticAppIcon{background-position:right;height:16px;width:16px}
-#fbNotificationsFlyout .selected .staticAppIcon{background-position:left}
-#fbNotificationsFlyout .info{max-width:259px;word-wrap:break-word}
-#fbRequestsJewel a.jewelButton{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y6/r/1Ifz-ufn5r2.png);background-repeat:no-repeat;background-position:-239px -269px}
-#fbRequestsJewel a.jewelButton:active,#fbRequestsJewel a.jewelButton:focus,#fbRequestsJewel a.jewelButton:hover{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y6/r/1Ifz-ufn5r2.png);background-repeat:no-repeat;background-position:-271px -52px}
-#fbRequestsJewel.hasNew a.jewelButton{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y6/r/1Ifz-ufn5r2.png);background-repeat:no-repeat;background-position:-271px -17px}
-#fbRequestsJewel.openToggler a.jewelButton{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y6/r/1Ifz-ufn5r2.png) !important;background-repeat:no-repeat !important;background-position:-214px -269px !important}
-#fbRequestsFlyout ul.jewelItemList{padding-top:4px;padding-bottom:0}
-#fbRequestsFlyout li{padding:4px 8px}
-#fbRequestsFlyout .jewelHighlight li{padding:0}
-#fbRequestsFlyout li.empty,#fbRequestsFlyout .jewelHighlight li.empty{color:#757575;padding:4px 8px 10px 8px}
-#fbRequestsFlyout .fbRequestMessageWrapper{white-space:nowrap}
-#fbRequestsFlyout .fbRequestMessage{display:inline-block;max-width:169px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#fbRequestsFlyout .jewelHighlight .title{color:#3b5998}
-#fbRequestsFlyout .jewelHighlight .mutualFriends{color:#808080}
-#fbRequestsFlyout .jewelHighlight a:hover .title,#fbRequestsFlyout .jewelHighlight a:focus .title,#fbRequestsFlyout .jewelHighlight a:active .title,#fbRequestsFlyout .jewelHighlight a:hover .mutualFriends,#fbRequestsFlyout .jewelHighlight a:focus .mutualFriends,#fbRequestsFlyout .jewelHighlight a:active .mutualFriends{color:#fff}
-#fbRequestsFlyout .jewelRequest .jewelRequestContent{padding-top:5px}
-#fbRequestsFlyout .title{font-size: 11px}
-#fbRequestsFlyout .requestLabel{line-height:12px}
-#fbRequestsFlyout .jewelFooter .seeMoreCount{display:block}
-.fbRequestsJewelRelationshipIcon{margin-bottom:-3px;padding-right:5px}
 .contextual_dialog .generic_dialog_popup{padding-top:9px;position:absolute;width:360px}
-.contextual_dialog .arrow{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y1/r/WUGF7ETcWHn.png);background-repeat:no-repeat;background-position:-119px -392px;height:9px;margin-left:25px;margin-top:-2px;position:absolute;top:4px;width:13px}
 .contextual_dialog .contextual_dialog_content{background:#fff;border:1px solid #333;border-bottom:2px solid #283e6a;line-height:15px}
 .contextual_dialog .contextual_dialog_content div.dialog_loading{background:#fff;border:0}
 .contextual_dialog .dialog_title{color:#000;font-size: 11px;padding-bottom:2px;padding:8px 10px 0}
@@ -695,7 +553,6 @@ ul #navAccountInfo a:hover,ul #navAccountInfo a:focus,ul #navAccountInfo a:activ
 .uiSearchInput{background:#fff;border:1px solid #899bc1;border-top-color:#6484b4;display:inline-block}
 .uiSearchInput span{border:0;border-top:1px solid #ededed;display:inline-block;padding:1px 0 2px;position:relative}
 .uiSearchInput input{border:0;margin:0 22px 0 5px;outline:none;padding:1px 5px 2px 0;width:190px}
-.uiSearchInput button{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y6/r/1Ifz-ufn5r2.png);background-repeat:no-repeat;background-position:-262px -235px;background-color:#fff;border:0;cursor:pointer;display:block;height:19px;padding:0;position:absolute;right:0;top:0;width:22px}
 .objectListItem{padding-bottom:8px;padding-top:8px}
 .passive .objectListItem{color:#808080}
 .objectListItem .auxiliary{text-align:right}

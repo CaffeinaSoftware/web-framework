@@ -167,7 +167,6 @@
     <div class="menu">
         <div class="content">
             <a class="logo" href="../index.php">
-                <img class="img" src="../media/cwhite.png" alt="Facebook Developers" width="166" height="17"/>
             </a>
 
             <?php

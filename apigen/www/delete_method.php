@@ -1,6 +1,7 @@
 <?php
+// Delete method
 ob_start();
-require_once("../../server/bootstrap.php");
+require_once("../server/bootstrap.php");
 
 $sql = "Select nombre from metodo where id_metodo = ".$_GET["m"];
 

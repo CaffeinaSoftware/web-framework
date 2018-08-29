@@ -1,10 +1,10 @@
 <?php
-    require_once("../../server/bootstrap.php");
+    require_once("../server/bootstrap.php");
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" >
 <head>
-<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="//code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
 <title>Web Framework</title>
 <script>
 
@@ -139,7 +139,7 @@
       }
 </script>
 
-<link type="text/css" rel="stylesheet" href="../media/f.css"/>
+<link type="text/css" rel="stylesheet" href="media/f.css"/>
 
 </head>
 <body class="safari4 mac Locale_en_US">

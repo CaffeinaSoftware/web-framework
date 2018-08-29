@@ -1,15 +1,11 @@
 <?php
 
-
-require_once("../../server/bootstrap.php");
+require_once("../server/bootstrap.php");
 $mid = $_GET["m"];
 
 
 ?><html>
 <head>
-    <link rel="stylesheet" type="text/css" href="../media/final_api.css">
-    <script type="text/javascript" src="http://api.caffeina.mx/jquery/jquery-1.4.2.min.js"></script>
-    <title></title>
     <script type="text/javascript">
                 function eliminarArg(id)
                 {
