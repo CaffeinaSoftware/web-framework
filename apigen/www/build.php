@@ -300,16 +300,13 @@ require_once("../server/bootstrap.php");
                     <a href="dl.php?what=api/full_api&out_name=full_api">Descargar Todo</a>
                 </p>
 
-                    <?php require_once( "write_api.php" ); ?>
-                    <?php require_once( "write_cs_api.php" ); ?>
+                    <?php require_once( "write_api.inc.php" ); ?>
+                    <?php require_once( "write_cs_api.inc.php" ); ?>
 
                 <hr/>
 
                 <div class="mtm pvm uiBoxWhite topborder">
-                    <div class="mbm">
-
-                    </div>
-                    <abbr title="Monday, September 5, 2011 at 8:28pm" data-date="Mon, 05 Sep 2011 18:28:49 -0700" class="timestamp">Ultima modifiacion</abbr>
+                    <div class="mbm"> </div>
                 </div>
 
             </div>
@@ -321,20 +318,8 @@ require_once("../server/bootstrap.php");
     </div>
     <div class="footer">
         <div class="content">
-            <div class="copyright">
-                 &copy; 2011
-            </div>
-            <div class="links">
-                <a href="build_bd.php?project=<?php echo ( isset($_GET["project"]) && is_numeric($_GET["project"]) )? $_GET["project"] : "null" ; ?>">Respaldar Base de Datos</a>
-            </div>
         </div>
     </div>
-    <div id="fb-root">
-    </div>
-    <input type="hidden" autocomplete="off" id="post_form_id" name="post_form_id" value="d8f38124ed9e31ef3947198c6d26bff1"/>
-    <div id="fb-root">
-    </div>
-
 </div>
 
 </body>

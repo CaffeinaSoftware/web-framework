@@ -13,14 +13,11 @@
                 <div class="header">
                     <div class="content">
                         <h1>Nuevo metodo</h1>
-                        <div class="breadcrumbs">
-                            <a href="apigen.php?project=<?php $_GET["project"] ?>">Regresar</a>
-                        </div>
                     </div>
                 </div>
 
                 <hr/>
-                    <?php require_once( "new_method.php" ); ?>
+                    <?php require_once( "newmethod.inc.php" ); ?>
                 <hr/>
 
                 <div class="mtm pvm uiBoxWhite topborder">

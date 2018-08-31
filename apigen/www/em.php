@@ -21,7 +21,7 @@
                     </div>
                 </div>
 
-                <?php require_once( "edit_method.php" ); ?>
+                <?php require_once( "editmethod.inc.php" ); ?>
 
                 <hr/>
 
