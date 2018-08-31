@@ -301,6 +301,7 @@ require_once("../server/bootstrap.php");
                 </p>
 
                     <?php require_once( "write_api.php" ); ?>
+                    <?php require_once( "write_cs_api.php" ); ?>
 
                 <hr/>
 

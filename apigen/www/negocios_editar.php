@@ -4,7 +4,6 @@
 
 ob_start();
 
-
 require_once("../server/bootstrap.php");
 
 $combo=isset($_POST["sesion_valida"]);
