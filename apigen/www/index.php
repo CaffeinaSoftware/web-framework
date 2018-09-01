@@ -1,20 +1,20 @@
-<?php require_once("top.inc.php"); ?>
+<?php require_once("inc/top.inc.php"); ?>
 
 <div class="devsitePage">
 
-<?php require_once("menu.inc.php"); ?>
+<?php require_once("inc/menu.inc.php"); ?>
 
 <div class="body nav">
     <div class="content">
 
         <div id="bodyMenu" class="bodyMenu">
-        <?php require_once("toplevnav.inc.php"); ?>
+        <?php require_once("inc/toplevnav.inc.php"); ?>
         </div>
 
             <div id="bodyText" class="bodyText">
 
 
-            <?php require_once("titleheader.inc.php"); ?>
+            <?php require_once("inc/titleheader.inc.php"); ?>
 
 
             <?php

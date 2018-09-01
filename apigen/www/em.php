@@ -1,13 +1,13 @@
-<?php require_once("top.inc.php"); ?>
+<?php require_once("inc/top.inc.php"); ?>
 
 <div class="devsitePage">
 
-    <?php require_once("menu.inc.php"); ?>
+    <?php require_once("inc/menu.inc.php"); ?>
 
     <div class="body nav">
         <div class="content">
             <div id="bodyMenu" class="bodyMenu">
-            <?php require_once("toplevnav.inc.php"); ?>
+            <?php require_once("inc/toplevnav.inc.php"); ?>
             </div>
             <div id="bodyText" class="bodyText">
                 <div class="header">
@@ -21,7 +21,7 @@
                     </div>
                 </div>
 
-                <?php require_once( "editmethod.inc.php" ); ?>
+                <?php require_once( "inc/editmethod.inc.php" ); ?>
 
                 <hr/>
 
@@ -29,7 +29,7 @@
                     <div class="mbm">
 
                     </div>
-                    <abbr title="Monday, September 5, 2011 at 8:28pm" data-date="Mon, 05 Sep 2011 18:28:49 -0700" class="timestamp">
+                    <abbr title="" data-date="" class="timestamp">
                     Ultima modificacion 
                     <?php 
                         if(isset($_GET["m"]))
@@ -52,7 +52,6 @@
                  &copy; 2011
             </div>
             <div class="links">
-                <a href="build_bd.php?project=<?php echo ( isset($_GET["project"]) && is_numeric($_GET["project"]) )? $_GET["project"] : "null" ; ?>">Respaldar Base de Datos</a>
             </div>
         </div>
     </div>
