@@ -2,6 +2,11 @@
 var new_category_form_visible = false;
 var edit_category_form_visible = false;
 
+function cambioMetodo(id)
+{
+    window.location="cambio_metodo.php?id="+id;
+}
+
 function showEditCategoryForm(nombre,descripcion,id)
 {
     if(!edit_category_form_visible)
@@ -438,16 +443,15 @@ var ApiMethod = function(){
     this.http       = "GET";
     this.desc       = "";
     this.html       = false;
-    this.auth       = {
-sesion  : true,
-          grupo   : null,
-          permiso : null
-    };
-
     this.params     = [];
     this.response   = [];
     this.entrada = "";
     this.salida  = "";
+    this.auth       = {
+          sesion  : true,
+          grupo   : null,
+          permiso : null
+    };
 
     this.render = function(){
         $("#preview_nombre").html(this.http + " " + this.nombre);
@@ -455,58 +459,43 @@ sesion  : true,
         $("#preview_desc").html(this.desc);
         //clean the space
 
-        $("#preview_regresa_html").html(  this.html ? "Si" : "No" );
+        $("#preview_regresa_html").html(this.html ? "Si" : "No" );
 
-        $("#preview_auth_sesion").html(  this.auth.sesion ? "Si" : "No" );
-        $("#preview_auth_grupo").html(  this.auth.grupo );
-        $("#preview_auth_permiso").html(  this.nombre );
+        $("#preview_auth_sesion").html(this.auth.sesion ? "Si" : "No" );
+        $("#preview_auth_grupo").html(this.auth.grupo );
+        $("#preview_auth_permiso").html(this.nombre );
 
-        $("#preview_respuesta").html(this.salida)
-            $("#preview_peticion").html(this.entrada)
+        $("#preview_respuesta").html(this.salida);
+        $("#preview_peticion").html(this.entrada);
 
 
-            var preview_arg_table = "";
-        for( a = 0; a <= param_count ; a ++ )
+        var preview_arg_table = "";
+        for (a = 0; a <= param_count ; a ++ )
         {
             preview_arg_table += '<tr><td class="c135"><p class="c3">';
-            preview_arg_table += '<span class="c7">' +  $( "#args_nombre_"+a ).val() + '</span>';
+            preview_arg_table += '<span class="c7">' +  $("#args_nombre_"+a ).val() + '</span>';
             preview_arg_table += '</p></td><td class="c61"><p class="c3">';
-            preview_arg_table += '<span class="c7">' + $( "#args_desc_"+a ).val() +'</span>';
+            preview_arg_table += '<span class="c7">' + $("#args_desc_"+a ).val() +'</span>';
             preview_arg_table += '</p></td><td class="c96"><p class="c3">';
-            preview_arg_table += '<span class="c7">' + $( "#args_ahuevo_"+a ).val() +'</span>';
+            preview_arg_table += '<span class="c7">' + $("#args_ahuevo_"+a ).val() +'</span>';
             preview_arg_table += '</p></td><td class="c82"><p class="c3">';
-            preview_arg_table += '<span class="c7">'+ $( "#args_tipo_"+a ).val() + '</span>';
+            preview_arg_table += '<span class="c7">'+ $("#args_tipo_"+a ).val() + '</span>';
             preview_arg_table += '</p></td></tr>';
         }
         $("#preview_arg_table").html(preview_arg_table);
 
-
-
         var preview_resp_table = "";
-        for( a = 0; a <= response_count ; a ++ )
+        for (a = 0; a <= response_count ; a ++ )
         {
             preview_resp_table += '<tr><td class="c135"><p class="c3">';
-            preview_resp_table += '<span class="c7">' +  $( "#response_nombre_"+a ).val() + '</span>';
+            preview_resp_table += '<span class="c7">' +  $("#response_nombre_"+a ).val() + '</span>';
             preview_resp_table += '</p></td><td class="c61"><p class="c3">';
-            preview_resp_table += '<span class="c7">' + $( "#response_desc_"+a ).val() +'</span>';
+            preview_resp_table += '<span class="c7">' + $("#response_desc_"+a ).val() +'</span>';
             preview_resp_table += '</p></td><td class="c96"><p class="c3">';
-            preview_resp_table += '<span class="c7">' + $( "#response_tipo_"+a ).val() +'</span>';
+            preview_resp_table += '<span class="c7">' + $("#response_tipo_"+a ).val() +'</span>';
             preview_resp_table += '</p></td></tr>';
         }
         $("#preview_resp_table").html(preview_resp_table);
-
-
     }
 };
-
-
-
-var m = new ApiMethod();
-
-function cambioMetodo(id)
-{
-    window.location="cambio_metodo.php?id="+id;
-}
-
-
 

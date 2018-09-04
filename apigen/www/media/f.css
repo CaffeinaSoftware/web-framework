@@ -652,3 +652,5 @@ font-weight: 700;
 border-radius: 15px;
 cursor: auto;
 }
+
+.bordered{border:1px solid #ddd}
