@@ -4,249 +4,109 @@ require_once("../server/bootstrap.php");
 
 class ApiGenApi
 {
-    static function RemoveCategory()
+    static function RemoveCategory($category_id)
     {
-
-// Deleting a category
-ob_start();
-require_once("../server/bootstrap.php");
-
-$sql = "Select nombre from clasificacion where id_clasificacion = ".$_GET["cat"];
-
-$row = mysql_fetch_array(mysql_query($sql));
-
-$nombre_clasificacion = $row[0];
-
-$sql = "Select id_metodo from metodo where id_clasificacion = ".$_GET["cat"];
-
-$res = mysql_query($sql);
-
-while($row = mysql_fetch_array($res))
-{
-    var_dump($row);
-    $sql="delete from argumento where id_metodo=".$row[0];
-    $Consulta_ID = mysql_query($sql);
-    if (!$Consulta_ID){
-        $mensaje= $sql."<br>";
-        $mensaje.= mysql_error();
-    }
-    else
-    {
-        $sql="delete from respuesta where id_metodo=".$row[0];
-        $Consulta_ID = mysql_query($sql);
-        if (!$Consulta_ID){
-            $mensaje= $sql."<br>";
-            $mensaje.= mysql_error();
-            break;
-        }
-        else
+        // Deleting a category
+        $sql = "select id_metodo from metodo where id_clasificacion = " . $category_id;
+        $res = mysql_query($sql);
+        while($row = mysql_fetch_array($res))
         {
-            $mensaje="";
+            // Delete method
+            ApiGenApi::DeleteMethod($row[0]);
+        }
+
+        $sql = "delete from clasificacion where id_clasificacion = " . $category_id;
+        if (!mysql_query($sql)) {
+            throw new Exception(mysql_error());
         }
     }
 
-    $sql="delete from metodo where id_metodo=".$row[0];
-    $Consulta_ID = mysql_query($sql);
-
-    if (!$Consulta_ID){
-        $mensaje= $sql."<br>";
-        $mensaje.= mysql_error();
-        break;
-    }
-}
-$sql = "delete from clasificacion where id_clasificacion = ".$_GET["cat"];
-$Consulta_ID = mysql_query($sql);
-
-if (!$Consulta_ID){
-    $mensaje= $sql."<br>";
-    $mensaje.= mysql_error();
-}
-else
-{
-    $mensaje = "Actualizacion exitosa!! Gracias ". $_SERVER["PHP_AUTH_USER"] . "!";
-
-    $descripcion = "elimino la clasificacion ".$nombre_clasificacion;
-
-    $descripcion .= ''.$row[0]." del proyecto ";
-
-    $sql = "Select name from mantis_project_table where id = ".$_GET["project"];
-
-    $row = mysql_fetch_array(mysql_query($sql));
-
-    $descripcion .= ''.$row[0];
-
-    $sql = "Insert into registro(id_proyecto,id_clasificacion,usuario,fecha,operacion,descripcion) values (".$_GET["project"].",".$_GET["cat"].",'".$_SERVER["PHP_AUTH_USER"]."','".  date("Y-m-d H:i:s")."','borrar','".$descripcion."')";
-
-    $Consulta_ID = mysql_query($sql);
-
-
-}
-
-header("Location: index.php?mensaje=".$mensaje."&project=".$_GET["project"]);
-
-ob_end_flush();
-    }
-
-
-    static function CreateCategory()
+    static function CreateCategory($id_proyecto, $nombre_clasificacion, $descripcion_clasificacion)
     {
-// Create a category
-ob_start();
-require_once("../server/bootstrap.php");
+        // Create a category
+        $id_clasificacion = null;
+        $sql = "Insert into clasificacion(id_proyecto,nombre,descripcion) values "
+                . "(".$id_proyecto.",'".$nombre_clasificacion."','".$descripcion_clasificacion."')";
 
-$id_clasificacion = null;
+        if (!mysql_query($sql)) {
+            throw new Exception(mysql_error());
+        }
 
-$sql = "Insert into clasificacion(id_proyecto,nombre,descripcion) values(".$_POST["id_proyecto"].",'".$_POST["nombre_clasificacion"]."','".$_POST["descripcion_clasificacion"]."')";
+        $sql="select LAST_INSERT_ID()";
+        if (!mysql_query($sql)) {
+            throw new Exception(mysql_error());
+        }
 
-$Consulta_ID = mysql_query($sql);
-
-if (!$Consulta_ID){
-    $mensaje= $sql."<br>";
-    $mensaje.= mysql_error();
-}
-
-else
-{
-    $sql="Select LAST_INSERT_ID()";
-    $Consulta_ID = mysql_query($sql);
-    if (!$Consulta_ID){
-        $mensaje= $sql."<br>";
-        $mensaje.= mysql_error();
+        //$id_clasificacion= mysql_fetch_row($Consulta_ID);
     }
-    else
+
+    static function EditCategory($nombre_clasificacion, $descripcion_clasificacion, $id_clasificacion)
     {
-        $mensaje="Clasificacion creada exitosamente! Gracias ". $_SERVER["PHP_AUTH_USER"] . "!";
-        $id_clasificacion= mysql_fetch_row($Consulta_ID);
-
-        $descripcion = "El usuario ".$_SERVER["PHP_AUTH_USER"]." agrego la clasificacion ".$_POST["nombre_clasificacion"]." en el proyecto ";
-        $sql = "Select name from mantis_project_table where id = ".$_POST["id_proyecto"];
-        $row = mysql_fetch_array(mysql_query($sql));
-        $descripcion .= ''.$row[0];
-        $sql = "Insert into registro(id_proyecto,id_clasificacion,usuario,fecha,operacion,descripcion) values(".$_POST["id_proyecto"].",".$id_clasificacion[0].",'".$_SERVER["PHP_AUTH_USER"]."','".  date("Y-m-d H:i:s")."','agregar','".$descripcion."')";
-        $Consulta_ID = mysql_query($sql);
-    }
-}
-
-$location = "Location: index.php?mensaje=".$mensaje."&project=".$_POST["id_proyecto"];
-
-if(!is_null($id_clasificacion))
-{
-    $location .= "&cat=".$id_clasificacion[0];
-}
-
-header($location);
-
-ob_end_flush();
+        $sql = "update clasificacion set nombre='".$nombre_clasificacion."',descripcion='".$descripcion_clasificacion."' where id_clasificacion=".$id_clasificacion;
+        if (!mysql_query($sql)) {
+            throw new Exception(mysql_error());
+        }
     }
 
-    static function EditCategory()
+    static function MethodDetails($method_id)
     {
-// Edit a category
+        //$info_metodo = "select * from metodo where id_metodo=".$method_id;
+        //$r = mysql_query($info_metodo) or die(mysql_error());
+        //$info_metodo=mysql_fetch_assoc($r) or die(mysql_error());
 
-require_once("../server/bootstrap.php");
-
-$id_clasificacion = null;
-
-$sql = "Update clasificacion set nombre='".$_POST["nombre_clasificacion"]."',descripcion='".$_POST["descripcion_clasificacion"]."' where id_clasificacion=".$_POST["id_clasificacion"];
-
-$Consulta_ID = mysql_query($sql);
-
-if (!$Consulta_ID) {
-    $mensaje= $sql."<br>";
-    $mensaje.= mysql_error();
-}
-else
-{
-    $mensaje="Clasificacion editada exitosamente! Gracias ". $_SERVER["PHP_AUTH_USER"] . "!";
-    $id_clasificacion= $_POST["id_clasificacion"];
-    $descripcion = "El usuario ".$_SERVER["PHP_AUTH_USER"]." edito la clasificacion ".$_POST["nombre_clasificacion"]." en el proyecto ";
-    $sql = "Select name from mantis_project_table where id = ".$_POST["id_proyecto"];
-    $row = mysql_fetch_array(mysql_query($sql));
-    $descripcion .= ''.$row[0];
-
-    $sql = "Insert into registro(id_proyecto,id_clasificacion,usuario,fecha,operacion,descripcion) values(".$_POST["id_proyecto"].",".$id_clasificacion.",'".$_SERVER["PHP_AUTH_USER"]."','".  date("Y-m-d H:i:s")."','editar','".$descripcion."')";
-
-    $Consulta_ID = mysql_query($sql);
-}
-
-$location = "Location: index.php?mensaje=".$mensaje."&project=".$_POST["id_proyecto"];
-if (!is_null($id_clasificacion))
-{
-    $location .= "&cat=".$id_clasificacion;
-}
-
-header($location);
-    }
-
-    static function MethodDetails()
-    {
-       if($mid == -1) return;
-
-        $info_metodo="select * from metodo where id_metodo=".$mid;
-        $r=mysql_query($info_metodo) or die(mysql_error());
-        $info_metodo=mysql_fetch_assoc($r) or die(mysql_error());
-
-        $query_argumentos="select * from argumento where id_metodo=".$mid;
-        $r=mysql_query($query_argumentos) or die(mysql_error());
-        $i=0;
-        $argumentos=-1;
+        $query_argumentos = "select * from argumento where id_metodo=".$method_id;
+        $r = mysql_query($query_argumentos) or die(mysql_error());
+        $argumentos = [];
         while($row=mysql_fetch_assoc($r))
         {
-            if($argumentos==-1)
-               unset($argumentos);
-
-           $argumentos[$i]=$row;
-           $i++;
+           $argumentos[] = $row;
         }
 
-        $respuestas = -1;
-        $query_respuestas = "select * from respuesta where id_metodo=".$mid;
+        $query_respuestas = "select * from respuesta where id_metodo=".$method_id;
         $r=mysql_query($query_respuestas) or die(mysql_error());
-        $i=0;
-
+        $respuestas = [];
         while($row=mysql_fetch_assoc($r))
         {
-           if($respuestas==-1)
-               unset($respuestas);
-           $respuestas[$i]=$row;
-           $i++;
+           $respuestas[] = $row;
         }
     }
 
-    static function CreateMethod()
+    static function CreateMethod($clasificacion_metodo, $sesion_valida, $regresa_html,
+        $nombre_metodo , $tipo_metodo , $combo , $grupo , $ejemplo_peticion , $ejemplo_respuesta , $descripcion_metodo, $subtitulo
+        )
     {
-        if(!isset ($_POST["clasificacion_metodo"]) || !is_numeric($_POST["clasificacion_metodo"]))
+        if(!isset ($clasificacion_metodo) || !is_numeric($clasificacion_metodo))
         {
             throw new Exception("No se obtuvo clasificacion de metodo");
         }
 
         // Defaults
-        $combo = isset($_POST["sesion_valida"]);
-        if(!$combo) $combo=0;
+        $combo = isset($sesion_valida);
+        if(!$combo) $combo = 0;
 
-        $regresa_html = isset($_POST["regresa_html"]);
+        $regresa_html = isset($regresa_html);
         if(!$regresa_html) $regresa_html=0;
 
         $sql = "insert into metodo (id_clasificacion, nombre, tipo, sesion_valida, grupo, ejemplo_peticion, ejemplo_respuesta, descripcion, subtitulo, regresa_html) "
                 . " values ({0}, '{1}', '{2}', {3}, {4}, '{5}', '{6}', '{7}', '{8}', {9})";
 
-        str_replace("{0}", $_POST["clasificacion_metodo"], $sql);
-        str_replace("{1}", $_POST["nombre_metodo"], $sql);
-        str_replace("{2}", $_POST["tipo_metodo"], $sql);
+        str_replace("{0}", $clasificacion_metodo, $sql);
+        str_replace("{1}", $nombre_metodo, $sql);
+        str_replace("{2}", $tipo_metodo, $sql);
         str_replace("{3}", $combo, $sql);
-        str_replace("{4}", $_POST["grupo"], $sql);
-        str_replace("{5}", $_POST["ejemplo_peticion"], $sql);
-        str_replace("{6}", $_POST["ejemplo_respuesta"], $sql);
-        str_replace("{7}", preg_replace('/\'/','`', $_POST["descripcion_metodo"]), $sql);
-        str_replace("{8}", $_POST["subtitulo"], $sql);
+        str_replace("{4}", $grupo, $sql);
+        str_replace("{5}", $ejemplo_peticion, $sql);
+        str_replace("{6}", $ejemplo_respuesta, $sql);
+        str_replace("{7}", preg_replace('/\'/','`', $descripcion_metodo), $sql);
+        str_replace("{8}", $subtitulo, $sql);
         str_replace("{9}", $regresa_html, $sql);
 
-        $Consulta_ID = mysql_query($sql);
+        if (!mysql_query($sql)) {
+            throw new Exception(mysql_error());
+        }
 
         $sql="Select LAST_INSERT_ID()";
-        $Consulta_ID = mysql_query($sql);
-        if (!$Consulta_ID)
-        {
+        if (!mysql_query($sql)) {
             throw new Exception(mysql_error());
         }
 
@@ -258,8 +118,16 @@ header($location);
                 continue;
             }
 
-            $sql="Insert into argumento(id_metodo,nombre,descripcion,ahuevo,tipo,defaults) ".
-                "values(".$id_metodo[0].",'".$_POST["nombre_argumento_".$i]."','".$_POST["descripcion_argumento_".$i]."','".$_POST["ahuevo_".$i]."','".$_POST["tipo_argumento_".$i]."','".$_POST["default_".$i]."')";
+            $sql = "Insert into argumento(id_metodo,nombre,descripcion,ahuevo,tipo,defaults) ".
+                "values({0},'{1}','{2}','{3}','{4}','{5}')";
+
+            str_replace("{0}", $id_metodo[0], $sql);
+            str_replace("{1}", $arguments[$i]['nombre_argumento'], $sql);
+            str_replace("{2}", $arguments[$i]['descripcion_argumento'], $sql);
+            str_replace("{3}", $arguments[$i]['obligatorio'], $sql);
+            str_replace("{4}", $arguments[$i]['tipo'], $sql);
+            str_replace("{5}", $arguments[$i]['valor_default'], $sql);
+
             if (!mysql_query($sql)) {
                 throw new Exception(mysql_error());
             }
@@ -278,19 +146,18 @@ header($location);
             }
         }
         /*
-
-//$location = "Location: index.php?mensaje=".$mensaje."&project=".$_POST["id_proyecto"];
-//if (isset($id_metodo) &&$ id_metodo!=-1)
-//{
-//    $location .= "&m=".$id_metodo[0];
-//}
-//
-//if(isset($_POST["clasificacion_metodo"]) && is_numeric($_POST["clasificacion_metodo"]))
-//{
-//    $location .= "&cat=".$_POST["clasificacion_metodo"];
-//}
-//
-    */
+            //$location = "Location: index.php?mensaje=".$mensaje."&project=".$_POST["id_proyecto"];
+            //if (isset($id_metodo) &&$ id_metodo!=-1)
+            //{
+            //    $location .= "&m=".$id_metodo[0];
+            //}
+            //
+            //if(isset($_POST["clasificacion_metodo"]) && is_numeric($_POST["clasificacion_metodo"]))
+            //{
+            //    $location .= "&cat=".$_POST["clasificacion_metodo"];
+            //}
+            //
+        */
     }
 
     static function EditMethod()
@@ -377,75 +244,23 @@ header($location);
         }
     }
 
-    static function EditMethod()
+    static function DeleteMethod($id_metodo)
     {
-// Delete method
-ob_start();
-require_once("../server/bootstrap.php");
+        $sql="delete from argumento where id_metodo=" . $id_metodo;
+        if (!mysql_query($sql)) {
+            throw new Exception(mysql_error());
+        }
 
-$sql = "Select nombre from metodo where id_metodo = ".$_GET["m"];
+        $sql="delete from respuesta where id_metodo=" . $id_metodo;
+        $Consulta_ID = mysql_query($sql);
+        if (!mysql_query($sql)) {
+            throw new Exception(mysql_error());
+        }
 
-$row = mysql_fetch_array(mysql_query($sql));
-
-$nombre_metodo = $row[0];
-
-$sql="delete from argumento where id_metodo=".$_GET["m"];
-$Consulta_ID = mysql_query($sql);
-if (!$Consulta_ID){
-    $mensaje= $sql."<br>";
-    $mensaje.= mysql_error();
-}
-else
-{
-    $sql="delete from respuesta where id_metodo=".$_GET["m"];
-    $Consulta_ID = mysql_query($sql);
-    if (!$Consulta_ID){
-        $mensaje= $sql."<br>";
-        $mensaje.= mysql_error();
-    }
-    else
-    {
-        $mensaje="";
-    }
-}
-
-$sql="delete from metodo where id_metodo=".$_GET["m"];
-$Consulta_ID = mysql_query($sql);
-
-if (!$Consulta_ID){
-    $mensaje= $sql."<br>";
-    $mensaje.= mysql_error();
-}
-
-else
-{
-    $mensaje = "Actualizacion exitosa!! Gracias ". $_SERVER["PHP_AUTH_USER"] . "!";
-
-    $descripcion = "elimino el metodo ".$nombre_metodo." en la clasificacion ";
-
-    $sql = "Select nombre from clasificacion where id_clasificacion = ".$_GET["cat"];
-
-    $row = mysql_fetch_array(mysql_query($sql));
-
-    $descripcion .= ''.$row[0]." del proyecto ";
-
-    $sql = "Select name from mantis_project_table where id = ".$_GET["project"];
-
-    $row = mysql_fetch_array(mysql_query($sql));
-
-    $descripcion .= ''.$row[0];
-
-    $sql = "Insert into registro(id_proyecto,id_clasificacion,id_metodo,usuario,fecha,operacion,descripcion) values (".$_GET["project"].",".$_GET["cat"].",".$_GET["m"].",'".$_SERVER["PHP_AUTH_USER"]."','".  date("Y-m-d H:i:s")."','borrar','".$descripcion."')";
-
-    $Consulta_ID = mysql_query($sql);
-
-
-}
-
-//header("Location: index.php?mensaje=".$mensaje."&cat=".$_GET["cat"]."&project=".$_GET["project"]);
-
-ob_end_flush();
-
+        $sql = "delete from metodo where id_metodo=" . $id_metodo;
+        if (!mysql_query($sql)) {
+            throw new Exception(mysql_error());
+        }
     }
 }
 
