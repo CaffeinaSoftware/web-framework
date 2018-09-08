@@ -1,6 +1,6 @@
 <?php
 
-require_once("../server/bootstrap.php");
+require_once(__DIR__ . "/../../server/bootstrap.php");
 
 class ApiGenApi
 {
@@ -50,9 +50,9 @@ class ApiGenApi
 
     static function MethodDetails($method_id)
     {
-        //$info_metodo = "select * from metodo where id_metodo=".$method_id;
-        //$r = mysql_query($info_metodo) or die(mysql_error());
-        //$info_metodo=mysql_fetch_assoc($r) or die(mysql_error());
+        $info_metodo = "select * from metodo where id_metodo=".$method_id;
+        $r = mysql_query($info_metodo) or die(mysql_error());
+        $info_metodo = mysql_fetch_assoc($r) or die(mysql_error());
 
         $query_argumentos = "select * from argumento where id_metodo=".$method_id;
         $r = mysql_query($query_argumentos) or die(mysql_error());
@@ -69,6 +69,11 @@ class ApiGenApi
         {
            $respuestas[] = $row;
         }
+
+        $info_metodo["argumentos"] = $argumentos;
+        $info_metodo["respuestas"] = $respuestas;
+
+        return $info_metodo;
     }
 
     static function CreateMethod($clasificacion_metodo, $sesion_valida, $regresa_html,
@@ -162,6 +167,7 @@ class ApiGenApi
 
     static function EditMethod()
     {
+var_dump($_POST);
         if(!isset ($_POST["id_metodo"]) || !is_numeric($_POST["id_metodo"]))
         {
             throw new Exception("No se envio id_metodo");
@@ -175,44 +181,42 @@ class ApiGenApi
         if(!$regresa_html) $regresa_html=0;
 
         $sql = "update metodo set "
-            "id_clasificacion={0}," 
-            "nombre='{1}',"
-            "tipo='{2}',"
-            "sesion_valida={3},"
-            "grupo={4},"
-            "ejemplo_peticion='{5}',"
-            "ejemplo_respuesta='{6}',"
-            "descripcion='{7}',"
-            "subtitulo='{8}',"
-            "regresa_html={9}"
-            " where id_metodo={10}";
+            . "id_clasificacion={0}," 
+            . "nombre='{1}',"
+            . "tipo='{2}',"
+            . "sesion_valida={3},"
+            . "grupo={4},"
+            . "ejemplo_peticion='{5}',"
+            . "ejemplo_respuesta='{6}',"
+            . "descripcion='{7}',"
+            . "subtitulo='{8}',"
+            . "regresa_html={9}"
+            . " where id_metodo={10}";
 
-        str_replace("{0}", $_POST["clasificacion_metodo"], $sql);
-        str_replace("{1}", $_POST["nombre_metodo"], $sql);
-        str_replace("{2}", $_POST["tipo_metodo"], $sql);
-        str_replace("{3}", $combo, $sql);
-        str_replace("{4}", $_POST["grupo"], $sql);
-        str_replace("{5}", $_POST["ejemplo_peticion"], $sql);
-        str_replace("{6}", $_POST["ejemplo_respuesta"], $sql);
-        str_replace("{7}", preg_replace('/\'/','`', $_POST["descripcion_metodo"]), $sql);
-        str_replace("{8}", $_POST["subtitulo"], $sql);
-        str_replace("{9}", $regresa_html, $sql);
-        str_replace("{10}", $_POST["id_metodo"], $sql);
+        $sql = str_replace("{0}", $_POST["clasificacion_metodo"], $sql);
+        $sql = str_replace("{1}", $_POST["nombre_metodo"], $sql);
+        $sql = str_replace("{2}", $_POST["tipo_metodo"], $sql);
+        $sql = str_replace("{3}", $combo, $sql);
+        $sql = str_replace("{4}", $_POST["grupo"], $sql);
+        $sql = str_replace("{5}", $_POST["ejemplo_peticion"], $sql);
+        $sql = str_replace("{6}", $_POST["ejemplo_respuesta"], $sql);
+        $sql = str_replace("{7}", preg_replace('/\'/','`', $_POST["descripcion_metodo"]), $sql);
+        $sql = str_replace("{8}", $_POST["subtitulo"], $sql);
+        $sql = str_replace("{9}", $regresa_html, $sql);
+        $sql = str_replace("{10}", $_POST["id_metodo"], $sql);
 
-        $Consulta_ID = mysql_query($sql);
-        $id_metodo=$_POST["id_metodo"];
+        if (mysql_query($sql) === false)
+        {
+            throw new Exception(mysql_error());
+        }
 
+        $id_metodo = $_POST["id_metodo"];
+        $id_metodo = $_POST["id_metodo"];
         $sql="delete from argumento where id_metodo=".$_POST["id_metodo"];
         if (!mysql_query($sql)){
             throw new Exception(mysql_error());
         }
 
-        $sql="delete from respuesta where id_metodo=".$_POST["id_metodo"];
-        if (!mysql_query($sql)){
-            throw new Exception(mysql_error());
-        }
-
-        $id_metodo = $_POST["id_metodo"];
         for($i = 0; $i < $_POST["numero_argumentos"]; $i++)
         {
             if(!isset($_POST["nombre_argumento_".$i]))
@@ -226,6 +230,11 @@ class ApiGenApi
             {
                 throw new Exception(mysql_error());
             }
+        }
+
+        $sql="delete from respuesta where id_metodo=".$_POST["id_metodo"];
+        if (!mysql_query($sql)){
+            throw new Exception(mysql_error());
         }
 
         for($i = 0; $i < $_POST["numero_respuestas"]; $i++)
@@ -264,3 +273,31 @@ class ApiGenApi
     }
 }
 
+if (isset($_REQUEST["api"]))
+{
+    switch($_REQUEST["api"])
+    {
+        case "CreateCategory":
+            ApiGenApi::CreateCategory();
+        break;
+        case "CreateMethod":
+            ApiGenApi::CreateMethod();
+        break;
+        case "DeleteMethod":
+            ApiGenApi::DeleteMethod();
+        break;
+        case "EditCategory":
+            ApiGenApi::EditCategory();
+        break;
+        case "EditMethod":
+            ApiGenApi::EditMethod();
+        break;
+        case "MethodDetails":
+            ApiGenApi::MethodDetails();
+        break;
+        case "RemoveCategory":
+            ApiGenApi::RemoveCategory();
+        break;
+
+    }
+}

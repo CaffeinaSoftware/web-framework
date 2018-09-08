@@ -64,22 +64,22 @@ if(!isset($_GET["m"]) && !isset($_GET["cat"])){
         {
             ?>
             <tr>
-            <td class="method"  class="bordered">
+            <td class="method bordered">
                 <code><?php
                     if($argumento["ahuevo"]) echo "<b>";
                     echo $argumento["nombre"];
                     if($argumento["ahuevo"]) echo "</b>";
                 ?></code>
             </td>
-            <td class="desc"  class="bordered">
+            <td class="desc bordered">
                 <code><?php echo $argumento["tipo"]; ?></code>
             </td>
-            <td class="args"  class="bordered">
+            <td class="args bordered">
                 <?php //echo $argumento["ahuevo"];
                  echo $argumento["defaults"];
                 ?>
             </td>
-            <td class="args"  class="bordered">
+            <td class="args bordered">
                 <?php echo $argumento["descripcion"]; ?>
             </td>
             </tr>
@@ -111,13 +111,13 @@ if(!isset($_GET["m"]) && !isset($_GET["cat"])){
         {
             ?>
             <tr>
-            <td class="method" class="bordered">
+            <td class="method bordered">
                 <code><?php echo $respuesta["nombre"]; ?></code>
             </td>
-            <td class="desc" class="bordered">
+            <td class="desc bordered">
                 <code><?php echo $respuesta["tipo"]; ?></code>
             </td>
-            <td class="args" class="bordered">
+            <td class="args bordered">
                 <?php echo $respuesta["descripcion"]; ?>
             </td>
             </tr>

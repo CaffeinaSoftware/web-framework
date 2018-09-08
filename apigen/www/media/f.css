@@ -653,4 +653,4 @@ border-radius: 15px;
 cursor: auto;
 }
 
-.bordered{border:1px solid #ddd}
+.bordered{border:1px solid #ddd !important}
