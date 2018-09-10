@@ -3,6 +3,10 @@
 require_once("../server/bootstrap.php");
 require_once("utils.inc.php");
 
+class GeneratePhpApi {
+
+    static $tmpPath = "tmp/php/out/";
+
 ################################################################################
                    ##   #####  #
                   #  #  #    # #
@@ -11,7 +15,7 @@ require_once("utils.inc.php");
                  #    # #      #
                  #    # #      #
 ################################################################################
-function write_api_file( $metodo ){
+static function write_api_file( $metodo ){
     $cname = ucwords( str_replace("/"," ", str_replace("_"," ", $metodo["nombre"]) ) );
     $cname = str_replace(" ","", $cname) ;
 
@@ -155,7 +159,7 @@ function write_api_file( $metodo ){
      #    # #    # #   ##   #   #   #  #    # #      #      #      #   #  #    #
       ####   ####  #    #   #   #    #  ####  ###### ###### ###### #    #  ####
 ################################################################################
-    function write_controller( $clasificacion )
+    static function write_controller( $clasificacion )
     {
 
         $nombre = str_replace(" ","", ucwords( $clasificacion["nombre"] ));
@@ -282,7 +286,7 @@ function write_api_file( $metodo ){
              #  #   ##   #   #      #   #  #      #    # #    # #
              #  #    #   #   ###### #    # #      #    #  ####  ######
 ################################################################################
-    function write_controller_interface($clasificacion)
+    static function write_controller_interface($clasificacion)
     {
 
         $nombre = str_replace(" ","", ucwords( $clasificacion["nombre"] ));
@@ -404,7 +408,7 @@ function write_api_file( $metodo ){
 
         return $out;
     }
-
+}
 
 ################################################################################
                       ####  #####   ##   #####  #####
@@ -415,30 +419,34 @@ function write_api_file( $metodo ){
                       ####    #   #    # #    #   #
 ################################################################################
 
-if(is_dir("tmp/out/server/")){
+if(is_dir(GeneratePhpApi::$tmpPath . "/server/")) {
+    delete_directory( GeneratePhpApi::$tmpPath . "/server/" );
+}
+
+if(is_dir(GeneratePhpApi::$tmpPath . "/server/")) {
     delete_directory( "tmp/out/server/" );
 }
 
-if(is_dir("tmp/builds/api/")){
+if(is_dir("tmp/builds/api/")) {
     delete_directory("tmp/builds/api/");
 }
 
-create_structure("tmp/out/server/api/");
-create_structure("tmp/out/server/controller/");
-create_structure("tmp/out/server/controller/interfaces/");
-create_structure("tmp/builds/api/");
+create_structure(GeneratePhpApi::$tmpPath . "/server/api/");
+create_structure(GeneratePhpApi::$tmpPath . "/server/controller/");
+create_structure(GeneratePhpApi::$tmpPath . "/server/controller/interfaces/");
+create_structure(GeneratePhpApi::$tmpPath . "/builds/api");
 
 $res = mysql_query("select m.* from metodo m,clasificacion c where c.id_proyecto = ".$_GET["project"]." and m.id_clasificacion = c.id_clasificacion order by id_clasificacion") or die(mysql_error());
 
-$_api_file = fopen("tmp/out/server/api/ApiLoader.php", 'w') or die("can't open ApiLoader");
+$_api_file = fopen(GeneratePhpApi::$tmpPath . "/server/api/ApiLoader.php", 'w') or die("can't open ApiLoader");
 
 fwrite( $_api_file, "<?php \n\n");
 
 while(($row = mysql_fetch_assoc($res)) != null ){
 
-    echo "Procesando " . $row["nombre"] . " ... \n";
+    echo "php: Procesando " . $row["nombre"] . " ... \n";
 
-    fwrite($_api_file, write_api_file(  $row ) );
+    fwrite($_api_file, GeneratePhpApi::write_api_file(  $row ) );
 }
 
 fclose($_api_file);
@@ -451,22 +459,20 @@ while( ($row = mysql_fetch_assoc( $query )) != null )
 {
     // write the interface
     $iname = str_replace(" ","", ucwords($row["nombre"]));
-    $fn = "tmp/out/server/controller/interfaces/" . $iname . ".interface.php";
+    $fn = GeneratePhpApi::$tmpPath . "/server/controller/interfaces/" . $iname . ".interface.php";
     $f = fopen($fn, 'w') or die("can't create new interface file");
-    fwrite($f, write_controller_interface(  $row) );
+    fwrite($f, GeneratePhpApi::write_controller_interface(  $row) );
     fclose($f);
 
 
     //write the actual controller
-    $fn = "tmp/out/server/controller/" . $iname . ".controller.php";
+    $fn = GeneratePhpApi::$tmpPath . "/server/controller/" . $iname . ".controller.php";
     $f = fopen($fn, 'w') or die("can't open file");
 
-    fwrite($f, write_controller(  $row) );
+    fwrite($f, GeneratePhpApi::write_controller(  $row) );
     fclose($f);
 }
 
-//ok al terminar enzipar todo en builds
-Zip('tmp/out/server/', 'tmp/builds/api/full_api.zip');
 
 
 ?></pre>

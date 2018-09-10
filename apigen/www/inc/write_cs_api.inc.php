@@ -15,7 +15,7 @@ class GenerateCsharpApi {
          #    # #    # #   ##   #   #   #  #    # #      #      #      #   #  #    #
           ####   ####  #    #   #   #    #  ####  ###### ###### ###### #    #  ####
     ################################################################################
-    function write_controller( $clasificacion ) {
+    static function write_controller( $clasificacion ) {
 
         $nombre = str_replace(" ","", ucwords( $clasificacion["nombre"] ));
 
@@ -38,7 +38,7 @@ class GenerateCsharpApi {
             //$out .= "    * " . utf8_decode(strip_tags($m["descripcion"])) . "\n";
             //$out .= "    *\n";
 
-            $params = build_argument_list($m["id_metodo"]);
+            $params = self::build_argument_list($m["id_metodo"]);
 
             $respuesta_out = "";
             $returns_query = mysql_query("select * from respuesta where id_metodo = ". $m["id_metodo"] .";");
@@ -66,7 +66,7 @@ class GenerateCsharpApi {
 
             $out .= "           Dictionary<string, string> request = new Dictionary<string, string>();\n";
 
-            $out .= build_http_call($m["id_metodo"]);
+            $out .= self::build_http_call($m["id_metodo"]);
 
             //$out .= "       request["usuario"] = "1";");
 
@@ -80,7 +80,7 @@ class GenerateCsharpApi {
         return $out;
     }
 
-    function build_http_call($metodo)
+    static function build_http_call($metodo)
     {
         $out = "";
         $args_params = mysql_query("select * from argumento where id_metodo = ". $metodo ." order by ahuevo desc, nombre;");
@@ -99,7 +99,7 @@ class GenerateCsharpApi {
         return $out;
     }
 
-    function build_argument_list($metodo)
+    static function build_argument_list($metodo)
     {
         $params = "";
         $args_params = mysql_query("select * from argumento where id_metodo = ". $metodo ." order by ahuevo desc, nombre;");
@@ -190,6 +190,7 @@ class GenerateCsharpApi {
                       ####    #   #    # #    #   #
 ################################################################################
 
+?><pre><?php
 if(is_dir(GenerateCsharpApi::$tmpPath . "/server/")){
     delete_directory( GenerateCsharpApi::$tmpPath . "/server/" );
 }
@@ -203,6 +204,8 @@ $query = mysql_query("select * from clasificacion where id_proyecto = ".$_GET["p
 
 while (($row = mysql_fetch_assoc( $query )) != null) {
 
+    echo "cs: Procesando " . $row["nombre"] . " ... \n";
+
     // write the interface
     $iname = str_replace(" ","", ucwords($row["nombre"]));
 
@@ -210,12 +213,14 @@ while (($row = mysql_fetch_assoc( $query )) != null) {
     $fn = GenerateCsharpApi::$tmpPath . "/server/controller/" . $iname . ".controller.cs";
     $f = fopen($fn, 'w') or die("can't open file");
 
-    fwrite($f, write_controller($row));
+    fwrite($f, GenerateCsharpApi::write_controller($row));
     fclose($f);
 }
 
-//ok al terminar enzipar todo en builds
-Zip(GenerateCsharpApi::$tmpPath . "/server/", "tmp/builds/api/full_api.zip");
+////ok al terminar enzipar todo en builds
+//Zip(GenerateCsharpApi::$tmpPath . "/server/", "tmp/builds/api/full_api.zip");
+////ok al terminar enzipar todo en builds
+//Zip(GeneratePhpApi::$tmpPath . '/server/', 'tmp/builds/api/full_api.zip');
 
 
-?>
+?></pre>
