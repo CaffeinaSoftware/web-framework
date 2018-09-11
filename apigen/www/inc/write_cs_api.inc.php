@@ -34,19 +34,11 @@ class GenerateCsharpApi {
         while (($m = mysql_fetch_assoc($argsq)) != null)
         {
             $out .= "\n";
-            //$out .= "  /**\n";
-            //$out .= "    * " . utf8_decode(strip_tags($m["descripcion"])) . "\n";
-            //$out .= "    *\n";
 
             $params = self::build_argument_list($m["id_metodo"]);
 
             $respuesta_out = "";
             $returns_query = mysql_query("select * from respuesta where id_metodo = ". $m["id_metodo"] .";");
-
-            //while(($row_respuesta = mysql_fetch_assoc( $returns_query )) != null ) {
-            //    $out .= "      * @return ". $row_respuesta["nombre"] ." ". $row_respuesta["tipo"] ." ". $row_respuesta["descripcion"] ."\n";
-            //}
-            //$out .= "    **/\n";
 
             $iname = str_replace("api/", "", $m["nombre"] );
             $iname = str_replace("/", " ", $iname );
@@ -106,7 +98,6 @@ class GenerateCsharpApi {
 
 
         while (($row_param = mysql_fetch_assoc( $args_params )) != null ) {
-            //$out .= "      * @param ". $row_param["nombre"] ." ". $row_param["tipo"] ." ". strip_tags($row_param["descripcion"]) ."\n";
             $params .= " ";
 
             // Write the type
@@ -216,11 +207,6 @@ while (($row = mysql_fetch_assoc( $query )) != null) {
     fwrite($f, GenerateCsharpApi::write_controller($row));
     fclose($f);
 }
-
-////ok al terminar enzipar todo en builds
-//Zip(GenerateCsharpApi::$tmpPath . "/server/", "tmp/builds/api/full_api.zip");
-////ok al terminar enzipar todo en builds
-//Zip(GeneratePhpApi::$tmpPath . '/server/', 'tmp/builds/api/full_api.zip');
 
 
 ?></pre>

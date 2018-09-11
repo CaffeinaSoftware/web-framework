@@ -150,24 +150,10 @@ class ApiGenApi
                 throw new Exception(mysql_error());
             }
         }
-        /*
-            //$location = "Location: index.php?mensaje=".$mensaje."&project=".$_POST["id_proyecto"];
-            //if (isset($id_metodo) &&$ id_metodo!=-1)
-            //{
-            //    $location .= "&m=".$id_metodo[0];
-            //}
-            //
-            //if(isset($_POST["clasificacion_metodo"]) && is_numeric($_POST["clasificacion_metodo"]))
-            //{
-            //    $location .= "&cat=".$_POST["clasificacion_metodo"];
-            //}
-            //
-        */
     }
 
     static function EditMethod()
     {
-var_dump($_POST);
         if(!isset ($_POST["id_metodo"]) || !is_numeric($_POST["id_metodo"]))
         {
             throw new Exception("No se envio id_metodo");
