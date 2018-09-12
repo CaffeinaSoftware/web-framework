@@ -197,7 +197,6 @@ class ApiGenApi
         }
 
         $id_metodo = $_POST["id_metodo"];
-        $id_metodo = $_POST["id_metodo"];
         $sql="delete from argumento where id_metodo=".$_POST["id_metodo"];
         if (!mysql_query($sql)){
             throw new Exception(mysql_error());

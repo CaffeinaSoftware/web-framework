@@ -24,8 +24,7 @@ function showEditCategoryForm(nombre,descripcion,id)
         html += '<label> Descripcion </label>';
         html += '<textarea name="descripcion_clasificacion" id="descripcion_clasificacion_edit">'+descripcion+'</textarea>';
 
-        // TODO: php here
-        html += '<input type="hidden" name="id_proyecto" value="<?php if(isset($_GET["project"]) && is_numeric($_GET["project"])) echo $_GET["project"]; ?>">';
+        html += '<input type="hidden" name="id_proyecto" value="1">';
         html += '<input type="hidden" name="id_clasificacion" value='+id+'>';
         html += '<input type="button" onClick="validarCamposCategoriaEditar()" value="Enviar">';
         html += '<a onClick="hideEditCategoryForm()">Hide</a>';
@@ -251,7 +250,8 @@ function validarCampos()
 
 var param_count = -1;
 
-function addParam(){
+function addParam()
+{
     param_count ++;
     document.getElementById("numero_argumentos").value=param_count+1;
     var html = '';
@@ -291,7 +291,8 @@ function addParam(){
     m.render();
 }
 
-function addParamEdit(nombre,tipo,ahuevo,descripcion,Default){
+function addParamEdit(nombre,tipo,ahuevo,descripcion,Default)
+{
     param_count ++;
     document.getElementById("numero_argumentos").value = param_count+1;
     var html = '';
@@ -304,20 +305,11 @@ function addParamEdit(nombre,tipo,ahuevo,descripcion,Default){
     html +=     '<td>';
     html +=         '<select name="tipo_argumento_'+param_count+'" id="args_tipo_'+param_count+'" onChange="m.render()">';
 
-    if(tipo=="string") html +=             '<option value="string" selected>string</option>';
-    else html +=             '<option value="string">string</option>';
-
-    if(tipo=="bool") html +=             '<option value="bool" selected>bool</option>';
-    else html +=             '<option value="bool">bool</option>';
-
-    if(tipo=="int") html +=             '<option value="int" selected>int</option>';
-    else html +=             '<option value="int">int</option>';
-
-    if(tipo=="float") html +=             '<option value="float" selected>float</option>';
-    else html +=             '<option value="float">float</option>';
-
-    if(tipo=="json") html +=             '<option value="json" selected>json</option>';
-    else html +=             '<option value="json">json</option>';
+    html += '         <option value="string">string</option>';
+    html += '         <option value="bool">bool</option>';
+    html += '         <option value="int">int</option>';
+    html += '         <option value="float">float</option>';
+    html += '         <option value="json">json</option>';
 
     html +=         '</select>'; 
     html +=     '</td>';
@@ -345,11 +337,13 @@ function addParamEdit(nombre,tipo,ahuevo,descripcion,Default){
     html +=     '</tr>' ;
 
     $("#param_space").append(html);
+    $("#args_tipo_"+param_count).val(tipo);
 
 }
 
 var response_count = -1;
-function addResponse(){
+function addResponse()
+{
     response_count++;
     document.getElementById("numero_respuestas").value=response_count+1;
     var html = '';
@@ -406,18 +400,17 @@ function SetValuesInEditForm(methodDetails)
     $("#ejemplo_peticion").val(methodDetails['ejemplo_peticion']);
     $("#ejemplo_respuesta").val(methodDetails['ejemplo_respuesta']);
     $("#id_metodo").val(methodDetails['id_metodo']);
-    
 }
 
 function SaveValuesInEditForm()
 {
     let values = $("#form_insercion").serialize();
-      $.ajax({
+    $.ajax({
             type: "POST",
             url: "api/api.php?api=EditMethod",
             data: values,
-            success: function(data) {
-            }
+        }).done(function(){
+            window.location = "editmethod.php?m=" + $("#id_metodo").val();
         });
 }
 
@@ -433,7 +426,7 @@ function addResponseEdit(nombre, tipo, descripcion)
     html += '   </td>';
 
     html += '   <td>';
-    html += '      <select name="tipo_respuesta_'+response_count+'" id="response_tipo_'+response_count+'" onChange="m.render()">';
+    html += '      <select name="tipo_respuesta_'+response_count+'" id="response_tipo_'+response_count+'">';
     html += '         <option value="string">string</option>';
     html += '         <option value="bool">bool</option>';
     html += '         <option value="int">int</option>';
@@ -441,6 +434,7 @@ function addResponseEdit(nombre, tipo, descripcion)
     html += '         <option value="json">json</option>';
     html += '      </select>';
     html += '   </td>';
+
     // TODO seleccionar el tipo apropiado
     // mismo que en linea 307
 
@@ -452,70 +446,6 @@ function addResponseEdit(nombre, tipo, descripcion)
 
     html += '</tr>' ;
     $("#response_space").append(html);
+    $("#response_tipo_"+response_count).val(tipo);
 }
-
-var ApiMethod = function(){
-
-    this.nombre     = "";
-    this.subtitulo  = "";
-    this.metodo     = "";
-    this.http       = "GET";
-    this.desc       = "";
-    this.html       = false;
-    this.params     = [];
-    this.response   = [];
-    this.entrada = "";
-    this.salida  = "";
-    this.auth       = {
-          sesion  : true,
-          grupo   : null,
-          permiso : null
-    };
-
-    this.render = function(){
-        $("#preview_nombre").html(this.http + " " + this.nombre);
-        $("#preview_subtitle").html(this.subtitulo);
-        $("#preview_desc").html(this.desc);
-        //clean the space
-
-       // $("#preview_regresa_html").html(this.html ? "Si" : "No" );
-
-        $("#preview_auth_sesion").html(this.auth.sesion ? "Si" : "No" );
-        $("#preview_auth_grupo").html(this.auth.grupo );
-        $("#preview_auth_permiso").html(this.nombre );
-
-        $("#preview_respuesta").html(this.salida);
-        $("#preview_peticion").html(this.entrada);
-
-
-        //var preview_arg_table = "";
-        //for (a = 0; a <= param_count ; a ++ )
-        //{
-        //    preview_arg_table += '<tr><td class="c135"><p class="c3">';
-        //    preview_arg_table += '<span class="c7">' +  $("#args_nombre_"+a ).val() + '</span>';
-        //    preview_arg_table += '</p></td><td class="c61"><p class="c3">';
-        //    preview_arg_table += '<span class="c7">' + $("#args_desc_"+a ).val() +'</span>';
-        //    preview_arg_table += '</p></td><td class="c96"><p class="c3">';
-        //    preview_arg_table += '<span class="c7">' + $("#args_ahuevo_"+a ).val() +'</span>';
-        //    preview_arg_table += '</p></td><td class="c82"><p class="c3">';
-        //    preview_arg_table += '<span class="c7">'+ $("#args_tipo_"+a ).val() + '</span>';
-        //    preview_arg_table += '</p></td></tr>';
-        //}
-        //$("#preview_arg_table").html(preview_arg_table);
-
-        var preview_resp_table = "";
-        for (a = 0; a <= response_count ; a ++ )
-        {
-            preview_resp_table += '<tr><td class="c135"><p class="c3">';
-            preview_resp_table += '<span class="c7">' +  $("#response_nombre_"+a ).val() + '</span>';
-            preview_resp_table += '</p></td><td class="c61"><p class="c3">';
-            preview_resp_table += '<span class="c7">' + $("#response_desc_"+a ).val() +'</span>';
-            preview_resp_table += '</p></td><td class="c96"><p class="c3">';
-            preview_resp_table += '<span class="c7">' + $("#response_tipo_"+a ).val() +'</span>';
-            preview_resp_table += '</p></td></tr>';
-        }
-        $("#preview_resp_table").html(preview_resp_table);
-    }
-};
-
 

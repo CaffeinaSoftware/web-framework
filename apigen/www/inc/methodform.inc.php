@@ -46,7 +46,7 @@
         <tr>
             <td>Method</td>
             <td>
-            <select name="tipo_metodo">
+            <select id="tipo_metodo" name="tipo_metodo">
                 <option value="GET">GET</option>
                 <option value="POST">POST</option>
                 <option value="POST/GET">POST/GET</option>

@@ -654,3 +654,7 @@ cursor: auto;
 }
 
 .bordered{border:1px solid #ddd !important}
+
+input, textarea{
+    width:100%;
+}
