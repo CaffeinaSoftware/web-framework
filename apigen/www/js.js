@@ -382,7 +382,7 @@ function SetValuesInEditForm(methodDetails)
 
     for (let arg of arguments)
     {
-        addParamEdit(arg.nombre, arg.tipo, arg.ahuevo, arg.descripcion, arg.defaults);
+        addParamEdit(arg.nombre, arg.tipo, arg.ahuevo == 1, arg.descripcion, arg.defaults);
     }
 
     for (let resp of responses)
