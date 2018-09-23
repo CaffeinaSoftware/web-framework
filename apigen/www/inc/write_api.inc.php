@@ -1,4 +1,4 @@
-<pre><?php
+<?php
 
 require_once("../server/bootstrap.php");
 require_once("utils.inc.php");
@@ -444,7 +444,6 @@ fwrite( $_api_file, "<?php \n\n");
 
 while(($row = mysql_fetch_assoc($res)) != null ){
 
-    echo "php: Procesando " . $row["nombre"] . " ... \n";
 
     fwrite($_api_file, GeneratePhpApi::write_api_file(  $row ) );
 }
@@ -457,6 +456,8 @@ $query = mysql_query("select * from clasificacion where id_proyecto = ".$_GET["p
 
 while( ($row = mysql_fetch_assoc( $query )) != null )
 {
+    echo "php: Procesando " . $row["nombre"] . " ... \n";
+
     // write the interface
     $iname = str_replace(" ","", ucwords($row["nombre"]));
     $fn = GeneratePhpApi::$tmpPath . "/server/controller/interfaces/" . $iname . ".interface.php";
@@ -473,6 +474,3 @@ while( ($row = mysql_fetch_assoc( $query )) != null )
     fclose($f);
 }
 
-
-
-?></pre>

@@ -4,209 +4,247 @@ require_once("../server/bootstrap.php");
 require_once("utils.inc.php");
 
 class GenerateCsharpApi {
-
-    static $tmpPath = "tmp/cs/out/";
-
-    ################################################################################
-          ####   ####  #    # ##### #####   ####  #      #      ###### #####   ####
-         #    # #    # ##   #   #   #    # #    # #      #      #      #    # #
-         #      #    # # #  #   #   #    # #    # #      #      #####  #    #  ####
-         #      #    # #  # #   #   #####  #    # #      #      #      #####       #
-         #    # #    # #   ##   #   #   #  #    # #      #      #      #   #  #    #
-          ####   ####  #    #   #   #    #  ####  ###### ###### ###### #    #  ####
-    ################################################################################
-    static function write_controller( $clasificacion ) {
-
-        $nombre = str_replace(" ","", ucwords( $clasificacion["nombre"] ));
-
-        $out = "\n";
-        $out .= "\n";
-        $out .= "using System;\n";
-        $out .= "using System.Collections.Generic;\n";
-
-        $out .= "\n";
-        $out .= "namespace PosERP {\n";
-        $out .= "\n";
-        $out .= "    public class ". $nombre ."Controller {\n";
-        $out .= "\n";
-
-        $argsq = mysql_query("select * from metodo where id_clasificacion = ". $clasificacion["id_clasificacion"] .";");
-        while (($m = mysql_fetch_assoc($argsq)) != null)
-        {
-            $out .= "\n";
-
-            $params = self::build_argument_list($m["id_metodo"]);
-
-            $respuesta_out = "";
-            $returns_query = mysql_query("select * from respuesta where id_metodo = ". $m["id_metodo"] .";");
-
-            $iname = str_replace("api/", "", $m["nombre"] );
-            $iname = str_replace("/", " ", $iname );
-            $iname = str_replace("_", " ", $iname );
-            $parts = explode(" ", $iname);
-            $iname = "";
-
-            for ($i= sizeof($parts) - 1; $i > 0  ; $i--) {
-                $iname .= $parts[$i]." ";
-            }
-
-            $iname = ucwords($iname);
-            $iname = str_replace(" ","", $iname );
-
-            $out .= "       public static Response " . $iname . "(".$params.")\n";
-            $out .= "       {\n";
-
-            $out .= "           Dictionary<string, string> request = new Dictionary<string, string>();\n";
-
-            $out .= self::build_http_call($m["id_metodo"]);
-
-            //$out .= "       request["usuario"] = "1";");
-
-            $out .= "           return (Response)PosERP.GetInstance().". $m["tipo"] ."(\"". $m["nombre"]  ."\", request);\n";
-            $out .= "       }\n";
-        }
-        $out .= "  }\n";
-
-        $out .= "}\n";
-
-        return $out;
-    }
-
-    static function build_http_call($metodo)
-    {
+    static function build_http_call($metodo) {
         $out = "";
-        $args_params = mysql_query("select * from argumento where id_metodo = ". $metodo ." order by ahuevo desc, nombre;");
-
-        while (($row_param = mysql_fetch_assoc( $args_params )) != null ) {
-
-
-            if($row_param["ahuevo"] != "0") {
-
-                $out .= "           request[\"".  $row_param["nombre"] ."\"] = ". $row_param["nombre"] .".ToString();\n";
+        foreach ($metodo->argumentos as $argumento) {
+            if($argumento["ahuevo"] != "0") {
+                $out .= "           request[\"".  $argumento["nombre"] ."\"] = ". $argumento["nombre"] .".ToString();\n";
             } else {
-                $out .= "           if (" . $row_param["nombre"] . " != null) request[\"".  $row_param["nombre"] ."\"] = ".$row_param["nombre"]."?.ToString();\n";
+                $out .= "           if (" . $argumento["nombre"] . " != null) request[\"".  $argumento["nombre"] ."\"] = ".$argumento["nombre"]."?.ToString();\n";
             }
         }
-
         return $out;
     }
 
-    static function build_argument_list($metodo)
-    {
+    static function build_argument_list($metodo) {
         $params = "";
-        $args_params = mysql_query("select * from argumento where id_metodo = ". $metodo ." order by ahuevo desc, nombre;");
-
-
-        while (($row_param = mysql_fetch_assoc( $args_params )) != null ) {
+        foreach ($metodo->argumentos as $argumento) {
             $params .= " ";
 
             // Write the type
-            switch ($row_param["tipo"]) {
+            switch ($argumento["tipo"]) {
                 case "string": 
                     $params .= "String";
                     break;
                     //case "float": 
                 case "json": 
-                    $params .= $row_param["tipo"];
+                    $params .= $argumento["tipo"];
                     break;
                 case "enum": 
                     $params .= "String /*enum */";
                     break;
                 default:
-                    $params .= $row_param["tipo"];
-                    if($row_param["ahuevo"] == "0") {
+                    $params .= $argumento["tipo"];
+                    if($argumento["ahuevo"] == "0") {
                         $params .= "?"; 
                     }
             }
 
+            $params .= " " . $argumento["nombre"] ;
 
-            $params .= " " . $row_param["nombre"] ;
-
-            if($row_param["ahuevo"] != "0") {
+            if($argumento["ahuevo"] != "0") {
                 // not optional, no default value
                 $params .=  ",";
                 continue;
             }
 
-            //
             // Write the default value
-            //
             $found = false;
 
-            if(strlen($row_param["defaults"]) == 0){
+            if(strlen($argumento["defaults"]) == 0){
                 $found = true;
                 $params .= " = null";
             }
 
-            if($row_param["defaults"] === "null"){
+            if($argumento["defaults"] === "null"){
                 $found = true;
                 $params .= " = null";
             }
 
-            if($row_param["defaults"] === "\"\""){
+            if($argumento["defaults"] === "\"\""){
                 $found = true;
                 $params .= " = \"\"";
             }
-
 
             if ($found) {
                 $params .=  ",";
                 continue;
             }
 
-            if (($row_param["tipo"] == "bool") || ($row_param["tipo"] == "int")) {
-                $params .= " =  " . $row_param["defaults"] . " ";
-            } else if (($row_param["tipo"] == "float")) {
-                $params .= " =  " . $row_param["defaults"] . "f";
+            if (($argumento["tipo"] == "bool") || ($argumento["tipo"] == "int")) {
+                $params .= " =  " . $argumento["defaults"] . " ";
+            } else if (($argumento["tipo"] == "float")) {
+                $params .= " =  " . $argumento["defaults"] . "f";
 
             } else {
-                $params .= " = \"" . $row_param["defaults"] . "\"";
+                $params .= " = \"" . $argumento["defaults"] . "\"";
             }
             $params .=  ",";
         }
 
         $params = substr($params, 0, -1);
         return $params;
+    }
 
+    static function WriteMethod($metodo, $clasificacion) {
+
+        $className = str_replace(" ","", ucwords($clasificacion->nombre));
+        $methodName = ApiNameToMethodName($metodo->nombre);
+
+        $docs = "---\n";
+        $docs .= "name: empresas \n";
+        $docs .= "position: Developer\n";
+        $docs .= "lang: cs\n";
+        $docs .= "permalink: /docs/cs/". $className ."/".$methodName."/\n";
+        $docs .= "apiname: ". $className ."/".$methodName. "\n";
+        $docs .= "layout: docs\n";
+        $docs .= "---\n";
+
+        $params = GenerateCsharpApi::build_argument_list($metodo);
+
+        $desc = str_replace("\n", "", $metodo->descripcion);
+        $desc = str_replace("\r", "", $desc);
+
+        $docs .= "## $methodName ##\n";
+
+        $docs .= "{% highlight ruby %}\n";
+        $docs .= "public static Response " . $methodName . "(".$params.")\n";
+        $docs .= "{% endhighlight %}\n\n";
+        $docs .= "\n";
+
+        $docs .= "### Parametros ###\n\n";
+        $docs .= "| Nombre | Tipo | Default | Description |\n";
+        foreach ($metodo->argumentos as $argumento) {
+            $docs .= "|" . $argumento['nombre'] . "|";
+
+            // Write the type
+            switch ($argumento["tipo"]) {
+                case "string": 
+                    $docs .= "String";
+                    break;
+                    //case "float": 
+                case "json": 
+                    $docs .= $argumento["tipo"];
+                    break;
+                case "enum": 
+                    $docs .= "String /*enum */";
+                    break;
+                default:
+                    $docs .= $argumento["tipo"];
+                    if($argumento["ahuevo"] == "0") {
+                        $docs .= "?"; 
+                    }
+            }
+            $docs .= "|";
+
+            if($argumento["ahuevo"] == "0") {
+                $found = false;
+
+                if(strlen($argumento["defaults"]) == 0){
+                    $found = true;
+                    $docs .= "null";
+                }
+
+                if($argumento["defaults"] === "null"){
+                    $found = true;
+                    $docs .= "null";
+                }
+
+                if($argumento["defaults"] === "\"\""){
+                    $found = true;
+                    $docs .= "\"\"";
+                }
+
+                if (!$found) {
+                    if (($argumento["tipo"] == "bool") || ($argumento["tipo"] == "int")) {
+                        $docs .= $argumento["defaults"] . " ";
+                    } else if (($argumento["tipo"] == "float")) {
+                        $docs .= $argumento["defaults"] . "f";
+
+                    } else {
+                        $docs .= " \"" . $argumento["defaults"] . "\"";
+                    }
+                }
+
+            }
+            $docs .= "|";
+            $docs .= $argumento['descripcion']."|\n";
+        }
+
+        $documentationFileName = "docs/" . NormalizeApiNameToFile("cs/".$metodo->nombre) . ".md";
+        FileWriter::Write($documentationFileName, $docs);
     }
 }
 
+$perClasif = function($clasificacion)
+{
+    print "cs: $clasificacion->nombre\n";
 
-################################################################################
-                      ####  #####   ##   #####  #####
-                     #        #    #  #  #    #   #
-                      ####    #   #    # #    #   #
-                          #   #   ###### #####    #
-                     #    #   #   #    # #   #    #
-                      ####    #   #    # #    #   #
-################################################################################
+    $nombre = str_replace(" ","", ucwords($clasificacion->nombre));
 
-?><pre><?php
-if(is_dir(GenerateCsharpApi::$tmpPath . "/server/")){
-    delete_directory( GenerateCsharpApi::$tmpPath . "/server/" );
-}
+    $out = "\n";
+    $out .= "using System;\n";
+    $out .= "using System.Collections.Generic;\n\n";
+    $out .= "namespace PosERP {\n\n";
+    $out .= "    public class ". $nombre ."Controller {\n\n";
 
-create_structure(GenerateCsharpApi::$tmpPath . "/server/api/");
-create_structure(GenerateCsharpApi::$tmpPath . "/server/controller/");
-create_structure(GenerateCsharpApi::$tmpPath . "/server/controller/interfaces/");
+    foreach ($clasificacion->metodos as $metodo)
+    {
+        $methodName = ApiNameToMethodName($metodo->nombre);
 
-//create controller interface
-$query = mysql_query("select * from clasificacion where id_proyecto = ".$_GET["project"].";");
+        $params = GenerateCsharpApi::build_argument_list($metodo);
 
-while (($row = mysql_fetch_assoc( $query )) != null) {
+        $out .= "       public static Response " . $methodName . "(".$params.")\n";
+        $out .= "       {\n";
+        $out .= "           Dictionary<string, string> request = new Dictionary<string, string>();\n";
+        $out .= GenerateCsharpApi::build_http_call($metodo);
+        $out .= "           return (Response)PosERP.GetInstance().". $metodo->tipo ."(\"". $metodo->nombre  ."\", request);\n";
+        $out .= "       }\n";
+    }
 
-    echo "cs: Procesando " . $row["nombre"] . " ... \n";
+    $out .= "  }\n";
+    $out .= "}\n";
 
-    // write the interface
-    $iname = str_replace(" ","", ucwords($row["nombre"]));
+    // Write the actual controller
+    $className = str_replace(" ","", ucwords($clasificacion->nombre));
+    $controllerFileName = "sdk/cs/" . $className . ".controller.cs";
+    FileWriter::Write($controllerFileName, $out);
 
-    //write the actual controller
-    $fn = GenerateCsharpApi::$tmpPath . "/server/controller/" . $iname . ".controller.cs";
-    $f = fopen($fn, 'w') or die("can't open file");
+    // Write the documentation
+    $docs = "---\n";
+    $docs .= "lang: cs\n";
+    $docs .= "permalink: /docs/cs/". $className ."/\n";
+    $docs .= "apiname: ". $className ."\n";
+    $docs .= "layout: docs\n";
+    $docs .= "toplevel: true\n";
+    $docs .= "class: ". $className ."\n";
+    $docs .= "---\n";
 
-    fwrite($f, GenerateCsharpApi::write_controller($row));
-    fclose($f);
-}
+    $docs .= "### ". $clasificacion->nombre ." ###\n\n";
+    $docs .= "{% highlight ruby %}\n";
+    $docs .= " ". $className .";\n";
+    $docs .= "{% endhighlight %}\n\n";
 
+    $docs .= "### Metodos ###\n\n";
+    $docs .= "| Nombre | Description |\n";
+    foreach ($clasificacion->metodos as $metodo)
+    {
+        $methodName = ApiNameToMethodName($metodo->nombre);
 
-?></pre>
+        $params = GenerateCsharpApi::build_argument_list($metodo);
+
+        $desc = str_replace("\n", "", $metodo->descripcion);
+        $desc = str_replace("\r", "", $desc);
+
+        $docs .= "[$methodName](/es/docs/cs/$clasificacion->nombre/$methodName)";
+        $docs .= "|" . $desc ;
+        $docs .= "|\n";
+    }
+
+    $documentationFileName = "docs/cs" . $className . ".md";
+    FileWriter::Write($documentationFileName, $docs);
+};
+
+$proj = Project::Load();
+$proj->Start($perClasif, ['GenerateCsharpApi', 'WriteMethod']);
+
