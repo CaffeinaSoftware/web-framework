@@ -8,6 +8,7 @@ $perMethod = function($metodo, $clasificacion)
     $out = "---\n";
     $out .= "lang: http\n";
     $out .= "permalink: /docs/http/". $metodo->nombre ."/\n";
+    $out .= "title: HTTP - ". $metodo->nombre ."/\n";
     $out .= "apiname: docs/http/". $metodo->nombre ."\n";
     $out .= "layout: docs\n";
     $out .= "---\n";
@@ -15,7 +16,7 @@ $perMethod = function($metodo, $clasificacion)
     // Clasificacion y nombre de metodo
     $out .= "## " . $clasificacion->nombre . " ##\n\n";
     $out .= "" . utf8_encode($clasificacion->descripcion) . "\n";
-    $out .= "## ". $metodo->nombre ."  ##\n\n";
+    $out .= "## " . $metodo->tipo . " " . $metodo->nombre ."  ##\n\n";
 
     // Argumentos
     $out .= "### Argumentos  ###\n\n";

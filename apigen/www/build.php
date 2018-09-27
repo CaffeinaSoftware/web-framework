@@ -136,9 +136,8 @@ mkdir("output/tmp");
 unlink("output/full_api.zip");
 
 require_once( "inc/write_docs_api.inc.php" );
-//require_once( "inc/write_api.inc.php" );
+require_once( "inc/write_api.inc.php" );
 require_once( "inc/write_cs_api.inc.php" );
-
 
 Zip("output/tmp", "output/full_api.zip");
 
