@@ -19,20 +19,22 @@ function Zip($source, $destination){
 
             foreach ($files as $file)
             {
+                if (basename($file) == "..") continue;
+
                 $file = realpath($file);
+
 
                 if (is_dir($file) === true)
                 {
                     $zip->addEmptyDir(str_replace($source . '/', '', $file . '/'));
                 }
-
                 else if (is_file($file) === true)
                 {
                     $zip->addFromString(str_replace($source . '/', '', $file), file_get_contents($file));
+
                 }
             }
         }
-
         else if (is_file($source) === true)
         {
             $zip->addFromString(basename($source), file_get_contents($source));
@@ -63,18 +65,18 @@ function delete_directory($dirname) {
     return true;
 }
 
-function create_structure( $dir, $n = 1 ){
-
+function create_structure($dir, $n = 1) {
     $p = explode( "/", $dir );
-
-    if( $n == sizeof($p) ) return;
+    if ($n == sizeof($p)) return;
 
     $f = "";
+    for ($i=0; $i < $n; $i++) {
+        $f .=  $p[$i] . "/";
+    }
 
-    for ($i=0; $i < $n; $i++) $f .=  $p[$i] . "/";
-
-    if( !is_dir( $f ) ) mkdir ( $f );
-
+    if( !is_dir( $f ) ) {
+        mkdir ( $f );
+    }
     create_structure($dir, ++$n);
 }
 

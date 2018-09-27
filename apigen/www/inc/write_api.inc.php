@@ -1,11 +1,11 @@
-<pre><?php
+<?php
 
 require_once("../server/bootstrap.php");
 require_once("utils.inc.php");
 
 class GeneratePhpApi {
 
-    static $tmpPath = "tmp/php/out/";
+    static $tmpPath = "output/tmp/_php/";
 
 ################################################################################
                    ##   #####  #
@@ -20,8 +20,7 @@ static function write_api_file( $metodo ){
     $cname = str_replace(" ","", $cname) ;
 
     $out = "\n";
-    $out .= "  class ". $cname ." extends ApiHandler {\n";
-    $out .= "  \n\n";
+    $out .= "  class ". $cname ." extends ApiHandler {\n\n";
     $out .= "\tprotected function DeclareAllowedRoles(){  return BYPASS;  }\n";
 
     if( $metodo["sesion_valida"] == 0 )
@@ -29,7 +28,7 @@ static function write_api_file( $metodo ){
 
     $out .= "\tprotected function GetRequest()\n";
     $out .= "\t{\n";
-    $out .= "\t\t$"."this->request = array(    \n";
+    $out .= "\t\t$"."this->request = array(\n";
 
     $args_params = mysql_query("select * from argumento where id_metodo = ". $metodo["id_metodo"] ." order by ahuevo desc, nombre;");
 
@@ -80,72 +79,59 @@ static function write_api_file( $metodo ){
     $out .= "\t\t\t\n";
     $out .= "\t\t\t\n";
 
-        //argumentos
-        $args_params = mysql_query("select * from argumento where id_metodo = ". $metodo["id_metodo"] ." order by ahuevo desc, nombre;");
+    //argumentos
+    $args_params = mysql_query("select * from argumento where id_metodo = ". $metodo["id_metodo"] ." order by ahuevo desc, nombre;");
 
-        while(($row_param = mysql_fetch_assoc( $args_params )) != null )
-        {
-            if($row_param["tipo"] == "json"){
-                $out .= "\t\t\tisset($"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] ) ? json_decode($"."_".$metodo["tipo"]."['".$row_param["nombre"]."']) : null,\n";
+    while(($row_param = mysql_fetch_assoc( $args_params )) != null )
+    {
+        if($row_param["tipo"] == "json"){
+            $out .= "\t\t\tisset($"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] ) ? json_decode($"."_".$metodo["tipo"]."['".$row_param["nombre"]."']) : null,\n";
 
-            }else{
-                /* */
-                if($row_param["ahuevo"] == "0") {
+        }else{
+            /* */
+            if($row_param["ahuevo"] == "0") {
 
-                    /* ES OPCIONAL */
-                    $foo = false;
+                /* ES OPCIONAL */
+                $foo = false;
 
-                    if(strlen($row_param["defaults"]) == 0){
-                        $foo = true;
-                        $_params = " \"\"";
-                    }
-
-                    if($row_param["defaults"] === "null"){
-                        $foo = true;
-                        $_params = " null";
-                    }
-
-                    if($row_param["defaults"] === "\"\""){
-                        $foo = true;
-                        $_params = " \"\"";
-                    }
-
-
-
-                    if(!$foo){
-                        if( ($row_param["tipo"] == "bool") || ($row_param["tipo"] == "int")){
-                            $_params = " " . $row_param["defaults"] . " ";
-
-                        }else{
-                            $_params = " \"" . $row_param["defaults"] . "\"";
-
-                        }
-                    }
-                    $out .= "\t\t\tisset($"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] ) ? $"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] : ". $_params .",\n";
-                }else{
-                    $out .= "\t\t\tisset($"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] ) ? $"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] : null,\n";
+                if(strlen($row_param["defaults"]) == 0){
+                    $foo = true;
+                    $_params = " \"\"";
                 }
 
+                if($row_param["defaults"] === "null"){
+                    $foo = true;
+                    $_params = " null";
+                }
 
+                if($row_param["defaults"] === "\"\""){
+                    $foo = true;
+                    $_params = " \"\"";
+                }
+
+                if(!$foo){
+                    if( ($row_param["tipo"] == "bool") || ($row_param["tipo"] == "int")){
+                        $_params = " " . $row_param["defaults"] . " ";
+
+                    }else{
+                        $_params = " \"" . $row_param["defaults"] . "\"";
+
+                    }
+                }
+                $out .= "\t\t\tisset($"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] ) ? $"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] : ". $_params .",\n";
+            }else{
+                $out .= "\t\t\tisset($"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] ) ? $"."_".$metodo["tipo"]."['".$row_param["nombre"]."'] : null,\n";
             }
-
         }
-        $out = substr( $out, 0, -2 );
+    }
+    $out = substr( $out, 0, -2 );
 
-    $out .= "\n\t\t\t\n";
     $out .= "\t\t\t);\n";
     $out .= "\t\t}catch(Exception $"."e){\n ";
-    //$out .= "\t\t\tthrow new ApiException( $e->getMessage() );\n ";
-    $out .= "\t\t\t//Logger::error($"."e);\n";
-    $out .= "\t\t\tthrow new ApiException( $"."this->error_dispatcher->invalidDatabaseOperation( $"."e->getMessage() ) );\n";
-
+    $out .= "\t\t\tthrow new ApiException($"."this->error_dispatcher->invalidDatabaseOperation($"."e->getMessage()));\n";
     $out .= "\t\t}\n ";
     $out .= "\t}\n";
-
-
-    $out .= "  }\n";
-    $out .= "  \n";
-    $out .= "  \n";
+    $out .= "}\n\n";
 
     return $out;
 
@@ -369,14 +355,10 @@ static function write_api_file( $metodo ){
             while(($row_respuesta = mysql_fetch_assoc( $returns_query )) != null )
             {
                 $out .= "      * @return ". $row_respuesta["nombre"] ." ". $row_respuesta["tipo"] ." ". strip_tags($row_respuesta["descripcion"]) ."\n";
-
                 //$respuesta_out .= "\n\t\t$" . $row_respuesta["nombre"] . ", ";
             }
 
             $out .= "      **/\n";
-
-
-
 
             $iname = str_replace("api/", "", $m["nombre"] );
             $iname = str_replace("/", " ", $iname );
@@ -389,13 +371,8 @@ static function write_api_file( $metodo ){
                 $iname .= $parts[$i]." ";
             }
 
-
             $iname = ucwords($iname);
             $iname = str_replace(" ","", $iname );
-
-
-
-
 
             $out .= "  static function " . $iname . "\n\t(".$params."\n\t);";
             $out .= "  \n";
@@ -410,60 +387,32 @@ static function write_api_file( $metodo ){
     }
 }
 
-################################################################################
-                      ####  #####   ##   #####  #####
-                     #        #    #  #  #    #   #
-                      ####    #   #    # #    #   #
-                          #   #   ###### #####    #
-                     #    #   #   #    # #   #    #
-                      ####    #   #    # #    #   #
-################################################################################
-
-if(is_dir(GeneratePhpApi::$tmpPath . "/server/")) {
-    delete_directory( GeneratePhpApi::$tmpPath . "/server/" );
-}
-
-if(is_dir(GeneratePhpApi::$tmpPath . "/server/")) {
-    delete_directory( "tmp/out/server/" );
-}
-
-if(is_dir("tmp/builds/api/")) {
-    delete_directory("tmp/builds/api/");
-}
-
 create_structure(GeneratePhpApi::$tmpPath . "/server/api/");
-create_structure(GeneratePhpApi::$tmpPath . "/server/controller/");
 create_structure(GeneratePhpApi::$tmpPath . "/server/controller/interfaces/");
-create_structure(GeneratePhpApi::$tmpPath . "/builds/api");
 
 $res = mysql_query("select m.* from metodo m,clasificacion c where c.id_proyecto = ".$_GET["project"]." and m.id_clasificacion = c.id_clasificacion order by id_clasificacion") or die(mysql_error());
-
 $_api_file = fopen(GeneratePhpApi::$tmpPath . "/server/api/ApiLoader.php", 'w') or die("can't open ApiLoader");
 
 fwrite( $_api_file, "<?php \n\n");
-
 while(($row = mysql_fetch_assoc($res)) != null ){
-
-    echo "php: Procesando " . $row["nombre"] . " ... \n";
-
     fwrite($_api_file, GeneratePhpApi::write_api_file(  $row ) );
 }
 
 fclose($_api_file);
 
 
-//create controller interface
+// create controller interface
 $query = mysql_query("select * from clasificacion where id_proyecto = ".$_GET["project"].";");
-
 while( ($row = mysql_fetch_assoc( $query )) != null )
 {
+    echo "php: Procesando " . $row["nombre"] . " ... \n";
+
     // write the interface
     $iname = str_replace(" ","", ucwords($row["nombre"]));
     $fn = GeneratePhpApi::$tmpPath . "/server/controller/interfaces/" . $iname . ".interface.php";
     $f = fopen($fn, 'w') or die("can't create new interface file");
     fwrite($f, GeneratePhpApi::write_controller_interface(  $row) );
     fclose($f);
-
 
     //write the actual controller
     $fn = GeneratePhpApi::$tmpPath . "/server/controller/" . $iname . ".controller.php";
@@ -473,6 +422,3 @@ while( ($row = mysql_fetch_assoc( $query )) != null )
     fclose($f);
 }
 
-
-
-?></pre>
