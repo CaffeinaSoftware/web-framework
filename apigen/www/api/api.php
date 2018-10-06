@@ -76,14 +76,30 @@ class ApiGenApi
         return $info_metodo;
     }
 
-    static function CreateMethod($clasificacion_metodo, $sesion_valida, $regresa_html,
-        $nombre_metodo , $tipo_metodo , $combo , $grupo , $ejemplo_peticion , $ejemplo_respuesta , $descripcion_metodo, $subtitulo
-        )
+    static function SetAndNotEmpty($value) {
+        return isset($value) && !empty($value);
+    }
+
+    static function CreateMethod()
     {
-        if(!isset ($clasificacion_metodo) || !is_numeric($clasificacion_metodo))
+        if(
+            !(self::SetAndNotEmpty($_POST['clasificacion_metodo'])
+            && self::SetAndNotEmpty($_POST['nombre_metodo'])
+            && self::SetAndNotEmpty($_POST['grupo'])))
         {
-            throw new Exception("No se obtuvo clasificacion de metodo");
+            throw new Exception("Faltan parametros");
         }
+
+        $clasificacion_metodo = $_POST["clasificacion_metodo"];
+        $sesion_valida = $_POST["sesion_valida"];
+        $regresa_html = false;
+        $nombre_metodo = $_POST["nombre_metodo"];
+        $tipo_metodo = $_POST["tipo_metodo"];
+        $grupo = $_POST["grupo"];
+        $ejemplo_peticion = $_POST["ejemplo_peticion"];
+        $ejemplo_respuesta = $_POST["ejemplo_respuesta"];
+        $descripcion_metodo = $_POST["descripcion_metodo"];
+        $subtitulo = $_POST["subtitulo"];
 
         // Defaults
         $combo = isset($sesion_valida);
@@ -95,27 +111,28 @@ class ApiGenApi
         $sql = "insert into metodo (id_clasificacion, nombre, tipo, sesion_valida, grupo, ejemplo_peticion, ejemplo_respuesta, descripcion, subtitulo, regresa_html) "
                 . " values ({0}, '{1}', '{2}', {3}, {4}, '{5}', '{6}', '{7}', '{8}', {9})";
 
-        str_replace("{0}", $clasificacion_metodo, $sql);
-        str_replace("{1}", $nombre_metodo, $sql);
-        str_replace("{2}", $tipo_metodo, $sql);
-        str_replace("{3}", $combo, $sql);
-        str_replace("{4}", $grupo, $sql);
-        str_replace("{5}", $ejemplo_peticion, $sql);
-        str_replace("{6}", $ejemplo_respuesta, $sql);
-        str_replace("{7}", preg_replace('/\'/','`', $descripcion_metodo), $sql);
-        str_replace("{8}", $subtitulo, $sql);
-        str_replace("{9}", $regresa_html, $sql);
+        $sql = str_replace("{0}", $clasificacion_metodo, $sql);
+        $sql = str_replace("{1}", $nombre_metodo, $sql);
+        $sql = str_replace("{2}", $tipo_metodo, $sql);
+        $sql = str_replace("{3}", $combo, $sql);
+        $sql = str_replace("{4}", $grupo, $sql);
+        $sql = str_replace("{5}", $ejemplo_peticion, $sql);
+        $sql = str_replace("{6}", $ejemplo_respuesta, $sql);
+        $sql = str_replace("{7}", preg_replace('/\'/','`', $descripcion_metodo), $sql);
+        $sql = str_replace("{8}", $subtitulo, $sql);
+        $sql = str_replace("{9}", $regresa_html, $sql);
 
         if (!mysql_query($sql)) {
             throw new Exception(mysql_error());
         }
 
         $sql="Select LAST_INSERT_ID()";
-        if (!mysql_query($sql)) {
+        if (!$Consulta_ID = mysql_query($sql)) {
             throw new Exception(mysql_error());
         }
 
-        $id_metodo= mysql_fetch_row($Consulta_ID);
+        $id_metodo = mysql_fetch_row($Consulta_ID);
+
         for($i = 0; $i < $_POST["numero_argumentos"]; $i++)
         {
             if(!isset($_POST["nombre_argumento_".$i]))
@@ -123,15 +140,9 @@ class ApiGenApi
                 continue;
             }
 
-            $sql = "Insert into argumento(id_metodo,nombre,descripcion,ahuevo,tipo,defaults) ".
-                "values({0},'{1}','{2}','{3}','{4}','{5}')";
-
-            str_replace("{0}", $id_metodo[0], $sql);
-            str_replace("{1}", $arguments[$i]['nombre_argumento'], $sql);
-            str_replace("{2}", $arguments[$i]['descripcion_argumento'], $sql);
-            str_replace("{3}", $arguments[$i]['obligatorio'], $sql);
-            str_replace("{4}", $arguments[$i]['tipo'], $sql);
-            str_replace("{5}", $arguments[$i]['valor_default'], $sql);
+            $sql="Insert into argumento(id_metodo,nombre,descripcion,ahuevo,tipo,defaults) "
+                    . "values(".$id_metodo[0].",'"
+                        .$_POST["nombre_argumento_".$i]."','".$_POST["descripcion_argumento_".$i]."','".$_POST["ahuevo_".$i]."','".$_POST["tipo_argumento_".$i]."','".$_POST["default_".$i]."')";
 
             if (!mysql_query($sql)) {
                 throw new Exception(mysql_error());
@@ -150,6 +161,10 @@ class ApiGenApi
                 throw new Exception(mysql_error());
             }
         }
+
+        $result = [];
+        $result['id_metodo'] = $id_metodo[0];
+        echo json_encode($result);
     }
 
     static function EditMethod()
@@ -247,7 +262,7 @@ class ApiGenApi
 
         $sql="delete from respuesta where id_metodo=" . $id_metodo;
         $Consulta_ID = mysql_query($sql);
-        if (!mysql_query($sql)) {
+        if (!$Consulta_ID) {
             throw new Exception(mysql_error());
         }
 

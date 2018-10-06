@@ -1,6 +1,8 @@
 
 $(document).ready(function() {
     $("#saveedit").on("click", SaveValuesInEditForm);
+    $("#SaveNewMethodButton").on("click", SaveNewMethod);
+
 });
 
 var new_category_form_visible = false;
@@ -372,7 +374,6 @@ function addResponse()
     html +=     '</tr>' ;
 
     $("#response_space").append(html);
-    m.render();
 }
 
 function SetValuesInEditForm(methodDetails)
@@ -390,6 +391,7 @@ function SetValuesInEditForm(methodDetails)
         addResponseEdit(resp.nombre, resp.tipo, resp.descripcion);
     }
 
+    $("#clasificacion_metodo").val(methodDetails['id_clasificacion']);
     $("#nombre_metodo").val(methodDetails['nombre']);
     $("#subtitulo").val(methodDetails['subtitulo']);
     $("#descripcion_metodo").val(methodDetails['descripcion']);
@@ -400,6 +402,19 @@ function SetValuesInEditForm(methodDetails)
     $("#ejemplo_peticion").val(methodDetails['ejemplo_peticion']);
     $("#ejemplo_respuesta").val(methodDetails['ejemplo_respuesta']);
     $("#id_metodo").val(methodDetails['id_metodo']);
+}
+
+function SaveNewMethod()
+{
+    let values = $("#form_insercion").serialize();
+    $.ajax({
+            type: "POST",
+            url: "api/api.php?api=CreateMethod",
+            dataType: 'json',
+            data: values,
+        }).done(function(result){
+            window.location = "index.php?m=" + result.id_metodo;
+        });
 }
 
 function SaveValuesInEditForm()

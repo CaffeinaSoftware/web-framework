@@ -6,20 +6,13 @@
         <tr>
             <td>Clasificacion</td>
             <td>
-            <select name="clasificacion_metodo"  >
+            <select id="clasificacion_metodo" name="clasificacion_metodo"  >
                 <?php
-                    // Read all project categories and pre-select
-                    if(isset($_GET["cat"])) $cat=$_GET["cat"]; else $cat=-1;
-
-                    $sql="select * from clasificacion where id_proyecto=1";
+                    $sql="select * from clasificacion where id_proyecto=1 order by nombre";
                     $result = mysql_query($sql);
-
                     while($row = mysql_fetch_assoc($result))
                     {
-                        if($cat==$row["id_clasificacion"])
-                            echo ' <option value="'.$row["id_clasificacion"].'" selected>'.$row["nombre"].'</option> ';
-                        else
-                            echo ' <option value="'.$row["id_clasificacion"].'">'.$row["nombre"].'</option> ';
+                        echo ' <option value="'.$row["id_clasificacion"].'">'.$row["nombre"].'</option> ';
                     }
                 ?>
             </select>
