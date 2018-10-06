@@ -130,7 +130,7 @@
 
                         <div class="breadcrumbs">
                            <?php
-                           if(isset($_GET["cat"])){
+                           if(isset($_GET["cat"]) && !empty($_GET["cat"])){
                                 $res = mysql_query("select * from clasificacion where id_clasificacion = " . $_GET["cat"]) or die(mysql_error());
                                 $metodo = mysql_fetch_assoc($res);
                                 echo'<br>&rsaquo; <a href=".?project='.$_GET["project"].'">'  . $metodo["nombre"] .  '</a>';
