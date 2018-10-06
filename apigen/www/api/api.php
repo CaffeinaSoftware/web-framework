@@ -19,6 +19,8 @@ class ApiGenApi
         if (!mysql_query($sql)) {
             throw new Exception(mysql_error());
         }
+
+        echo '{}';
     }
 
     static function CreateCategory($id_proyecto, $nombre_clasificacion, $descripcion_clasificacion)
@@ -270,6 +272,8 @@ class ApiGenApi
         if (!mysql_query($sql)) {
             throw new Exception(mysql_error());
         }
+
+        echo '{}';
     }
 }
 
@@ -284,7 +288,7 @@ if (isset($_REQUEST["api"]))
             ApiGenApi::CreateMethod();
         break;
         case "DeleteMethod":
-            ApiGenApi::DeleteMethod();
+            ApiGenApi::DeleteMethod($_POST['id_metodo']);
         break;
         case "EditCategory":
             ApiGenApi::EditCategory();

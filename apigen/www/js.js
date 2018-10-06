@@ -123,9 +123,20 @@ function Borrar(id)
 {
     var selection = confirm("Esta seguro de querer borrar el método con todos sus argumentos y repsuestas?");
 
-    //if(selection)
-        // TODO: php here
-    //   window.location="delete_method.php?m="+id<?php if(isset($_GET["cat"])) echo '+"&cat='.$_GET["cat"].'"'; if(isset($_GET["project"])) echo '+"&project='.$_GET["project"].'"'?>;
+    if(!selection) {
+        return;
+    }
+
+    $.ajax({
+            type: "POST",
+            url: "api/api.php?api=DeleteMethod",
+            dataType: 'json',
+            data: {
+                id_metodo: id
+            },
+        }).done(function(result){
+            window.location = "index.php";
+        });
 }
 
 function Borrar_categoria()
