@@ -77,9 +77,13 @@ class GeneratePhpCode {
             }
         }
 
-        $out = substr( $out, 0, -2 );
+        if (count($metodo->argumentos) > 0) {
+            $out = substr($out, 0, -2);
+            $out .= "\n\t\t\t);\n";
+        } else {
+            $out = substr($out, 0, -1) . ");\n";
+        }
 
-        $out .= "\n\t\t\t);\n";
         $out .= "\t\t}catch(Exception $"."e){\n ";
         $out .= "\t\t\tthrow new ApiException($"."this->error_dispatcher->invalidDatabaseOperation($"."e->getMessage()));\n";
         $out .= "\t\t}\n";
