@@ -41,6 +41,15 @@ class FileWriter {
         fwrite($handle, $contents);
         fclose($handle);
     }
+
+    public static function Append($filename, $contents) {
+        $filename = "output/tmp/" . $filename;
+        self::EnsureDirectoryExists($filename);
+        print "Appending to: ". str_replace("output/tmp/", "",$filename) . "\n";
+        $handle = fopen($filename, 'a') or die("can't open file");
+        fwrite($handle, $contents);
+        fclose($handle);
+    }
 }
 
 class Method {
@@ -59,6 +68,7 @@ class Method {
         $this->id_metodo = $data['id_metodo'];
         $this->nombre = $data['nombre'];
         $this->tipo = $data['tipo'];
+        $this->sesion_valida = $data['sesion_valida'] == '1';
         $this->descripcion = utf8_encode($data['descripcion']);
 
         // nombre, tipo, defaults, descripcion
@@ -84,11 +94,13 @@ class Clasif {
     public $metodos = [];
     public $nombre;
     public $descripcion;
+    public $id_clasificacion;
 
     public static function Load ($clasificacionArray) {
         $clasificacion = new Clasif();
         $clasificacion->nombre = $clasificacionArray['nombre'];
         $clasificacion->descripcion = $clasificacionArray['descripcion'];
+        $clasificacion->id_clasificacion = $clasificacionArray['id_clasificacion'];
         $argsq = mysql_query("select * from metodo where id_clasificacion = ". $clasificacionArray['id_clasificacion'] .";");
         while (($metodo = mysql_fetch_assoc($argsq)) != null) {
             $clasificacion->metodos[] = new Method($metodo);
