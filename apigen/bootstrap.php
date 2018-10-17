@@ -5,13 +5,10 @@
 #   BOOTSTRAPING
 #
 # #########################################
-define('POS_PATH_TO_SERVER_ROOT', str_replace("bootstrap.php", "", __FILE__ ));
-ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . POS_PATH_TO_SERVER_ROOT);
+//define('POS_PATH_TO_SERVER_ROOT', str_replace("bootstrap.php", "", __FILE__ ));
+//ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . POS_PATH_TO_SERVER_ROOT);
 
-$BaseDatos  = "framework3";
-$Servidor   = "localhost";
-$Usuario    = "root";
-$Clave      = "root";
+require_once('config.php');
 
 @$Conexion_ID = mysql_connect($Servidor, $Usuario, $Clave);
 

@@ -1,6 +1,6 @@
 <?php
     $_GET["project"] = 1;
-    require_once("../server/bootstrap.php");
+    require_once("../bootstrap.php");
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" >
