@@ -10,10 +10,10 @@ class GeneratePhpCode {
         $cname = ucwords( str_replace("/"," ", str_replace("_"," ", $metodo->nombre) ) );
         $cname = str_replace(" ","", $cname) ;
 
-        $out = "\nclass ". $cname ." extends ApiHandler {\n\n";
+        $out = "\nclass ". $cname ." extends ApiHandler {\n";
         $out .= "\tprotected function DeclareAllowedRoles(){ return BYPASS; }\n";
 
-        if( $metodo->sesion_valida)
+        if(!$metodo->sesion_valida)
             $out .= "\tprotected function CheckAuthorization() { return; }\n";
 
         $out .= "\tprotected function GetRequest()\n";
@@ -34,12 +34,12 @@ class GeneratePhpCode {
         $nombreController = str_replace(" ", "", ucwords($clasificacion->nombre));
         $nombreInterfaz = ApiNameToMethodName($metodo->nombre);
 
-        $out .= "\t\ttry{\n ";
+        $out .= "\t\ttry{\n";
         $out .= "\t\t\t$"."this->response = ". $nombreController . "Controller::". $nombreInterfaz ."(\n";
 
         foreach ($metodo->argumentos as $argumento)
         {
-            if ($argumento["tipo"] == "json"){
+            if ($argumento["tipo"] == "json") {
                 $out .= "\t\t\t\tisset($"."_".$metodo->tipo."['".$argumento["nombre"]."'] ) ? json_decode($"."_".$metodo->tipo."['".$argumento["nombre"]."']) : null,\n";
 
             } else {
@@ -84,7 +84,7 @@ class GeneratePhpCode {
             $out = substr($out, 0, -1) . ");\n";
         }
 
-        $out .= "\t\t}catch(Exception $"."e){\n ";
+        $out .= "\t\t}catch(Exception $"."e){\n";
         $out .= "\t\t\tthrow new ApiException($"."this->error_dispatcher->invalidDatabaseOperation($"."e->getMessage()));\n";
         $out .= "\t\t}\n";
         $out .= "\t}\n";
