@@ -20,17 +20,22 @@ $perMethod = function($metodo, $clasificacion)
 
     // Argumentos
     $out .= "### Argumentos  ###\n\n";
-    $out .= "| Nombre | Tipo | Default | Description |\n";
+    $out .= "| Nombre | Tipo | Obligatorio | Default | Description |\n";
     foreach ($metodo->argumentos as $argumento) {
-        $out .= utf8_encode($argumento["nombre"]) . "|";
+
+        $obligatorio = ($argumento["ahuevo"] == '1');
+        if ($obligatorio)
+        {
+            $out .= "**" . utf8_encode($argumento["nombre"]) . "**|";
+        }
+        else
+        {
+            $out .= utf8_encode($argumento["nombre"]) . "|";
+        }
         $out .= utf8_encode($argumento["tipo"]) . "|";
+        $out .= ($obligatorio ? '**Si**' : '') . "|";
         $out .= utf8_encode($argumento["defaults"]) . "|";
         $out .= utf8_encode($argumento["descripcion"]) . "|\n";
-
-        if ($argumento["ahuevo"] != "0") {
-            // not optional, no default value
-            continue;
-        }
     }
 
     $out .= "\n";

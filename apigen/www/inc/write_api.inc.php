@@ -40,7 +40,7 @@ class GeneratePhpCode {
         foreach ($metodo->argumentos as $argumento)
         {
             if ($argumento["tipo"] == "json") {
-                $out .= "\t\t\t\tisset($"."_".$metodo->tipo."['".$argumento["nombre"]."'] ) ? json_decode($"."_".$metodo->tipo."['".$argumento["nombre"]."']) : null,\n";
+                $out .= "\t\t\t\tisset($"."_".$metodo->tipo."['".$argumento["nombre"]."'] ) ? (is_object($"."_".$metodo->tipo."['".$argumento["nombre"]."']) ? $"."_".$metodo->tipo."['".$argumento["nombre"]."'] : json_decode($"."_".$metodo->tipo."['".$argumento["nombre"]."'])) : null,\n";
 
             } else {
                 if($argumento["ahuevo"] == "0") {
