@@ -95,7 +95,8 @@ class GenerateCsharpApi {
         $docs .= "name: empresas \n";
         $docs .= "position: Developer\n";
         $docs .= "lang: cs\n";
-        $docs .= "permalink: /docs/cs/". $className ."/".$methodName."/\n";
+        $docs .= "permalink: /es/docs/cs/". $className ."/".$methodName."/\n";
+        $docs .= "locale: es\n";
         $docs .= "apiname: ". $className ."/".$methodName. "\n";
         $docs .= "layout: docs\n";
         $docs .= "---\n";
@@ -213,7 +214,8 @@ $perClasif = function($clasificacion)
     // Write the documentation
     $docs = "---\n";
     $docs .= "lang: cs\n";
-    $docs .= "permalink: /docs/cs/". $className ."/\n";
+    $docs .= "permalink: /es/docs/cs/". $className ."/\n";
+    $docs .= "locale: es\n";
     $docs .= "apiname: ". $className ."\n";
     $docs .= "layout: docs\n";
     $docs .= "toplevel: true\n";

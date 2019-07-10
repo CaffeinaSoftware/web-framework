@@ -77,7 +77,8 @@ $perClasif = function($clasificacion)
     // Write the documentation
     $docs = "---\n";
     $docs .= "lang: http\n";
-    $docs .= "permalink: /docs/http/". $className ."/\n";
+    $docs .= "permalink: /es/docs/http/". $className ."/\n";
+    $docs .= "locale: es\n";
     $docs .= "apiname: ". $className ."\n";
     $docs .= "layout: docs\n";
     $docs .= "toplevel: true\n";
