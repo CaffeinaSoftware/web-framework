@@ -7,7 +7,8 @@ $perMethod = function($metodo, $clasificacion)
 {
     $out = "---\n";
     $out .= "lang: http\n";
-    $out .= "permalink: /docs/http/". $metodo->nombre ."/\n";
+    $out .= "permalink: /es/docs/http/". $metodo->nombre ."/\n";
+    $out .= "locale: es\n";
     $out .= "title: HTTP - ". $metodo->nombre ."/\n";
     $out .= "apiname: docs/http/". $metodo->nombre ."\n";
     $out .= "layout: docs\n";
