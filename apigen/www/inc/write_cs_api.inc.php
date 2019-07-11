@@ -238,7 +238,7 @@ $perClasif = function($clasificacion)
         $desc = str_replace("\n", "", $metodo->descripcion);
         $desc = str_replace("\r", "", $desc);
 
-        $docs .= "[$methodName](/es/docs/cs/$clasificacion->nombre/$methodName)";
+        $docs .= "[$methodName](/public/es/docs/cs/$clasificacion->nombre/$methodName)";
         $docs .= "|" . $desc ;
         $docs .= "|\n";
     }
