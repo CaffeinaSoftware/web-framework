@@ -10,12 +10,18 @@
 
 require_once('config.php');
 
-@$Conexion_ID = mysql_connect($Servidor, $Usuario, $Clave);
+$conn = new mysqli($Servidor, $Usuario, $Clave, $BaseDatos);
 
-if (!$Conexion_ID) {
-    die(mysql_error());
+if ($conn->connect_errno) {
+    echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
 }
 
-if (!mysql_select_db($BaseDatos, $Conexion_ID)) {
-    die(mysql_error());
+function mysql_query($query) {
+    global $conn;
+    return $conn->query($query);
+}
+
+function mysql_fetch_assoc($result) {
+    global $conn;
+    return $result->fetch_assoc();
 }
