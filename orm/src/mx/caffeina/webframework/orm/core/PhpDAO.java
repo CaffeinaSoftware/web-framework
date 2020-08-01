@@ -74,64 +74,83 @@ public class PhpDAO
 
 	private void parseTable(String t_name) throws IOException
 	{
-		String tline ;
+		System.out.println("Procesando tabla: " + t_name);
+
+		String linea;
 		ArrayList<Field> fields = new ArrayList<Field>();
-		int no_pks = 0;
+		int numeroDeLlavesPrimarias = 0;
 
-		System.out.println( "Procesando tabla: " + t_name );
-
-		while( (tline = br.readLine()).trim().startsWith("`") )
+		while ((linea = br.readLine()).trim().startsWith("`"))
 		{
-			String campo = tline.substring( tline.indexOf("`") + 1, tline.lastIndexOf("`") );
-			String comentario = (tline.indexOf("COMMENT ") != -1) ? tline.substring( tline.indexOf("COMMENT ") + 9, tline.lastIndexOf("'") ) : " [Campo no documentado]";
-			boolean autoInc = (tline.indexOf("AUTO_INCREMENT") != -1) || (tline.indexOf("auto_increment") != -1);
-			String tipo = tline.trim().split(" ")[1].toLowerCase();
+			// Extraer las partes de la definicion de columna:
+			String campo = linea.substring(linea.indexOf("`") + 1, linea.lastIndexOf("`"));
+			String comentario = (linea.indexOf("COMMENT ") != -1) ? linea.substring( linea.indexOf("COMMENT ") + 9, linea.lastIndexOf("'") ) : " [Campo no documentado]";
+			boolean autoInc = (linea.indexOf("AUTO_INCREMENT") != -1) || (linea.indexOf("auto_increment") != -1);
 			String defaultValue = null;
+
+			// Obtener el tipo tiene dos formas, una donde solo hay un token, y otra donde pueden existir espacios:
+			//
+			// `fecha` INT(11) NOT NULL COMMENT 'Comentario',
+			//         ^^^^^^^
+			// `tipo_de_pago` ENUM('cheque', 'tarjeta', 'efectivo') NOT NULL COMMENT 'Comentario',
+			//                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+			linea = linea.trim();
+			int indiceIzquierdo = linea.indexOf(" ");
+			int indiceDerecho = linea.indexOf(" NOT NULL");
+			if (indiceDerecho == -1) {
+				indiceDerecho = linea.indexOf(" NULL");
+			}
+			String tipo = linea.substring(indiceIzquierdo, indiceDerecho).trim();
 
 			// Posibles combinaciones de valures
 			// default:
 			// -DEFAULT NULL
 			// -NULL DEFAULT '0'
 			// -NOT NULL DEFAULT '0'
-			if (tline.contains("DEFAULT NULL")){
+			if (linea.contains("DEFAULT NULL")){
 				// No incluir nada en este caso
 			}
-			else if (tline.contains("DEFAULT"))
+			else if (linea.contains("DEFAULT"))
 			{
-			    defaultValue = parseToken(tline, tline.indexOf("DEFAULT ") + "DEFAULT ".length());
+			    defaultValue = parseToken(linea, linea.indexOf("DEFAULT ") + "DEFAULT ".length());
 			}
 
 			fields.add(new Field(campo , tipo , comentario, false, autoInc, defaultValue));
 		}
 
-		//buscar llave primaria, PRIMARY KEY
-		if( (tline.trim().startsWith("PRIMARY KEY") ) )
+		// Buscar llave primaria, PRIMARY KEY
+		if ((linea.trim().startsWith("PRIMARY KEY")))
 		{
-			//hay definicion de llave primaria
-			String pk = tline.substring( tline.indexOf("(")+1, tline.indexOf(")") );
+			// Hay definicion de llave primaria
+			String pk = linea.substring(linea.indexOf("(") + 1, linea.indexOf(")"));
 			String pks[] = pk.split(",");
 
-			for(String i: pks)
+			for(String llavePrimaria: pks)
 			{
-				i= i.trim().substring( 1, i.length()-1 ) ;
+				// La definicion se ve asi:
+				// 		PRIMARY KEY (`id_billete`, `id_apertura_caja`),
+				//
+				// Remover las comillas y los espacios para quedarnos solo con el nombre
+				llavePrimaria = llavePrimaria.trim();
+				llavePrimaria = llavePrimaria.substring(1, llavePrimaria.length() - 1) ;
 
-				//cicle trough the fields, and add pk to the ones on i
+				// Buscar el campo y marcarlo como llave primaria
 				for(int a = 0; a < fields.size(); a++)
 				{
-					if(fields.get( a ).title.equals(i))
+					if(fields.get(a).title.equals(llavePrimaria))
 					{
-						fields.get( a ).isPrimary = true;
-						no_pks ++;
+						fields.get(a).isPrimary = true;
+						numeroDeLlavesPrimarias ++;
 					}
 				}
 			}
 		}
 
-		writeVO( t_name, fields, no_pks != 0 );
+		writeVO( t_name, fields, numeroDeLlavesPrimarias != 0 );
 
-		writeDAOBase( t_name, fields, no_pks != 0 );
+		writeDAOBase( t_name, fields, numeroDeLlavesPrimarias != 0 );
 
-		writeDAO( t_name, fields, no_pks != 0 );
+		writeDAO( t_name, fields, numeroDeLlavesPrimarias != 0 );
 	}
 
 	private void writeVO( String tabla, ArrayList<Field> fields, boolean has_pk ) throws IOException
