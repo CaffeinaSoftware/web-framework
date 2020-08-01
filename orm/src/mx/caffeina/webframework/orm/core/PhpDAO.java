@@ -100,7 +100,7 @@ public class PhpDAO
 			if (indiceDerecho == -1) {
 				indiceDerecho = linea.indexOf(" NULL");
 			}
-			String tipo = linea.substring(indiceIzquierdo, indiceDerecho).trim();
+			String tipo = linea.substring(indiceIzquierdo, indiceDerecho).trim().toLowerCase();
 
 			// Posibles combinaciones de valures
 			// default:
